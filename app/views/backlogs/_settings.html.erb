@@ -413,6 +413,11 @@
     <%= select_tag("settings[show_backlog_story_marker_support_id]", options_from_collection_for_select(IssueCustomField.all, :id, :name, Backlogs.setting[:show_backlog_story_marker_support_id]), :include_blank => true) %>
     <em class="info"><%= l(:rb_show_backlog_story_marker_support_explanation) %></em>
   </p>
+  <p>
+  	<%= label_tag("settings_support_id_URL_start_match", l(:support_id_URL_start_match))%>
+    <%= text_field_tag("settings[support_id_URL_start_match]",  Backlogs.setting[:support_id_URL_start_match]) %>
+    <em class="info"><%= l(:support_id_URL_start_match_explanation) %></em>
+  </p>
 </fieldset>
 
 <fieldset>

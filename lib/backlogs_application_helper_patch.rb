@@ -16,10 +16,10 @@ module Backlogs
       def format_object_with_backlogs(object, html=true, &block)
         if object.class.name == "CustomFieldValue" || object.class.name == "CustomValue"
           if object.custom_field
-            if object.custom_field.id == 1 && object.value.present?# && (params[:controller] == "issues" && params[:action] == "show")
+            if object.custom_field.id == Backlogs.setting[:show_backlog_story_marker_support_id].to_i && object.value.present?
               string = ""
               object.value.split(/[\s,]+/).each_with_index do |case_id, i|
-                if case_id.starts_with?("CAS-")
+                if case_id.starts_with?(Backlogs.setting[:support_id_URL_start_match])
                   string+= "<a href='#{object.custom_field.format_store[:url_pattern]}#{case_id}' target='_blank'>#{case_id}</a>"
                 else
                   string += case_id

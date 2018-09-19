@@ -307,7 +307,9 @@ en:
   rb_show_backlog_story_marker_support_explanation: "If the selected field contains a value, this marker is shown."
   title_marker_release: "Connected to a release"
   title_marker_support: "Related to a support case"
-
+  support_id_URL_start_match: "Match start of case-id"
+  support_id_URL_start_match_explanation: "The value of the custom field will be split on whitespaces. When the word matches the prefix, the url configured for the custom field will be added and the value is clickable."
+  
   ######## release notes #######
   release_notes:
     title: "Release note"
