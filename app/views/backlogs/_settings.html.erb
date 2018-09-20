@@ -283,6 +283,12 @@
     <%= check_box_tag("settings[always_allow_time_fields]", 'enabled',
                       Backlogs.setting[:always_allow_time_fields]) %>
   </p>
+
+  <p>  
+    <%= label_tag("settings_copy_custom_fields_from_parent", l(:backlogs_copy_custom_fields_from_parent)) %>
+    <%= select_tag("settings[copy_custom_fields_from_parent]", options_from_collection_for_select(IssueCustomField.all, :id, :name, Backlogs.setting[:copy_custom_fields_from_parent]), :multiple => true) %>
+    <em class="info"><%= l(:backlogs_copy_custom_fields_from_parent_explanation) %></em>
+  </p>
 </fieldset>
 
 <fieldset>
