@@ -96,7 +96,8 @@ Redmine::Plugin.register :redmine_backlogs do
                          :show_backlog_story_markers_sprint_taskboard => 'enabled',
                          :show_backlog_story_marker_release           => 'enabled',
                          :show_backlog_story_marker_priority          => 'enabled',
-                         :show_backlog_story_marker_support_id        => '0'
+                         :show_backlog_story_marker_support_id        => '0',
+                         :copy_custom_fields_from_parent => {}
                        },
            :partial => 'backlogs/settings'
 

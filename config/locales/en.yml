@@ -308,6 +308,8 @@ en:
   title_marker_release: "Connected to a release"
   title_marker_support: "Related to a support case"
 
+  backlogs_copy_custom_fields_from_parent: "Copy the values of the following fields from story to task"
+  backlogs_copy_custom_fields_from_parent_explanation: "When creating a new task, pre-fill the selected custom fields with the same value as the parent"
   ######## release notes #######
   release_notes:
     title: "Release note"
