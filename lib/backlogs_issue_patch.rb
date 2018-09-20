@@ -25,7 +25,7 @@ module Backlogs
         safe_attributes 'release_id','release_relationship' #FIXME merge conflict. is this required?
         safe_attributes 'rbteam_id'
 
-        after_create :set_wbso_field #set parent story wbso field to chield task if chield task wbso field blank
+        after_create :copy_custom_fields
 
         before_save :backlogs_before_save
         after_save  :backlogs_after_save
@@ -124,11 +124,17 @@ module Backlogs
         return Integer(self.story_points * (hpp / 8))
       end
 
-      def set_wbso_field
-        wbso_field_chield = self.custom_values.find_by(custom_field_id: 19)
-        if (wbso_field_chield.value.blank? && self.parent_id.present?)
-          wbso_parent = self.parent.custom_values.find_by(custom_field_id: 19)
-          wbso_field_chield.update_columns(value: wbso_parent.value) if wbso_parent.value.present?
+      def copy_custom_fields
+        return if !self.parent_id.present?
+
+        copy_custom_fields = Backlogs.setting[:copy_custom_fields_from_parent]
+        Rails.logger.info "Copy custom fields: #{copy_custom_fields} from issue #{self.parent_id}."
+        copy_custom_fields.each do |field_id|
+          field_child = self.custom_values.find_by(custom_field_id: field_id.to_i)
+          if (field_child.value.blank?)
+            field_parent = self.parent.custom_values.find_by(custom_field_id: field_id.to_i)
+            field_child.update_columns(value: field_parent.value) if field_parent.value.present?
+          end
         end
       end
 
