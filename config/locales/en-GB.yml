@@ -95,9 +95,8 @@ en_GB:
   field_priority: Priority
   field_project_id: "Project Id"
   field_release: Release
-  field_release_end_date: "Release end date"
+  field_release_end_date: "Release date"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Release start date"
   field_remaining_hours: "Remaining (hours)"
   field_story_points: "Story points"
   field_subject: Subject
@@ -148,7 +147,7 @@ en_GB:
   label_product_backlog: "product backlog"
   label_product_cards: "Product backlog cards"
   label_release: Release
-  label_release_end_date: "field_release_start_date"
+  label_release_end_date: "Release date"
   label_release_new: "New release"
   label_release_plan_new: "Release Planning"
   release_planning_edit: "Edit"
@@ -159,7 +158,6 @@ en_GB:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "field_release_start_date"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum statistics"

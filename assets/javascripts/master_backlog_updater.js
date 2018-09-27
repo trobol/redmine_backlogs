@@ -30,15 +30,11 @@ RB.BacklogsUpdater = RB.Object.create(RB.BoardUpdater, {
     // Position the story properly in the backlog
     var higher_item = null,
         previous = update.$.find(".higher_item_id").text(),
-        fixed_version_id = target.$.find(".fixed_version_id").text(),
-        release_id = target.$.find(".release_id").text();
+        fixed_version_id = target.$.find(".fixed_version_id").text();
 
     //find the correct container
     if (fixed_version_id !== '') { //sprint
       stories = RB.$('#stories-for-' + fixed_version_id);
-    }
-    else if (release_id !== '') { //release
-      stories = RB.$('#stories-for-release-' + release_id);
     }
     else { //backlog
       stories = RB.$('#stories-for-product-backlog');

@@ -85,15 +85,9 @@ RB.StoryEB = RB.Object.create(RB.Issue, {
 	}
     switch (vtype) {
       case 'sprint':
-        data += '&release_id=';
         data += '&fixed_version_id='+vid;
         break;
-      case 'release':
-        data += '&release_id='+vid;
-        data += '&fixed_version_id=';
-        break;
       case 'productbacklog':
-        data += '&release_id=';
         data += '&fixed_version_id=';
         break;
       default:

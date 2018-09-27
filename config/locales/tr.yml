@@ -98,7 +98,6 @@ tr:
   field_release_ids: Sürümler
   field_release_end_date: "Sürüm sonu tarihi"
   field_release_relationship: "Sürüm ilişkisi"
-  field_release_start_date: "Sürüm başı tarihi"
   field_remaining_hours: "Kalan (saat)"
   field_story_points: "Öykü puanı"
   field_subject: Konu
@@ -160,7 +159,6 @@ tr:
   label_release_relationship_auto: Otomatik
   label_release_relationship_continued: Devam eden
   label_release_relationship_initial: İlk
-  label_release_start_date: "Sürüm başlangıç tarihi"
   label_release_trend_end_date: "Tahmini bitiş tarihi eğilimi"
   label_reset: Sıfırla
   label_scrum_statistics: "Scrum istatistikleri"

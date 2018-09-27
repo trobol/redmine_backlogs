@@ -97,7 +97,6 @@
   field_release: Release
   field_release_end_date: "Utgivelse sluttdato"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Utgivelse startdato"
   field_remaining_hours: "Remaining (hours)"
   field_story_points: "Storypoeng"
   field_subject: Emne
@@ -157,7 +156,6 @@
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "Utgivelse startdato"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum statistikk"

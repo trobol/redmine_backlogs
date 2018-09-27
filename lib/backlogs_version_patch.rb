@@ -10,7 +10,6 @@ module Backlogs
         unloadable
 
         has_one :sprint_burndown, :class_name => RbSprintBurndown, :dependent => :destroy
-        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
         belongs_to :rbteam, :class_name => 'Group', :foreign_key => 'rbteam_id'
 
         after_save :clear_burndown

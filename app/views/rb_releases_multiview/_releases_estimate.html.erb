@@ -1,7 +1,6 @@
 <table class="list releases">
   <tr>
     <th>Release</th>
-    <th><%= l(:field_release_start_date) %></th>
     <th><%= l(:field_release_end_date) %></th>
     <th>Estimated end date</th>
   </tr>
@@ -9,7 +8,6 @@
   klass=r[:release].closed? ? 'closed':'open' %>
   <tr class="<%= klass %>">
     <td><%= release_link_or_empty(r[:release]) %></td>
-    <td><%= r[:release].release_start_date   %></td>
     <td><%= r[:release].release_end_date     %></td>
     <td><%= r[:trend_end_date]               %></td>
   </tr>

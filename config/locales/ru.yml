@@ -97,7 +97,6 @@ ru:
   field_release: Релиз
   field_release_end_date: "Дата окончания релиза"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Дата начала релиза"
   field_remaining_hours: "Осталось (часов)"
   field_story_points: "Оценка истории (в баллах)"
   field_subject: Тема
@@ -158,7 +157,6 @@ ru:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "Дата начала релиза"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Сбросить
   label_scrum_statistics: "Скрам-статистика"

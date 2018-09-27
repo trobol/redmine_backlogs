@@ -94,9 +94,6 @@
     </div>
     <div class="backlogs-panel right-col">
       <div id="product_backlog_container" class="backlogs-panel-inner">
-		<%- if !Backlogs.setting[:use_one_product_backlog] %>
-          <%= render :partial => 'backlog', :collection => @release_backlogs, :locals => {:cls => ' release_backlog'} %>
-		<%- end %>
         <%= render :partial => 'backlog', :object => @product_backlog, :locals => {:cls => ' product_backlog'} %>
       </div>
     </div>

@@ -111,7 +111,6 @@ en:
   field_release_ids: Releases
   field_release_end_date: "Release date"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Release start date"
   field_remaining_hours: "Remaining (hours)"
   field_sprint: "Sprint"
   field_story_points: "Story points"
@@ -186,7 +185,6 @@ en:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "Release start date"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum statistics"

@@ -188,8 +188,7 @@ class ReleaseNotesGenerator
   def values_for_header_release(release)
     values = {
       "name" => release.name,
-      "start_date" => format_date(release.release_start_date),
-      "end_date" => format_date(release.release_start_date),
+      "end_date" => format_date(release.release_end_date),
       "id" => release.id,
       "project_name" => release.project.name
     }

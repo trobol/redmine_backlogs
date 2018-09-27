@@ -8,7 +8,6 @@ namespace :redmine do
         # enable the feature
         puts "Enabling scaled agile features"
         Backlogs.setting[:scaled_agile_enabled] = true
-        Backlogs.setting[:use_one_product_backlog] = false
 		
         # Configure the epic and feature trackers
         puts "Creating Epic and Feature trackers"

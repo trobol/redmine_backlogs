@@ -39,29 +39,12 @@ class RbGeneric < Issue
     end
   end
 
-  def self.__find_options_release_condition(project_id, release_ids, tracker_ids)
-    ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and fixed_version_id is NULL
-      and release_id in (?)", tracker_ids, release_ids]
-  end
-
-  def self.__find_options_pbl_condition(project_id, tracker_ids, include_releases)
-    if include_releases
+  def self.__find_options_pbl_condition(project_id, tracker_ids)
     ["
       project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
       and fixed_version_id is NULL
       and is_closed = ?", tracker_ids, false]
-    else
-      ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and release_id is NULL
-      and fixed_version_id is NULL
-      and is_closed = ?", tracker_ids, false]
-    end
   end
 
   def self.__find_options_generic_condition(project_id, tracker_ids)
@@ -89,12 +72,9 @@ class RbGeneric < Issue
 
     self.__find_options_add_permissions(options)
 
-    include_releases = options.delete(:include_releases)
-
     sprint_ids = self.__find_options_normalize_option(options.delete(:sprint))
-    release_ids = self.__find_options_normalize_option(options.delete(:release))
     tracker_ids = self.__find_options_normalize_option(options.delete(:trackers) || self.trackers)
-    Rails.logger.info "SprintId: #{sprint_ids}; ReleaseId: #{release_ids}; TrackerId: #{tracker_ids}; GenScope: #{generic_scope};"
+    Rails.logger.info "SprintId: #{sprint_ids}; TrackerId: #{tracker_ids}; GenScope: #{generic_scope};"
     if generic_scope
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_generic_condition(project_id, tracker_ids))
       options[:joins] ||= []
@@ -103,10 +83,8 @@ class RbGeneric < Issue
       options[:joins] << :project
     elsif sprint_ids
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_sprint_condition(project_id, sprint_ids, tracker_ids))
-    elsif release_ids
-      Backlogs::ActiveRecord.add_condition(options, self.__find_options_release_condition(project_id, release_ids, tracker_ids))
     else #product backlog
-      Backlogs::ActiveRecord.add_condition(options, self.__find_options_pbl_condition(project_id, tracker_ids, include_releases))
+      Backlogs::ActiveRecord.add_condition(options, self.__find_options_pbl_condition(project_id, tracker_ids))
       options[:joins] ||= []
       options[:joins] [options[:joins]] unless options[:joins].is_a?(Array)
       options[:joins] << :status
@@ -123,7 +101,6 @@ class RbGeneric < Issue
     {
       :project => self.project_id,
       :sprint => self.fixed_version_id,
-      :release => self.release_id
     }
   end
 
