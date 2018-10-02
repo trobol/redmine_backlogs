@@ -6,8 +6,6 @@ class RbSprint < Version
 
   validate :start_and_end_dates
 
-  belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
-
   def start_and_end_dates
     errors.add(:base, l(:error_sprint_end_before_start) ) if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
@@ -212,11 +210,6 @@ class RbSprint < Version
 
   def sprint_points_display(notsized='-')
     format_story_points(sprint_points, notsized)
-  end
-
-  def release_id=(rid)
-    self.release = nil
-    write_attribute(:release_id, rid)
   end
 
   private

@@ -173,7 +173,7 @@ module Backlogs
 
       base.class_eval do
         unloadable
-        has_many :releases, -> { order "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC" }, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy
+        has_many :releases, -> { order "#{RbRelease.table_name}.name DESC" }, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy
         has_many :releases_multiview, :class_name => 'RbReleaseMultiview', :dependent => :destroy
         has_one :release_planning, :class_name => 'RbReleasePlanning'
         include Backlogs::ActiveRecord::Attributes
@@ -243,7 +243,7 @@ module Backlogs
 
       def active_release
         search_date = (Time.zone ? Time.zone : Time).now.strftime('%Y-%m-%d')
-        open_releases_by_date.where("#{RbRelease.table_name}.release_start_date <= ? and #{RbRelease.table_name}.release_end_date >= ?",
+        open_releases_by_date.where("#{RbRelease.table_name}.release_end_date >= ?",
                                     search_date, search_date).first
       end
 
@@ -251,14 +251,14 @@ module Backlogs
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
         (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
           visible.open.
-          reorder("#{RbRelease.table_name}.release_end_date #{order}, #{RbRelease.table_name}.release_start_date #{order}")
+          reorder("#{RbRelease.table_name}.release_end_date #{order}")
       end
 
       def closed_releases_by_date
         order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
         (Backlogs.setting[:sharing_enabled] ? shared_releases : releases).
           visible.closed.
-          reorder("#{RbRelease.table_name}.release_end_date #{order}, #{RbRelease.table_name}.release_start_date #{order}")
+          reorder("#{RbRelease.table_name}.release_end_date #{order}")
       end
 
       def shared_releases
@@ -276,7 +276,7 @@ module Backlogs
                 " OR (#{Project.table_name}.lft < #{lft} AND #{Project.table_name}.rgt > #{rgt} AND #{RbRelease.table_name}.sharing IN ('hierarchy', 'descendants'))" +
                 " OR (#{Project.table_name}.lft > #{lft} AND #{Project.table_name}.rgt < #{rgt} AND #{RbRelease.table_name}.sharing = 'hierarchy')" +
                 "))").
-              order("#{RbRelease.table_name}.release_end_date #{order}, #{RbRelease.table_name}.release_start_date #{order}")
+              order("#{RbRelease.table_name}.release_end_date #{order}")
           end
         end
       end

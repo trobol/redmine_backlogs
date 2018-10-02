@@ -13,21 +13,6 @@ module BacklogsPlugin
         Rails.logger.error "#{ex.message} (#{ex.class}): " + ex.backtrace.join("\n")
       end
 
-      def helper_issues_show_detail_after_setting(context={ })
-      	begin
-          if context[:detail].prop_key == 'release_id'
-            r = RbRelease.find_by_id(context[:detail].value)
-            context[:detail].value = r.name unless r.nil? || r.name.nil?
-
-            r = RbRelease.find_by_id(context[:detail].old_value)
-            context[:detail].old_value = r.name unless r.nil? || r.name.nil?
-          end
-        rescue => e
-          exception(context, e)
-          return ''
-        end
-      end
-
       def view_issues_sidebar_planning_bottom(context={ })
         begin
           return '' if User.current.anonymous?
@@ -95,11 +80,6 @@ module BacklogsPlugin
             snippet += '<div class="splitcontentleft">'
             snippet += "<div class=\"backlogs_storypoints attribute\"><div class=\"label\"><span>#{l(:field_story_points)}</span>:</div><div class=\"value\">#{RbStory.find(issue.id).points_display}</div></div>"
 			
-            unless issue.release_id.nil? || Backlogs.setting[:issue_release_relation] == 'multiple'
-              release = RbRelease.find(issue.release_id)
-              snippet += "<div class=\"backlogs_release attribute\"><div class=\"label\"><span>#{l(:field_release)}</span>:</div><div class=\"value\">#{link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release}))}</div></div>"
-            end
-
             unless issue.rbteam_id.nil?
               team = Group.find(issue.rbteam_id)
               snippet += "<div class=\"backlogs_team attribute\"><div class=\"label\"><span>#{l(:field_team)}</span>:</div><div class=\"value\">#{team.name}</div></div>"
@@ -112,10 +92,6 @@ module BacklogsPlugin
               unless issue.remaining_hours.nil?
                 snippet += "<div class=\"backlogs_remaining_hours attribute\"><div class=\"label\"><span>#{l(:field_remaining_hours)}</span>:</div><div class=\"value\">#{l_hours(issue.remaining_hours)}</div></div>"
               end
-            end
-            unless issue.release_id.nil? || Backlogs.setting[:issue_release_relation] == 'multiple'
-              relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
-              snippet += "<div class=\"release_relationship attribute\"><div class=\"label\"><span>#{l(:field_release_relationship)}</span>:</div><div class=\"value\">#{relation_translate}</div></div>"
             end
             if Backlogs.setting[:show_velocity_based_estimate]
               vbe = issue.velocity_based_estimate
@@ -163,20 +139,9 @@ module BacklogsPlugin
             end
             snippet += '</p>'
 
-            if issue.safe_attribute?('release_id') && issue.assignable_releases.any? && Backlogs.setting[:issue_release_relation] != 'multiple'
-              snippet += '<div class="splitcontentleft"><p>'
-              snippet += context[:form].select :release_id, release_options_for_select(issue.assignable_releases, issue.release), :include_blank => true
-              snippet += '</p></div>'
-              snippet += '<div class="splitcontentright"><p>'
-              snippet += context[:form].select :release_relationship, RbStory::RELEASE_RELATIONSHIP.collect{|v|
-                [ l("label_release_relationship_#{v}"), v] }
-
-              snippet += '</p></div>'
-            end
-
-              snippet += '<div class="splitcontentleft"><p>'
-              snippet += context[:form].select :rbteam_id, teams_assignable_options_for_select(Group.all, issue.rbteam), :include_blank => true
-              snippet += '</p></div>'
+            snippet += '<div class="splitcontentleft"><p>'
+            snippet += context[:form].select :rbteam_id, teams_assignable_options_for_select(Group.all, issue.rbteam), :include_blank => true
+            snippet += '</p></div>'
           end
 
           if issue.is_story? && !Backlogs.settings["always_allow_time_fields"]
@@ -229,72 +194,13 @@ module BacklogsPlugin
       end
 
       def view_issues_bulk_edit_details_bottom(context={ })
-        return if Backlogs.setting[:issue_release_relation] == 'multiple'
-        issues = context[:issues]
-        projects = issues.collect(&:project).compact.uniq
-        return if projects.size == 0
-        releases = projects.map {|p| p.shared_releases.open}.reduce(:&)
-        return if releases.size == 0
-
-        snippet = ''
-        snippet += "<p>
-          <label for='issue_release_id'>#{ l(:field_release)}</label>
-          #{ select_tag('issue[release_id]', content_tag('option', l(:label_no_change_option), :value => '') +
-                                   content_tag('option', l(:label_none), :value => 'none') +
-                                   release_options_for_select(releases)) }
-          </p>"
-        snippet += "<p>
-          <label for='issue_release_relationship'>#{ l(:field_release_relationship)}</label>"
-        snippet += select_tag 'issue[release_relationship]',
-                     options_for_select([[l(:label_no_change_option),'']] +
-                       RbStory::RELEASE_RELATIONSHIP.collect{|v|
-                        [l("label_release_relationship_#{v}"), v] } )
-        snippet += "</p>"
       end
 
       def view_issues_context_menu_end(context={ })
-        return if Backlogs.setting[:issue_release_relation] == 'multiple'
-        begin
-          issues = context[:issues]
-          issue = nil
-          issue = issues.first if issues.size == 1
-          projects = issues.collect(&:project).compact.uniq
-          return if projects.size == 0
-          releases = projects.map {|p| p.shared_releases.open}.reduce(:&)
-          return if releases.size == 0
-          snippet='
-            <li class="folder">
-              <a href="#" class="submenu">'+ l(:field_release) + '</a>
-              <ul>'
-          releases.each do |s|
-              snippet += '<li>' +
-                context_menu_link(s.name,
-                                  url_for_prefix_in_hooks + bulk_update_issues_path(:ids => issues, :issue => {:release_id => s}, :back_url => context[:back]),
-                                  :method => :post,
-                                  :selected => (issue && s == issue.release),
-                                  :disabled => !context[:can][:edit])+
-              '</li>'
-          end
-          snippet += '<li>' +
-                context_menu_link(l(:label_none),
-                                  url_for_prefix_in_hooks + bulk_update_issues_path(:ids => issues, :issue => {:release_id => 'none'}, :back_url => context[:back]),
-                                  :method => :post,
-                                  :selected => (issue && issue.release.nil?),
-                                  :disabled => !context[:can][:edit])+
-            '</li>'
-          snippet += '
-              </ul>
-            </li>'
-        rescue => e
-          Rails.logger.error("Exception in Backlogs view_issues_context_menu_end #{e}")#exception(context, e)
-          return ''
-        end
       end
       
       def view_issues_show_description_bottom(context)
         issue, controller = context[:issue], context[:controller]
-
-        return if Backlogs.setting[:issue_release_relation] != 'multiple'
 
         context[:issue_release] = RbIssueRelease.new
         controller.IssueReleases(issue.issue_releases)

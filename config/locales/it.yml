@@ -98,7 +98,6 @@ it:
   field_release_ids: Releases
   field_release_end_date: "Data fine Release"
   field_release_relationship: "Relazione Release"
-  field_release_start_date: "Data inizio Release"
   field_remaining_hours: "Ore rimanenti"
   field_story_points: "Punti storia"
   field_subject: Oggetto
@@ -160,7 +159,6 @@ it:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continuata
   label_release_relationship_initial: Iniziale
-  label_release_start_date: "Data inizio release"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Statistiche scrum"

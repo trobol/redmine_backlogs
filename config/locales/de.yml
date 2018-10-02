@@ -101,9 +101,8 @@ de:
   field_project_id: "Projekt Id"
   field_rbteam: "Team"
   field_release: Release
-  field_release_end_date: "Release Enddatum"
+  field_release_end_date: "Release Datum"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Release Startdatum"
   field_remaining_hours: "Restaufwand (Stunden)"
   field_story_points: "Storypunkte"
   field_subject: Thema
@@ -155,7 +154,7 @@ de:
   label_product_backlog: "Produkt Backlog"
   label_product_cards: "Produkt Backlog Karten"
   label_release: Release
-  label_release_end_date: "Release Abgabedatum"
+  label_release_end_date: "Release Datum"
   label_release_new: "Neues Release"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release-Planung"
@@ -164,7 +163,6 @@ de:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "Release Anfangsdatum"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum Statistiken"

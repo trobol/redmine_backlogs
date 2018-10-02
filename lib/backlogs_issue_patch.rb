@@ -9,7 +9,6 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
         belongs_to :rbteam, :class_name => 'User', :foreign_key => 'rbteam_id'
 
         acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
@@ -22,7 +21,6 @@ module Backlogs
 
         validates_inclusion_of :release_relationship, :in => RbStory::RELEASE_RELATIONSHIP
 
-        safe_attributes 'release_id','release_relationship' #FIXME merge conflict. is this required?
         safe_attributes 'rbteam_id'
 
         after_create :copy_custom_fields
@@ -40,10 +38,6 @@ module Backlogs
     module InstanceMethods
       def history
         @history ||= RbIssueHistory.where(:issue_id => self.id).first_or_initialize
-      end
-
-      def release_burnchart_day_caches(release_id)
-        RbReleaseBurnchartDayCache.where(:issue_id => self.id, :release_id => release_id)
       end
 
       def is_epic?
@@ -213,8 +207,7 @@ module Backlogs
         # stories (and their tasks) follow feature release
         if Backlogs.setting[:scaled_agile_enabled] && self.is_feature?
             self.class.connection.execute("update issues set
-                               updated_on = #{self.class.connection.quote(self.updated_on)},
-                               release_id = #{self.class.connection.quote(self.release_id)}
+                               updated_on = #{self.class.connection.quote(self.updated_on)}
                                where root_id=#{self.class.connection.quote(self.root_id)} and
                                   lft > #{self.class.connection.quote(self.lft)} and
                                   rgt < #{self.class.connection.quote(self.rgt)} and
@@ -269,11 +262,6 @@ module Backlogs
 
       def assignable_releases
         project.shared_releases
-      end
-
-      def release_id=(rid)
-        self.release = nil
-        write_attribute(:release_id, rid)
       end
 
       def rbteam

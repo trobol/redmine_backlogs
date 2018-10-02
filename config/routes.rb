@@ -29,8 +29,6 @@ def rb_common_routes(rb)
                :to => 'rb_releases#index', :via => [:get], :as => :releases_path
   rb_match rb, 'release/:project_id/new', :to => 'rb_releases#new', :via => [:get]
   rb_match rb, 'release/:project_id/new', :to => 'rb_releases#create', :via => [:post]
-  rb_match rb, 'release/:release_id/shapshot',
-               :to => 'rb_releases#snapshot', :via => [:get]
 
   rb_match rb, 'releases_multiview/:project_id/new',
                :to => 'rb_releases_multiview#new', :via => [:get, :post]

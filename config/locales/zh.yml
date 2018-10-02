@@ -97,7 +97,6 @@ zh:
   field_release: Release
   field_release_end_date: "Release end date"
   field_release_relationship: "Release relationship"
-  field_release_start_date: "Release start date"
   field_remaining_hours: "Remaining (hours)"
   field_story_points: "故事点数"
   field_subject: '[[Subject]]'
@@ -157,7 +156,6 @@ zh:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continued
   label_release_relationship_initial: Initial
-  label_release_start_date: "Release start date"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Reset
   label_scrum_statistics: "Scrum 统计"

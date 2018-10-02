@@ -123,12 +123,8 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   end
 
   def release_or_empty(story)
-    if Backlogs.setting[:issue_release_relation] != 'multiple'
-      story.release_id.nil? ? "" : RbRelease.find(story.release_id).name
-    else
-      issue_releases = story.issue_releases
-      issue_releases.present? ? (RbRelease.where(id:issue_releases.map(&:release_id))).pluck(:name).join(', ') : ""
-    end
+    issue_releases = story.issue_releases
+    issue_releases.present? ? (RbRelease.where(id:issue_releases.map(&:release_id))).pluck(:name).join(', ') : ""
   end
 
   def sprint_or_empty(story)

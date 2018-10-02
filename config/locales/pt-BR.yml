@@ -99,7 +99,6 @@ pt-BR:
   field_release: Release
   field_release_end_date: "Data final do release"
   field_release_relationship: "Relacionamento do release"
-  field_release_start_date: "Data inicial do release"
   field_remaining_hours: "Restando (horas)"
   field_story_points: "Pontos de história"
   field_subject: Assunto
@@ -159,7 +158,6 @@ pt-BR:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Continuado
   label_release_relationship_initial: Inicial
-  label_release_start_date: "Data inicial do Release"
   label_release_trend_end_date: "Trend estimated end date"
   label_reset: Resetar
   label_scrum_statistics: "Estatísticas do scrum"

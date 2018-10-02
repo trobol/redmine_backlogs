@@ -4,26 +4,16 @@ class RbMasterBacklogsController < RbApplicationController
   unloadable
 
   def show
-    product_backlog_stories = RbStory.product_backlog(@project, @settings[:use_one_product_backlog])
+    product_backlog_stories = RbStory.product_backlog(@project)
     @product_backlog = { :sprint => nil, :stories => product_backlog_stories }
 
     #collect all sprints which are sharing into @project
     sprints = @project.open_shared_sprints
     @sprint_backlogs = RbStory.backlogs_by_sprint(@project, sprints)
 
-	  if @settings[:use_one_product_backlog]
-      @last_update = [product_backlog_stories,
-        @sprint_backlogs.map{|s| s[:stories]},
-        ].flatten.compact.map{|s| s.updated_on}.sort.last
-	  else
-      releases = @project.open_releases_by_date
-      @release_backlogs = RbStory.backlogs_by_release(@project, releases)
-
-      @last_update = [product_backlog_stories,
-        @sprint_backlogs.map{|s| s[:stories]},
-        @release_backlogs.map{|r| r[:releases]}
-        ].flatten.compact.map{|s| s.updated_on}.sort.last
-    end
+    @last_update = [product_backlog_stories,
+      @sprint_backlogs.map{|s| s[:stories]},
+      ].flatten.compact.map{|s| s.updated_on}.sort.last
 
     respond_to do |format|
       format.html { render :layout => "rb"}
@@ -104,9 +94,6 @@ class RbMasterBacklogsController < RbApplicationController
     links << {:label => l(:label_sprint),
               :url => url_for(:controller => 'rb_sprints_roadmap', :action => 'show', :sprint_id => @sprint, :target => '_blank', :only_path => true)
              } if @sprint
-    links << {:label => l(:label_release),
-              :url => url_for(:controller => 'rb_releases', :action => 'show', :release_id => @release, :target => '_blank', :only_path => true)
-             } if @release
     links << {:label => l(:label_sprint_close),
               :url => url_for(:controller => 'rb_sprints', :action => 'close', :sprint_id => @sprint, :only_path => true)
               } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)

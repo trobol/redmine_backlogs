@@ -23,9 +23,6 @@ object_to_prepare.to_prepare do
     Issue.safe_attributes "story_points", "position", "remaining_hours"
   end
 
-  if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-    require_dependency 'backlogs_time_report_patch'
-  end
   require_dependency 'backlogs_issue_query_patch'
   require_dependency 'backlogs_issue_patch'
   require_dependency 'backlogs_issue_status_patch'
@@ -78,13 +75,13 @@ Redmine::Plugin.register :redmine_backlogs do
                          :scrum_stats_menu_position    => 'top',
                          :show_redmine_std_header      => 'enabled',
                          :show_priority                => nil,
-                         :use_one_product_backlog      => nil,
+                         :use_one_product_backlog      => nil,            # obsolete / not used anymore
                          :always_allow_time_fields     => nil,
                          :show_sprint_as_roadmap       => 'enabled',
                          :hide_roadmap                 => nil,
                          :use_remaining_hours          => 'enabled',
                          :estimated_hours_per_point    => 0.0,
-                         :issue_release_relation       => 'single',
+                         :issue_release_relation       => 'single',       # obsolete / not used anymore
                          :show_estimated_hours         => 'enabled',
                          :show_velocity_based_estimate => 'enabled',
                          :default_generation_format_id => 1,              # release note settings

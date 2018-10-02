@@ -57,7 +57,7 @@ class RbGenericboard < ActiveRecord::Base
     #order = 'ASC'
     (Backlogs.setting[:sharing_enabled] ? project.shared_releases : project.releases).
       visible.open.
-      reorder("#{RbRelease.table_name}.release_end_date ASC, #{RbRelease.table_name}.release_start_date ASC")
+      reorder("#{RbRelease.table_name}.release_end_date ASC")
   end
 
 
@@ -68,7 +68,7 @@ class RbGenericboard < ActiveRecord::Base
     #FIXME
     r = pf['__current_or_no_release'] || pf['__current_release']
     if !r.is_a?(Integer) && r
-      condition = ["#{RbSprint.table_name}.sprint_start_date >= ? and #{RbSprint.table_name}.effective_date <= ? ", r.release_start_date, r.release_end_date]
+      condition = ["#{RbSprint.table_name}.effective_date <= ? ", r.release_end_date]
       Backlogs::ActiveRecord.add_condition(options, condition) if condition
     end
     r = pf['__current_or_no_sprint'] || pf['__current_sprint']
@@ -109,30 +109,6 @@ class RbGenericboard < ActiveRecord::Base
     options = {}
     options[:conditions] ||= []
     pf = filter_object_ids(project, filter, filteroptions)
-
-    if pf.include? '__current_release'
-      id = pf['__current_release']
-      if id < 0 # None
-        condition = ["#{RbGeneric.table_name}.release_id is null "]
-      elsif id > 0
-        condition = ["#{RbGeneric.table_name}.release_id = ? ", id]
-      else
-        condition = nil
-      end
-      Backlogs::ActiveRecord.add_condition(options, condition) if condition
-    end
-
-    if pf.include? '__current_or_no_release'
-      id = pf['__current_release']
-      if id < 0 # None
-        condition = ["#{RbGeneric.table_name}.release_id is null "]
-      elsif id > 0
-        condition = ["(#{RbGeneric.table_name}.release_id is null or #{RbGeneric.table_name}.release_id = ?) ", id]
-      else
-        condition = nil
-      end
-      Backlogs::ActiveRecord.add_condition(options, condition) if condition
-    end
 
     if pf.include? '__current_sprint'
       id = pf['__current_sprint']

@@ -102,9 +102,8 @@ nl:
   field_rbteam: "Team"
   field_release: Release
   field_release_ids: Releases
-  field_release_end_date: "Eind datum van de release"
+  field_release_end_date: "Release datum"
   field_release_relationship: "Release relatie"
-  field_release_start_date: "Start datum release"
   field_remaining_hours: "Resterend (uren)"
   field_sprint: "Sprint"
   field_story_points: "Story points"
@@ -164,7 +163,7 @@ nl:
   label_product_backlog: "product backlog"
   label_product_cards: "Product backlog kaarten"
   label_release: Release
-  label_release_end_date: "Einddatum release"
+  label_release_end_date: "Release datum"
   label_release_multiview: "Release multiview"
   label_release_multiview_new: "Nieuwe multiview release"
   label_release_new: "Nieuwe release"
@@ -175,7 +174,6 @@ nl:
   label_release_relationship_auto: Auto
   label_release_relationship_continued: Vervolgd
   label_release_relationship_initial: Initieel
-  label_release_start_date: "Start datum release"
   label_release_trend_end_date: "Trend verwachtte einddatum"
   label_reset: Reset
   label_scrum_statistics: "Scrum statistieken"

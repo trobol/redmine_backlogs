@@ -35,18 +35,6 @@ module Backlogs
     module InstanceMethods
       def joins_for_order_statement_with_backlogs_issue_type(order_options)
         joins = joins_for_order_statement_without_backlogs_issue_type(order_options)
-        return joins if Backlogs.setting[:issue_release_relation] == 'multiple'
-        if order_options
-          if order_options.include?("#{RbRelease.table_name}")
-            joins = "" if joins.nil?
-            if check_redmine_version_ge(2, 3)
-              joins += " LEFT OUTER JOIN #{RbRelease.table_name} ON #{RbRelease.table_name}.id = #{queried_table_name}.release_id"
-            else
-              joins += " LEFT OUTER JOIN #{RbIssueRelease.table_name} ON #{RbIssueRelease.table_name}.id = #{Issue.table_name}.release_id"
-            end
-          end
-        end
-
         joins
       end
 
@@ -69,20 +57,11 @@ module Backlogs
             }
         end
 
-        if project && Backlogs.setting[:issue_release_relation] != 'multiple'
-          backlogs_filters["release_id"] = {
-            :type => :list_optional,
-            :name => l(:field_release),
-            :values => RbRelease.where(project_id: project).order('name ASC').collect { |d| [d.name, d.id.to_s]},
-            :order => 23
-          }
-        else
-          backlogs_filters["releases"] = { :type => :list_optional,
-                            :name => l(:field_releases),
-                            :values => lambda { project.releases.collect{|s| [s.name, s.id.to_s] } },
-                            :order => 23
-                          }
-        end
+        backlogs_filters["releases"] = { :type => :list_optional,
+                          :name => l(:field_releases),
+                          :values => lambda { project.releases.collect{|s| [s.name, s.id.to_s] } },
+                          :order => 23
+                        }
 
         if check_redmine_version_ge(3, 4)
           backlogs_filters.each do |field, filter|
@@ -106,7 +85,6 @@ module Backlogs
         @available_columns << QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position")
         @available_columns << QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours")
         @available_columns << QueryColumn.new(:releases, :sortable => "#{RbIssueRelease.table_name}.release_id")
-        @available_columns << QueryColumn.new(:release, :sortable => "#{RbRelease.table_name}.name", :groupable => true) if Backlogs.setting[:issue_release_relation] != 'multiple'
         @available_columns << QueryColumn.new(:backlogs_issue_type)
       end
 

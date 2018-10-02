@@ -98,7 +98,6 @@ ja:
   field_release_ids: リリース
   field_release_end_date: "リリース終了日"
   field_release_relationship: "リリース関係"
-  field_release_start_date: "リリース開始日"
   field_remaining_hours: "残り時間"
   field_story_points: "ストーリーポイント"
   field_subject: 題名
@@ -160,7 +159,6 @@ ja:
   label_release_relationship_auto: 自動
   label_release_relationship_continued: 継続
   label_release_relationship_initial: 初期
-  label_release_start_date: "リリース開始日"
   label_release_trend_end_date: "傾向から推定したリリース日"
   label_reset: リセット
   label_scrum_statistics: "スクラム統計"

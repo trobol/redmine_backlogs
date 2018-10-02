@@ -40,19 +40,10 @@ class RbStory < RbGeneric
     end
   end
 
-  def self.__find_options_release_condition(project_id, release_ids)
-    ["
-      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and fixed_version_id is NULL
-      and release_id in (?)", self.trackers, release_ids]
-  end
-
   def self.__find_options_pbl_condition(project_id)
     ["
       issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
       and tracker_id in (?)
-      and release_id is NULL
       and fixed_version_id is NULL
       and is_closed = ?", self.trackers, false]
   end
@@ -79,41 +70,36 @@ class RbStory < RbGeneric
     }
   end
 
-  def self.backlog(project_id, sprint_id, release_id, options={})
+  def self.backlog(project_id, sprint_id, options={})
     options = options.merge({
       :project => project_id,
       :sprint => sprint_id,
     })
-    if Backlogs.setting[:issue_release_relation] == 'multiple' && release_id
-      options = options.merge({
-        :include_releases => true
-      })
-      puts "The options: #{options}."
-      self.visible.
-        joins("INNER JOIN rb_issue_releases ON rb_issue_releases.issue_id = issues.id AND rb_issue_releases.release_id = #{release_id}").
-        order("#{self.table_name}.position").
-        backlog_scope(options)
-    else
-      options = options.merge({
-        :release => release_id
-      })
-  
-      self.visible.
-        order("#{self.table_name}.position").
-        backlog_scope(options)
-    end
+
+    Rails.logger.info "The options: #{options}."
+    self.visible.
+      order("#{self.table_name}.position").
+      backlog_scope(options)
   end
 
-  def self.product_backlog(project, include_releases=false, limit=nil)
-    return RbStory.backlog(project.id, nil, nil, {:limit => limit, :include_releases => include_releases })
+  def self.product_backlog(project, limit=nil)
+    return RbStory.backlog(project.id, nil, {:limit => limit })
   end
 
   def self.sprint_backlog(sprint, options={})
-    return RbStory.backlog(sprint.project.id, sprint.id, nil, options)
+    return RbStory.backlog(sprint.project.id, sprint.id, options)
   end
 
   def self.release_backlog(release, options={})
-    return RbStory.backlog(release.project.id, nil, release.id, options)
+    options = options.merge({
+      :project => release.project.id,
+    })
+
+    Rails.logger.info "The options: #{options}."
+    self.visible.
+      joins("INNER JOIN rb_issue_releases ON rb_issue_releases.issue_id = issues.id AND rb_issue_releases.release_id = #{release.id}").
+      order("#{self.table_name}.position").
+      backlog_scope(options)
   end
 
   def self.backlogs_by_sprint(project, sprints, options={})
@@ -121,7 +107,7 @@ class RbStory < RbGeneric
     return [] unless sprints
     sprints.map do |s|
       { :sprint => s,
-        :stories => RbStory.backlog(project.id, s.id, nil, options)
+        :stories => RbStory.backlog(project.id, s.id, options)
       }
     end
   end
@@ -131,10 +117,11 @@ class RbStory < RbGeneric
     return [] unless releases
     releases.map do |r|
       { :release => r,
-        :stories => RbStory.backlog(project.id, nil, r.id, options)
+        :stories => RbStory.release_backlog(r, options)
       }
     end
   end
+
 
   def self.create_and_position(params)
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
@@ -221,8 +208,6 @@ class RbStory < RbGeneric
     params['prev'] = params.delete('prev_id') if params.include?('prev_id')
     params['next'] = params.delete('next_id') if params.include?('next_id')
 
-    params.delete('release_id') if Backlogs.settings[:use_one_product_backlog]
-
     self.position!(params)
 
     # lft and rgt fields are handled by acts_as_nested_set
@@ -253,98 +238,6 @@ class RbStory < RbGeneric
         self.move_before(RbStory.find(params['next']))
       end
     end
-  end
-
-
-  def update_release_burnchart_data(days,release_burndown_id)
-    #Idea: is it feasible to only recalculate missing days?
-    calculate_release_burndown_data(days,release_burndown_id)
-  end
-
-  def save_release_burnchart_data(series,release_burndown_id)
-    RbReleaseBurnchartDayCache.delete_all(
-      ["issue_id = ? AND release_id = ? AND day IN (?)",
-       self.id,
-       release_burndown_id,
-       series.series(:day)])
-
-    series.each{|s|
-      RbReleaseBurnchartDayCache.create(:issue_id => self.id,
-        :release_id => release_burndown_id,
-        :day => s.day,
-        :total_points => s.total_points.nil? ? 0 : s.total_points,
-        :added_points => s.added_points.nil? ? 0 : s.added_points,
-        :closed_points => s.closed_points.nil? ? 0 : s.closed_points)
-    }
-  end
-
-  #private
-  # Calculates total, added and closed points for each day of interest
-  # in a release. The result is stored as RbReleaseBurnchartDayCache-objects
-  # per day. Stored data include:
-  #  :total_points is all points in release including closed+added at given day
-  #  :added_points is points from stories added after release start
-  #  :closed_points is accumulated number of closed points
-  # @param days of interest in the release
-  # @param release_burndown_id release_id of burnchart under calculation
-  def calculate_release_burndown_data(days, release_burndown_id)
-    baseline = [0] * days.size
-
-    series = Backlogs::MergedArray.new
-    series.merge(:total_points => baseline.dup)
-    series.merge(:closed_points => baseline.dup)
-    series.merge(:added_points => baseline.dup)
-
-    # Collect data
-    bd = {:points => [], :open => [], :accepted => [], :in_release => [], :rejected => [] }
-    self.history.filter_release(days).each{|d|
-      if d.nil? || d[:tracker] != :story
-        [:points, :open, :accepted, :in_release, :rejected].each{|k| bd[k] << nil }
-      else
-        bd[:points] << d[:story_points]
-        bd[:open] << d[:status_open]
-        bd[:accepted] << d[:status_success]
-        bd[:in_release] << (d[:release] == release_burndown_id)
-        bd[:rejected] << (d[:status_open] == false && d[:status_success] == false)
-      end
-    }
-
-    series.merge(:accepted => bd[:accepted])
-    series.merge(:points => bd[:points])
-    series.merge(:open => bd[:open])
-    series.merge(:in_release => bd[:in_release])
-    series.merge(:rejected => bd[:rejected])
-    series.merge(:day => days)
-
-    in_release_first = (bd[:in_release][0] == true)
-    index_first = bd[:points].find_index{|i| i}
-    story_points_first = index_first ? bd[:points][index_first] : 0
-
-    # Extract total, closed and added points during release
-    series.each{|p|
-      if release_relationship == 'auto'
-        p.total_points = calc_total_auto(p,days,in_release_first)
-        p.closed_points = calc_closed_auto(p,days,in_release_first)
-        p.added_points = calc_added_auto(p,days,in_release_first)
-      else
-        p.total_points = calc_total_manual(p,days,release_burndown_id)
-        p.closed_points = calc_closed_manual(p,days,release_burndown_id)
-        p.added_points = calc_added_manual(p,days,release_burndown_id)
-      end
-    }
-
-    rl = {}
-    rl[:total_points] = series.series(:total_points)
-    rl[:added_points] = series.series(:added_points)
-    rl[:closed_points] = series.series(:closed_points)
-
-    self.save_release_burnchart_data(series,release_burndown_id)
-  end
-
-  #optimization for RbRelease.stories_all_time to eager load all the required stuff
-  def self.release_burndown_includes
-    #return a scope for release burndown chart rendering
-    includes(:relations_from, :relations_to)
   end
 
   # Definition of a continued story:
@@ -433,50 +326,6 @@ class RbStory < RbGeneric
       end
     end
     descendants
-  end
-
-private
-
-  def calc_total_auto(p,days,in_release_first)
-    return p.points if (p.in_release == true) && (p.rejected == false) &&
-      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
-    # last part above (continued... || continu....) takes care of an edge case because
-    # RbIssueHistory adds an entry for all issues the day before created_on.
-    # Without this the continued story's points might show up a sprint too early.
-    0
-  end
-
-  def calc_total_manual(p,days,release_burndown_id)
-    return p.points if p.rejected == false &&
-      (release_id == release_burndown_id || p.in_release) &&
-      ( continued_story? == false || continued_story? == true && created_on.to_date <= p.day)
-    # See description for calc_total_auto
-    0
-  end
-
-  def calc_closed_auto(p,days,in_release_first)
-    return p.points if p.in_release == true && p.accepted == true
-    0
-  end
-
-  def calc_closed_manual(p,days,release_burndown_id)
-    return p.points if p.accepted == true && release_id == release_burndown_id
-    0
-  end
-
-  def calc_added_auto(p,day,in_release_first)
-    return p.points if p.in_release == true &&
-                       p.open == true &&
-                       continued_story? == false &&
-                       in_release_first == false
-    0
-  end
-
-  def calc_added_manual(p,days,release_burndown_id)
-    return p.points if release_id == release_burndown_id &&
-                       release_relationship == 'added' &&
-                       p.open == true
-    0
   end
 
 end

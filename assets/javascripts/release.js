@@ -16,11 +16,6 @@ RB.Release = RB.Object.create(RB.Sprint, {
     name.width(Math.max(300, parseInt(name.attr('_rb_width'), 10)));
     var d = new Date();
     var now, start, end;
-    start = editor.find('.release_start_date.editor');
-    if (start.val()=='no start') {
-      now = RB.$.datepicker.formatDate('yy-mm-dd', new Date());
-      start.val(now);
-    }
     end = editor.find('.end_date.editor');
     if (end.val()=='no end') {
       now = new Date();

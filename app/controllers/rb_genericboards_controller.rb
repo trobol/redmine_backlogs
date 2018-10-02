@@ -59,7 +59,6 @@ class RbGenericboardsController < RbApplicationController
         if parent.is_a? RbGeneric
           params[:parent_issue_id] = parent.id
           params[:rbteam_id] = parent.rbteam_id unless parent.rbteam_id.blank?
-          params[:release_id] = parent.release_id unless parent.release_id.blank?
           params[:fixed_version_id] = parent.fixed_version_id unless parent.fixed_version_id.blank?
         end
       end
@@ -68,7 +67,6 @@ class RbGenericboardsController < RbApplicationController
         if parent.is_a? RbGeneric
           params[:parent_issue_id] = parent.id
           params[:rbteam_id] = parent.rbteam_id unless parent.rbteam_id.blank?
-          params[:release_id] = parent.release_id unless parent.release_id.blank?
           params[:fixed_version_id] = parent.fixed_version_id unless parent.fixed_version_id.blank?
         end
       end
@@ -78,8 +76,6 @@ class RbGenericboardsController < RbApplicationController
         begin
           Rails.logger.info("determining param from prefilter #{k} #{v}")
           case k
-          when '__current_release', '__current_or_no_release'
-            params[:release_id] = v.id unless (v.blank? && params.include?(:release_id))
           when '__current_sprint', '__current_or_no_sprint'
             Rails.logger.info("determining sprint from filter #{k} #{v} #{params}")
             params[:fixed_version_id] = v.id unless (v.blank? && params.include?(:fixed_version_id))
@@ -107,12 +103,6 @@ class RbGenericboardsController < RbApplicationController
         params[:fixed_version_id] = col_id
       end
 
-      if row_type == '__release'
-        params[:release_id] = row_id
-      elsif col_type == '__release'
-        params[:release_id] = col_id
-      end
-
       if row_type == '__team'
         params[:rbteam_id] = row_id
       elsif col_type == '__team'
@@ -130,7 +120,6 @@ class RbGenericboardsController < RbApplicationController
         if parent.is_a? RbGeneric
           params[:parent_issue_id] = parent.id
           params[:project_id] = parent.project.id
-          #params[:release_id] = parent.release_id unless parent.release_id.blank?
           #params[:fixed_version_id] = parent.fixed_version_id unless parent.fixed_version_id.blank?
         elsif parent.is_a? RbSprint
           params[:fixed_version_id] = parent.id
@@ -151,7 +140,6 @@ class RbGenericboardsController < RbApplicationController
         if parent.is_a? RbGeneric
           params[:parent_issue_id] = parent.id
           params[:project_id] = parent.project.id
-          #params[:release_id] = parent.release_id unless parent.release_id.blank?
           #params[:fixed_version_id] = parent.fixed_version_id unless parent.fixed_version_id.blank?
         elsif parent.is_a? RbSprint
           params[:fixed_version_id] = parent.id

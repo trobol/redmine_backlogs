@@ -78,7 +78,7 @@ class RbReleasesController < RbApplicationController
   private
 
   def release_params
-    params.require(:release).permit(:name, :description, :status, :release_start_date, :release_end_date, :planned_velocity, :sharing)
+    params.require(:release).permit(:name, :description, :status, :release_end_date, :planned_velocity, :sharing)
   end
 
 end

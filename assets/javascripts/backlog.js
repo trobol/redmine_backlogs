@@ -75,10 +75,6 @@ RB.Backlog = RB.Object.create({
       id = this.getSprint().data('this').getID();
       ajaxdata = { sprint_id: id };
     }
-    else if (this.isReleaseBacklog()) {
-      id = this.getRelease().data('this').getID();
-      ajaxdata = { release_id: id };
-    }
     // else id = null // product backlog
     if (id === "") { return; } // template sprint
 
