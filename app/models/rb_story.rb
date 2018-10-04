@@ -154,29 +154,10 @@ class RbStory < RbGeneric
           updated_since(since)
   end
 
+  alias :trackers :story_trackers
+  
   def self.trackers(options = {})
-    # legacy
-    options = {:type => options} if options.is_a?(Symbol)
-
-    # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
-    trackers = []
-    if has_settings_table
-      trackers = Backlogs.setting[tracker_setting]
-      trackers << Backlogs.setting[:default_epic_tracker] unless trackers.blank? || trackers.include?(Backlogs.setting[:default_epic_tracker])
-      trackers
-      trackers = [] if trackers.blank?
-    end
-
-    trackers = Tracker.where(:id => trackers).all
-    trackers = trackers & options[:project].trackers if options[:project]
-    trackers = trackers.sort_by { |t| [t.position] }
-
-    case options[:type]
-      when :trackers      then return trackers
-        when :array, nil  then return trackers.collect{|t| t.id}
-        when :string      then return trackers.collect{|t| t.id.to_s}.join(',')
-        else                   raise "Unexpected return type #{options[:type].inspect}"
-    end
+    self.story_trackers(options)
   end
 
   def self.trackers_include?(tracker_id)

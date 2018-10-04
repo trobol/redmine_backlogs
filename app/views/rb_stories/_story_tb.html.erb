@@ -1,4 +1,4 @@
-<div class="model story <%= mark_scrum_status(story) %>" <%= build_inline_style(story).html_safe %> id="<%= story_html_id_or_empty(story) %>" _view="taskboard">
+<div class="model <%= story.backlogs_issue_type %> <%= mark_scrum_status(story) %>" <%= build_inline_style(story).html_safe %> id="<%= story_html_id_or_empty(story) %>" _view="taskboard">
   <%- show_category = User.current.backlogs_preference[:show_category] == '1' %>
   <div class="id story_tooltip_ajax">
     <div class="tooltip_text"></div>

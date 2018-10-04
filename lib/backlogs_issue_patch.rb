@@ -28,8 +28,6 @@ module Backlogs
 
         include Backlogs::ActiveRecord::Attributes
 
-        alias_method_chain :disabled_core_fields, :backlogs
-        alias_method_chain :clear_disabled_fields, :backlogs
       end
     end
 
@@ -37,22 +35,6 @@ module Backlogs
     end
 
     module InstanceMethods
-
-      def disabled_core_fields_with_backlogs
-        disabled_fields = disabled_core_fields_without_backlogs
-        disabled_fields -= %w(fixed_version_id) if (tracker && tracker.id == 14)
-        disabled_fields
-      end
-
-      def clear_disabled_fields_with_backlogs
-        if tracker
-          tracker.disabled_core_fields.each do |attribute|
-            send "#{attribute}=", nil unless (tracker.id == 14 && attribute == "fixed_version_id")
-          end
-          self.done_ratio ||= 0
-        end
-      end
-
       def history
         @history ||= RbIssueHistory.where(:issue_id => self.id).first_or_initialize
       end
@@ -70,7 +52,7 @@ module Backlogs
       end
 
       def is_rbgeneric?
-        [].concat(RbGeneric.feature_trackers).concat(RbEpic.trackers).concat(RbGeneric.trackers).include?(tracker_id)
+        RbGeneric.generic_trackers.include?(tracker_id)
       end
 
       def is_task?
@@ -78,6 +60,7 @@ module Backlogs
       end
 
       def backlogs_issue_type
+        return "epic" if self.is_epic?
         return "story" if self.is_story?
         return "impediment" if self.blocks(true).any?
         return "task" if self.is_task?
