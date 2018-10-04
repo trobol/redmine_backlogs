@@ -20,13 +20,6 @@ class RbEpicboardsController < RbApplicationController
       s[:type] = 'sprint'
     end
 
-    releases = @project.open_releases_by_date
-    @release_backlogs = cls.backlogs_by_release(@project, releases)
-    @release_backlogs.each do |r|
-      r[:type] = 'release'
-      r[:sprint] = r.delete(:release)
-    end
-
     #This project and subprojects
     @epics = RbEpic.where(:project_id => @project).select { |s| RbEpic.trackers.include?(s.tracker_id) }
 

@@ -19,8 +19,6 @@ module Backlogs
         belongs_to :rb_issue_release
         has_many :releases, :class_name => 'RbRelease', :through => :rb_issue_release
 
-        validates_inclusion_of :release_relationship, :in => RbStory::RELEASE_RELATIONSHIP
-
         safe_attributes 'rbteam_id'
 
         after_create :copy_custom_fields
@@ -182,16 +180,8 @@ module Backlogs
         return true
       end
 
-      def invalidate_release_burnchart_data
-        RbReleaseBurnchartDayCache.delete_all(["issue_id = ? AND day >= ?",self.id,Date.today])
-        #FIXME Missing cleanup of older cache entries which is no longer
-        # valid for any releases. Delete cache entries not related to
-        # current release?
-      end
-
       def backlogs_after_save
         self.history.save!
-        self.invalidate_release_burnchart_data
 
         [self.parent_id, self.parent_id_was].compact.uniq.each{|pid|
           p = Issue.find(pid)
