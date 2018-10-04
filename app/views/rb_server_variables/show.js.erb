@@ -76,8 +76,6 @@ if (!RB.constants) {
       update_stories: <%= User.current.allowed_to?(:update_stories, @project) ? 'true' : 'false' %>,
       create_sprints: <%= User.current.allowed_to?(:create_sprints, @project) ? 'true' : 'false' %>,
       update_sprints: <%= User.current.allowed_to?(:update_sprints, @project) ? 'true' : 'false' %>,
-      create_releases: <%= User.current.allowed_to?(:modify_releases, @project) ? 'true' : 'false' %>,
-      update_releases: <%= User.current.allowed_to?(:modify_releases, @project) ? 'true' : 'false' %>,
       create_tasks: <%= User.current.allowed_to?(:create_tasks, @project) ? 'true' : 'false' %>,
       update_tasks: <%= User.current.allowed_to?(:update_tasks, @project) ? 'true' : 'false' %>,
       create_impediments: <%= User.current.allowed_to?(:create_impediments, @project) ? 'true' : 'false' %>,
@@ -110,23 +108,11 @@ RB.constants.task_states = <%= workflow_transitions(RbTask).to_json.html_safe %>
       ]
     }]
 
-=begin
- a release can contain stories of all projects which it is visible
- but droppables are only self_and_descendants of the current view to avoid user confusion by vanishing stories
-=end
-    project_releases = Hash[@project.droppable_releases.map{|v|
-      [
-        v["project"],
-        v["list"].split(',').collect{|r| r.to_s}
-      ]
-    }]
-
 #project_self_and_descendants is used by the js ui to determine if a dragged story can be dropped onto the product backlog.
     projects_in_product_backlog = Hash[@project.projects_in_shared_product_backlog.map{|p| [p.id.to_s, true]}]
   %>
   RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
-  RB.constants.project_releases = <%= project_releases.to_json.html_safe %>;
   RB.constants.story_states = <%= workflow_transitions(RbStory).to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
   RB.routes.closed_sprints = <%= url_for(:controller => 'rb_master_backlogs', :action => 'closed_sprints', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
@@ -158,23 +144,11 @@ RB.constants.task_states = <%= workflow_transitions(RbTask).to_json.html_safe %>
       ]
     }]
 
-=begin
- a release can contain stories of all projects which it is visible
- but droppables are only self_and_descendants of the current view to avoid user confusion by vanishing stories
-=end
-    project_releases = Hash[@project.droppable_releases.map{|v|
-      [
-        v["project"],
-        v["list"].split(',').collect{|r| r.to_s}
-      ]
-    }]
-
 #project_self_and_descendants is used by the js ui to determine if a dragged story can be dropped onto the product backlog.
     projects_in_product_backlog = Hash[@project.projects_in_shared_product_backlog.map{|p| [p.id.to_s, true]}]
   %>
   RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
-  RB.constants.project_releases = <%= project_releases.to_json.html_safe %>;
   RB.constants.story_states = <%= workflow_transitions(RbStory).to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
   RB.routes.closed_sprints = <%= url_for(:controller => 'rb_master_backlogs', :action => 'closed_sprints', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;

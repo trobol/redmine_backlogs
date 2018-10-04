@@ -1,8 +1,6 @@
 class RbStory < RbGeneric
   unloadable
 
-  RELEASE_RELATIONSHIP = %w(auto initial continued added)
-
   private
 
   def self.tracker_setting; :story_trackers end
@@ -146,16 +144,13 @@ class RbStory < RbGeneric
         }
 
   def self.find_all_updated_since(since, project_id)
-    #look in backlog, sprint and releases. look in shared sprints and shared releases
+    #look in backlog and sprint. look in shared sprints
     project = Project.select("id,lft,rgt,parent_id,name").find(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
-    releases = project.open_releases_by_date.map{|s|s.id}
     #following will execute 3 queries and join it as array
     self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
           updated_since(since) |
       self.backlog_scope( {:project => project_id, :sprint => sprints, :release => nil } ).
-          updated_since(since) |
-      self.backlog_scope( {:project => project_id, :sprint => nil, :release => releases } ).
           updated_since(since)
   end
 
