@@ -32,7 +32,7 @@
          <%- if show_assigned_to_full %>
            <div class="assigned_to_full start_edit"> - 
            <%- if story_color %>
-           		<span class="assigned_to_color" style="background-color: <%= story_color %>; border-color: <%= story_color %>;">
+           		<span class="assigned_to_color" style="background-color: <%= story_color %>; border-color: <%= story_color %>; color: <%= front_color %>;">
            <%- end %>
 				<%= story.assigned_to%>
            <%- if story_color %>
@@ -43,7 +43,7 @@
          <%- if show_assigned_to_short %>
 			<div class="assigned_to_short start_edit"> - 
 	        <%- if story_color %>
-           		<span class="assigned_to_color" style="background-color: <%= story_color %>; border-color: <%= story_color %>;">
+           		<span class="assigned_to_color" style="background-color: <%= story_color %>; border-color: <%= story_color %>; color: <%= front_color %>;">
            <%- end %>
            <%= story.assigned_to.firstname[0]%>. <%= story.assigned_to.lastname[0]%>.
            <%- if story_color %>
