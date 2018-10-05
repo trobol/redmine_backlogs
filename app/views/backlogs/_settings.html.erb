@@ -264,6 +264,13 @@
     <%= select_tag("settings[copy_custom_fields_from_parent]", options_from_collection_for_select(IssueCustomField.all, :id, :name, Backlogs.setting[:copy_custom_fields_from_parent]), :multiple => true) %>
     <em class="info"><%= l(:backlogs_copy_custom_fields_from_parent_explanation) %></em>
   </p>
+  
+  <p>  
+    <%= label_tag("settings_status_for_validating", l(:backlogs_status_for_validating)) %>
+    <%= select_tag("settings[status_for_validating]", options_from_collection_for_select(IssueStatus.all, :id, :name, Backlogs.setting[:status_for_validating]), :multiple => true) %>
+    <em class="info"><%= l(:backlogs_status_for_validating_explanation) %></em>
+  </p>
+  
 </fieldset>
 
 <fieldset>

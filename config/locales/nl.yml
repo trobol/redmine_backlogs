@@ -167,6 +167,11 @@ nl:
   label_release_multiview: "Release multiview"
   label_release_multiview_new: "Nieuwe multiview release"
   label_release_new: "Nieuwe release"
+  label_release_plan_new: "Release planning"
+  label_stories_to_be_refined_user: "Gebruiker"
+  label_stories_to_be_refined: "Stories om te refinen"
+  field_label_stories_to_be_refined: "Stories om te refinen"
+  label_stories_to_be_refined_link: "Stories om te refinen"
   label_release_planned_velocity_end_date: "Planned velocity estimated end date"
   label_release_planning: "Release Planning"
   label_release_plural: Releases
@@ -286,6 +291,8 @@ nl:
   rb_show_backlog_story_marker_support_explanation: "Wanneer het geselecteerde veld een waarde heeft, wordt deze indicator getoond."
   title_marker_release: "Verbonden aan een release"
   title_marker_support: "Gerelateerd aan een support case"
+  backlogs_status_for_validating: "Status(en) die refinement/validatie representeert"
+  backlogs_status_for_validating_explanation: "Story status die refinement/validatie aangeeft voordat de story de sprint in gaat. Er wordt een lijst van stories gegroepeerd op toegewezen aan gegenereerd wanneer je naar issues toe gaat en in de zijbalk op 'Stories om te refinen' klikt."
 
   ######## release notes #######
   release_notes:

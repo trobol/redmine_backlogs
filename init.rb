@@ -94,8 +94,9 @@ Redmine::Plugin.register :redmine_backlogs do
                          :show_backlog_story_marker_release           => 'enabled',
                          :show_backlog_story_marker_priority          => 'enabled',
                          :show_backlog_story_marker_support_id        => '0',
-                         :support_id_URL_start_match   => 'CAS-',
-                         :copy_custom_fields_from_parent => {}
+                         :support_id_URL_start_match     => 'CAS-',
+                         :copy_custom_fields_from_parent => {},
+                         :status_for_validating          => {}
                        },
            :partial => 'backlogs/settings'
 
