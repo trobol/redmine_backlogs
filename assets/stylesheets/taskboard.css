@@ -103,6 +103,7 @@ See RB.Taskboard.initialize()
   cursor:pointer;
   background-color:#ffffcc;
 }
+
 .story,
 .label_sprint_impediments{
   -moz-box-shadow: 2px 2px 2px #CCCCCC;
@@ -121,7 +122,27 @@ See RB.Taskboard.initialize()
   position:relative;
   width:190px;
 }
-.story .id{
+
+.epic {
+  -moz-box-shadow: 2px 2px 2px #CCCCCC;
+  -webkit-box-shadow: 2px 2px 2px #CCCCCC;;
+  box-shadow: 2px 2px 2px #CCCCCC;;
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFEEEE), to(#FFD9C9));
+  background: -moz-linear-gradient(top, #FFEEEE, #FFD9C9);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#FFEEEE,EndColorStr=#FFD9C9);
+  border:none;
+  display:block;
+  float:left;
+  font-size:10px;
+  min-height:80px;
+  margin:5px;
+  padding:5px;
+  position:relative;
+  width:190px;
+}
+
+.story .id,
+.epic .id{
   -moz-border-radius:4px 4px 4px 4px;
   -webkit-border-radius:4px 4px 4px 4px;
   border-radius:4px 4px 4px 4px;
@@ -133,14 +154,18 @@ See RB.Taskboard.initialize()
   line-height: 14px;
 }
 .story .id a,
-.story .id .remaininghours {
+.story .id .remaininghours,
+.epic .id a,
+.epic .id .remaininghours {
   float:right;
   margin-left: 4px;
 }
-.story .id .assignee{
+.story .id .assignee,
+.epic .id .assignee {
   font-weight: bold;
 }
-.story .subject{
+.story .subject,
+.epic .subject {
   height:68px;
   line-height:13px;
   margin-top:0;
@@ -148,28 +173,35 @@ See RB.Taskboard.initialize()
   padding:2px;
   width:186px;
 }
-.story .project {
+.story .project,
+.epic .project {
   text-align:left;
 }
-.story .id .v {
+.story .id .v,
+.epic .id .v {
   display:none;
 }
-.story.closed .subject{
+.story.closed .subject,
+.epic.closed .subject {
   text-decoration:line-through;
 }
 
-.story.closed .status {
+.story.closed .status,
+.epic.closed .status {
     text-decoration: line-through;
     background-color: darkred;
 }
-.story.todo .status {
+.story.todo .status,
+.epic.todo .status {
 }
 
-.story.inprogress .status {
+.story.inprogress .status,
+.epic.inprogress .status {
     background-color: blue;
 }
 
-.story .story_points_text{
+.story .story_points_text,
+.epic .story_points_text {
   -moz-border-radius:15px 15px 15px 15px;
   -webkit-border-radius:15px 15px 15px 15px;
   border-radius:15px 15px 15px 15px;
@@ -182,7 +214,8 @@ See RB.Taskboard.initialize()
   right:-5px;
 }
 
-.story .status{
+.story .status,
+.epic .status {
   -moz-border-radius:10px 10px 10px 10px;
   -webkit-border-radius:10px 10px 10px 10px;
   border-radius:10px 10px 10px 10px;
@@ -195,7 +228,8 @@ See RB.Taskboard.initialize()
   right:35px;
 }
 
-.story .story_mark{
+.story .story_mark,
+.epic .story_mark {
   -moz-border-radius:10px 10px 10px 10px;
   -webkit-border-radius:10px 10px 10px 10px;
   border-radius:10px 10px 10px 10px;
@@ -205,15 +239,19 @@ See RB.Taskboard.initialize()
   padding:.4em;
   bottom:-5px;
 }
-.story .priority_marker {
+.story .priority_marker,
+.epic .priority_marker {
   color: red;	
 }
 .story .release_marker,
-.story .support_marker {
+.story .support_marker,
+.epic .release_marker,
+.epic .support_marker {
   color: #777777
 }
 
-.story .story_points_text:empty{
+.story .story_points_text:empty,
+.epic .story_points_text:empty {
   display:none;
 }
 

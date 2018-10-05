@@ -27,6 +27,7 @@ module Backlogs
         after_save  :backlogs_after_save
 
         include Backlogs::ActiveRecord::Attributes
+
       end
     end
 
@@ -51,7 +52,7 @@ module Backlogs
       end
 
       def is_rbgeneric?
-        [].concat(RbGeneric.feature_trackers).concat(RbEpic.trackers).concat(RbGeneric.trackers).include?(tracker_id)
+        RbGeneric.generic_trackers.include?(tracker_id)
       end
 
       def is_task?
@@ -59,6 +60,7 @@ module Backlogs
       end
 
       def backlogs_issue_type
+        return "epic" if self.is_epic?
         return "story" if self.is_story?
         return "impediment" if self.blocks(true).any?
         return "task" if self.is_task?

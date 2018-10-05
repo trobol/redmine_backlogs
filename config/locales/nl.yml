@@ -109,6 +109,7 @@ nl:
   field_story_points: "Story points"
   field_subject: Onderwerp
   field_task_color: "Taak kleur"
+  field_task_front_color: "Taak tekst kleur"
   field_team: "Team"
   field_time_entry_comments: "Tijd registratie commentaar"
   field_time_entry_hours: "Tijd registratie uren"

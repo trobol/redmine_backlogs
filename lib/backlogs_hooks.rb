@@ -282,6 +282,10 @@ module BacklogsPlugin
               #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference[:task_color]}
             </p>
             <p>
+              #{label :backlogs, l(:field_task_front_color)}
+              #{text_field :backlogs, :task_front_color, :value => context[:user].backlogs_preference[:task_front_color]}
+            </p>
+            <p>
               #{label :backlogs, l(:field_show_backlog_story_color)}
               #{check_box :backlogs, :show_backlog_story_color, color_hash}
             </p>

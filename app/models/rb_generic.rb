@@ -71,7 +71,7 @@ class RbGeneric < Issue
     self.__find_options_add_permissions(options)
 
     sprint_ids = self.__find_options_normalize_option(options.delete(:sprint))
-    tracker_ids = self.__find_options_normalize_option(options.delete(:trackers) || self.trackers)
+    tracker_ids = self.__find_options_normalize_option(options.delete(:trackers) || [].concat(story_trackers).concat(epic_trackers) )
     Rails.logger.info "SprintId: #{sprint_ids}; TrackerId: #{tracker_ids}; GenScope: #{generic_scope};"
     if generic_scope
       Backlogs::ActiveRecord.add_condition(options, self.__find_options_generic_condition(project_id, tracker_ids))
@@ -102,21 +102,42 @@ class RbGeneric < Issue
     }
   end
 
-  def self.trackers(options = {})
+
+  def trackers(options = {})
     self.get_trackers(:story_trackers, options)
+  end
+
+  def story_trackers(options = {})
+    self.story_trackers(options)
   end
 
   def self.story_trackers(options = {})
     self.get_trackers(:story_trackers, options)
   end
 
+  def epic_trackers(options = {})
+    self.epic_trackers(options)
+  end
+  
+  def self.epic_trackers(options = {})
+    self.get_trackers(:epic_trackers, options)
+  end
+
+  def feature_trackers(options = {})
+    self.feature_trackers(options)
+  end
+  
   def self.feature_trackers(options = {})
     self.get_trackers(:feature_trackers, options)
   end
+  
+  def self.generic_trackers
+    [].concat(feature_trackers).concat(epic_trackers).concat(story_trackers)
+  end
 
   def self.all_trackers(tracker_id)
-    if RbEpic.trackers(:type=>:array).include?(tracker_id)
-      return RbEpic.trackers
+    if self.epic_trackers(:type=>:array).include?(tracker_id)
+      return self.epic_trackers
     elsif self.feature_trackers(:type=>:array).include?(tracker_id)
       return self.feature_trackers
     elsif self.story_trackers(:type=>:array).include?(tracker_id)

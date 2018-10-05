@@ -24,6 +24,12 @@ module Backlogs
           else
             flash[:notice] = "Invalid task color code #{color}"
           end
+          front_color = (params[:backlogs] ? params[:backlogs][:task_front_color] : '').to_s
+          if front_color == '' || color.match(/^#[A-Fa-f0-9]{6}$/)
+            User.current.backlogs_preference[:task_front_color] = front_color
+          else
+            flash[:notice] = "Invalid task front color code #{front_color}"
+          end
           hash = (params[:backlogs] || {})
           User.current.backlogs_preference[:show_backlog_story_color] = hash[:show_backlog_story_color]
           User.current.backlogs_preference[:show_assigned_to_full] = hash[:show_assigned_to_full]

@@ -720,10 +720,58 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#EFF0BF;
 }
 #backlogs_container .stories .tracker7{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FED0D0));
-  background: -moz-linear-gradient(top, #EEE, #FED0D0);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FED0D0);
-  background-color:#FED0D0;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FB8585));
+  background: -moz-linear-gradient(top, #EEE, #FB8585);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FB8585);
+  background-color:#FB8585;
+}
+#backlogs_container .stories .tracker8{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FBFED0));
+  background: -moz-linear-gradient(top, #EEE, #FBFED0);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FBFED0);
+  background-color:#FBFED0;
+}
+#backlogs_container .stories .tracker9{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#D0E9FE));
+  background: -moz-linear-gradient(top, #EEE, #D0E9FE);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#D0E9FE);
+  background-color:#D0E9FE;
+}
+#backlogs_container .stories .tracker10{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#EAFED0));
+  background: -moz-linear-gradient(top, #EEE, #EAFED0);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#EAFED0);
+  background-color:#EAFED0;
+}
+#backlogs_container .stories .tracker11{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#DBD0FE));
+  background: -moz-linear-gradient(top, #EEE, #DBD0FE);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#DBD0FE);
+  background-color:#DBD0FE;
+}
+#backlogs_container .stories .tracker12{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#B2FB85));
+  background: -moz-linear-gradient(top, #EEE, #B2FB85);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#B2FB85);
+  background-color:#B2FB85;
+}
+#backlogs_container .stories .tracker13{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FBFD83));
+  background: -moz-linear-gradient(top, #EEE, #FBFD83);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FBFD83);
+  background-color:#FBFD83;
+}
+#backlogs_container .stories .tracker14{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFD9C9));
+  background: -moz-linear-gradient(top, #EEE, #FFD9C9);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FFD9C9);
+  background-color:#FFD9C9;
+}
+#backlogs_container .stories .tracker15{
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FD91F0));
+  background: -moz-linear-gradient(top, #EEE, #FD91F0);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FD91F0);
+  background-color:#FD91F0;
 }
 #backlogs_container .stories .story_field {
   overflow: hidden;
