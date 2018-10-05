@@ -110,6 +110,7 @@ nl:
   field_subject: Onderwerp
   field_task_color: "Taak kleur"
   field_task_front_color: "Taak tekst kleur"
+  field_task_example_color: "Voorbeeld taak (Vernieuwd na opslaan)"
   field_team: "Team"
   field_time_entry_comments: "Tijd registratie commentaar"
   field_time_entry_hours: "Tijd registratie uren"

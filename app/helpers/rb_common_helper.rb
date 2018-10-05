@@ -33,17 +33,19 @@ module RbCommonHelper
     if (task.blank? || task.assigned_to.blank? || !task.assigned_to.is_a?(User))
       ''
     else
-      color_to = task.assigned_to.backlogs_preference[:task_color]
+      "style='#{build_user_style(task.assigned_to)}'"
+    end
+  end
+  
+  def build_user_style(user)
+      color_to = user.backlogs_preference[:task_color]
       color_from = Backlogs::Color.new(color_to).lighten(0.5)
-      front_color = task.assigned_to.backlogs_preference[:task_front_color]
-      "style='
-background-color:#{task.assigned_to.backlogs_preference[:task_color]};
+      front_color = user.backlogs_preference[:task_front_color]
+      "background-color:#{color_to};
 background: -webkit-gradient(linear, left top, left bottom, from(#{color_from}), to(#{color_to}));
 background: -moz-linear-gradient(top, #{color_from}, #{color_to});
 filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#{color_from},EndColorStr=#{color_to});
-color: #{front_color};
-'"
-    end
+color: #{front_color};"
   end
 
   def breadcrumb_separator

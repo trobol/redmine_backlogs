@@ -117,6 +117,7 @@ en:
   field_subject: Subject
   field_task_color: "Task color"
   field_task_front_color: "Task text color"
+  field_task_example_color: "Example task (Updated after save)"
   field_team: "Team"
   field_time_entry_comments: "Time Entry Comments"
   field_time_entry_hours: "Time Entry Hours"
