@@ -1,4 +1,5 @@
 class RbRefineStoriesController < ApplicationController
+  menu_item :issues
   
   include ProjectsHelper
   include QueriesHelper
@@ -18,7 +19,7 @@ class RbRefineStoriesController < ApplicationController
     end
 
     def get_query
-      query = IssueQuery.new(name: "_", filters: {"status_id"=>{:operator=>"=", :values=>["17"]}}, group_by: "assigned_to")
+      query = IssueQuery.new(name: "refinement", filters: {"status_id"=>{:operator=>"=", :values=>Backlogs.setting[:status_for_validating]}}, group_by: "assigned_to")
       query.project_id = @project.id
       query
     end
