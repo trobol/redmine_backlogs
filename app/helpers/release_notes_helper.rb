@@ -22,18 +22,38 @@ module ReleaseNotesHelper
                  :legend => '%0.0f%' % completion)
   end
 
-  def release_notes_overview_link(text, version, project, release_notes_value = nil)
-    opts = {
-      :f => [:fixed_version_id, :status_id],
-      :op => {
-        :fixed_version_id => '=',
-        :status_id => '*',
-      },
-      :v => {
-        :fixed_version_id => [version.id]
-      },
-      :set_filter => 1
-    }
+  def release_notes_opts(object)
+    opts = nil
+    if object.is_a?(RbRelease)
+      opts = {
+        :f => [:releases, :status_id],
+        :op => {
+          :releases => '=',
+          :status_id => '*',
+        },
+        :v => {
+          :releases => [object.id]
+        },
+        :set_filter => 1
+      }
+    else
+      opts = {
+        :f => [:fixed_version_id, :status_id],
+        :op => {
+          :fixed_version_id => '=',
+          :status_id => '*',
+        },
+        :v => {
+          :fixed_version_id => [object.id]
+        },
+        :set_filter => 1
+      }
+    end
+    opts
+  end
+
+  def release_notes_overview_link(text, object, project, release_notes_value = nil)
+    opts = release_notes_opts(object)
 
     if release_notes_value
       opts = add_release_notes_custom_field_filters(opts, release_notes_value)
