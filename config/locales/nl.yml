@@ -295,6 +295,7 @@ nl:
   title_marker_support: "Gerelateerd aan een support case"
   backlogs_status_for_validating: "Status(en) die refinement/validatie representeert"
   backlogs_status_for_validating_explanation: "Story status die refinement/validatie aangeeft voordat de story de sprint in gaat. Er wordt een lijst van stories gegroepeerd op toegewezen aan gegenereerd wanneer je naar issues toe gaat en in de zijbalk op 'Stories om te refinen' klikt."
+  backlogs_release_date_not_set: "(niet ingesteld)"
 
   ######## release notes #######
   release_notes:

@@ -18,7 +18,7 @@ class RbRelease < ActiveRecord::Base
   attr_accessible :project_id, :name, :release_end_date, :status
   attr_accessible :project, :description, :planned_velocity, :sharing
 
-  validates_presence_of :project_id, :name, :release_end_date
+  validates_presence_of :project_id, :name
   validates_inclusion_of :status, :in => RELEASE_STATUSES
   validates_inclusion_of :sharing, :in => RELEASE_SHARINGS
   validates_length_of :name, :maximum => 64

@@ -317,6 +317,7 @@ en:
   backlogs_copy_custom_fields_from_parent_explanation: "When creating a new task, pre-fill the selected custom fields with the same value as the parent"
   backlogs_status_for_validating: "Statuses for refinement/validation"
   backlogs_status_for_validating_explanation: "Story statuses that represent refinement/validation before approved for sprint start. A list of stories to be refined grouped by assigned to is generated when you go to issues an in the side bar click on 'Stories to be refined'"
+  backlogs_release_date_not_set: "(not set)"
 
   ######## release notes #######
   release_notes:
