@@ -257,11 +257,11 @@ class RbStory < RbGeneric
   end
 
   def story_follow_task_state
-    return if Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'close' && Setting.plugin_redmine_backlogs[:story_follow_task_status] != 'loose'
+    return if Backlogs.setting[:story_follow_task_status] != 'close' && Backlogs.setting[:story_follow_task_status] != 'loose'
     return if self.status.is_closed? #bail out if we are closed
 
     self.reload #we might be stale at this point
-    case Setting.plugin_redmine_backlogs[:story_follow_task_status]
+    case Backlogs.setting[:story_follow_task_status]
       when 'close'
         set_closed_status_if_following_to_close
       when 'loose'
@@ -285,7 +285,7 @@ class RbStory < RbGeneric
   end
 
   def set_closed_status_if_following_to_close
-        status_id = Setting.plugin_redmine_backlogs[:story_close_status_id]
+        status_id = Backlogs.setting[:story_close_status_id]
         unless status_id.nil? || status_id.to_i == 0
           # bail out if something is other than closed.
           tasks.each{|task|

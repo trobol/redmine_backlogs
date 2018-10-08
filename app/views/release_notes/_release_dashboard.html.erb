@@ -1,6 +1,6 @@
 <% stats = @release.release_notes_stats_release %>
-<% cf_none_value =  Setting.plugin_redmine_backlogs[:field_value_not_required] %>
-<% cf_name = CustomField.find_by_id(Setting.plugin_redmine_backlogs["issue_custom_field_id"]).name %>
+<% cf_none_value =  Backlogs.setting[:field_value_not_required] %>
+<% cf_name = CustomField.find_by_id(Backlogs.setting["issue_custom_field_id"]).name %>
 <% issues = @release.issues %>
 
 <fieldset id="release-notes-completion">

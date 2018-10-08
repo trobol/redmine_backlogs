@@ -60,6 +60,8 @@ module ReleaseNotesHelper
     end
     opts = add_non_eligible_tracker_filters(opts) 
 
+    Rails.logger.info "Release notes overview link options: #{opts}"
+
     link_to text, project_issues_path(project, opts)
   end
 
@@ -67,7 +69,7 @@ module ReleaseNotesHelper
   def add_release_notes_custom_field_filters(opts, release_notes_value)
     orig_opts = opts.dup
 
-    settings = Setting.plugin_redmine_backlogs
+    settings = Backlogs.setting
     custom_field_id = settings[:issue_custom_field_id].to_i
     custom_field = CustomField.find(custom_field_id)
 
@@ -92,7 +94,7 @@ Unrecognised value for +release_notes_value+: <#{release_notes_value}>.
 This is a bug. Please report it: https://github.com/hdgarrood/redmine_release_notes
 END
     end
-
+    
     opts
   rescue ActiveRecord::RecordNotFound
     orig_opts
@@ -101,7 +103,7 @@ END
   def add_non_eligible_tracker_filters(opts)
     orig_opts = opts.dup
 
-    settings = Setting.plugin_redmine_backlogs
+    settings = Backlogs.setting
     custom_field_id = settings[:issue_custom_field_id].to_i
     custom_field = CustomField.find(custom_field_id)
 
