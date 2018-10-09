@@ -23,8 +23,7 @@ class RbEpicboardsController < RbApplicationController
     #This project and subprojects
     @epics = RbEpic.where(:project_id => @project).select { |s| RbEpic.trackers.include?(s.tracker_id) }
 
-    @columns = @release_backlogs
-    @columns.concat(@sprint_backlogs)
+    @columns = @sprint_backlogs
     @columns.append(@product_backlog)
 
     respond_to do |format|
