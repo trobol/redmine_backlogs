@@ -42,7 +42,7 @@ module Backlogs
         elsif object.class.name == "User" && params[:controller] == "rb_refine_stories"
           link_to "#{object.to_s}", project_issues_path({"set_filter"=>"1", "sort"=>"id:desc", "f"=>["status_id", "assigned_to_id", ""], "op"=>{"status_id"=>"=", "assigned_to_id"=>"="}, "v"=>{"status_id"=>Backlogs.setting[:status_for_validating], "assigned_to_id"=>["#{object.id}"]}, "t"=>[""]})
         else
-          format_object_without_backlogs(object, html=true, &block)
+          format_object_without_backlogs(object, html, &block)
         end 
       end
     end
