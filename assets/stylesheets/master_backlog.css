@@ -726,10 +726,10 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#FB8585;
 }
 #backlogs_container .stories .tracker8{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FBFED0));
-  background: -moz-linear-gradient(top, #EEE, #FBFED0);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FBFED0);
-  background-color:#FBFED0;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FBF8A8));
+  background: -moz-linear-gradient(top, #EEE, #FBF8A8);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FBF8A8);
+  background-color:#FBF8A8;
 }
 #backlogs_container .stories .tracker9{
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#D0E9FE));
@@ -738,10 +738,10 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#D0E9FE;
 }
 #backlogs_container .stories .tracker10{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#EAFED0));
-  background: -moz-linear-gradient(top, #EEE, #EAFED0);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#EAFED0);
-  background-color:#EAFED0;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#D9FBAC));
+  background: -moz-linear-gradient(top, #EEE, #D9FBAC);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#D9FBAC);
+  background-color:#D9FBAC;
 }
 #backlogs_container .stories .tracker11{
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#DBD0FE));
@@ -756,10 +756,10 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   background-color:#B2FB85;
 }
 #backlogs_container .stories .tracker13{
-  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FBFD83));
-  background: -moz-linear-gradient(top, #EEE, #FBFD83);
-  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FBFD83);
-  background-color:#FBFD83;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFFFDD));
+  background: -moz-linear-gradient(top, #EEE, #FFFFDD);
+  filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#EEEEEE,EndColorStr=#FFFFDD);
+  background-color:#FFFFDD;
 }
 #backlogs_container .stories .tracker14{
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#FFD9C9));
