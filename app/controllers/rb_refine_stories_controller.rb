@@ -11,6 +11,7 @@ class RbRefineStoriesController < ApplicationController
     @query = get_query
     @issue_count = @query.issue_count
     @issues = @query.issues
+    @statuses = IssueStatus.find(Backlogs.setting[:status_for_validating])
   end
 
   private

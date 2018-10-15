@@ -3,6 +3,7 @@
 <%- end %>
 
 <h2><%=l(:label_stories_to_be_refined)%></h2>
+<div class="refine_statuses"><%= l(:backlogs_validating_statuses) %> <%= h((@statuses || []).join(', ')) %></div>
 <% if @query.valid? %>
   <% if @issues.empty? %>
   <p class="nodata"><%= l(:label_no_data) %></p>
