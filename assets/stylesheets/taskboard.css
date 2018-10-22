@@ -163,6 +163,7 @@ See RB.Taskboard.initialize()
 .story .id .assignee,
 .epic .id .assignee {
   font-weight: bold;
+  color: black;
 }
 .story .subject,
 .epic .subject {
