@@ -340,14 +340,14 @@ color: #{front_color};"
 
     if collection.include?(User.current)
       el = User.current
-      s << "<option value=\"#{el.id}\" color=\"#{el.backlogs_preference[:task_color]}\" color_light=\"#{el.backlogs_preference[:task_color_light]}\">&lt;&lt; #{l(:label_me)} &gt;&gt;</option>"
+      s << "<option value=\"#{el.id}\" color=\"#{el.backlogs_preference[:task_color]}\" front_color=\"#{el.backlogs_preference[:task_front_color]}\" color_light=\"#{el.backlogs_preference[:task_color_light]}\">&lt;&lt; #{l(:label_me)} &gt;&gt;</option>"
     end
 
     collection.sort.each do |element|
       if element.is_a?(Group)
         groups << "<option value=\"#{element.id}\" color=\"#AAAAAA\" color_light=\"#E0E0E0\">#{h element.name}</option>"
       else
-        s << "<option value=\"#{element.id}\" color=\"#{element.backlogs_preference[:task_color]}\" color_light=\"#{element.backlogs_preference[:task_color_light]}\">#{h element.name}</option>"
+        s << "<option value=\"#{element.id}\" color=\"#{element.backlogs_preference[:task_color]}\" front_color=\"#{element.backlogs_preference[:task_front_color]}\" color_light=\"#{element.backlogs_preference[:task_color_light]}\">#{h element.name}</option>"
       end
     end
     unless groups.empty?
