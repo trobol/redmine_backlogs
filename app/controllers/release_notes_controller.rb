@@ -129,7 +129,7 @@ class ReleaseNotesController < ApplicationController
   end
 
   def update_custom_field(completed)
-    new_value = Backlogs.setting.fetch(completed ? "field_value_done" : "field_value_todo")
+    new_value = Backlogs.settings.fetch(completed ? "field_value_done" : "field_value_todo")
     custom_value = @issue.release_notes_custom_value
 
     # TODO: Maybe it would be better to just go ahead and create one, instead
