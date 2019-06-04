@@ -1,0 +1,31 @@
+<!-- story helper tags -->
+
+<select class="epic_status_id helper" id="status_id_options">
+  <%- IssueStatus.all.order("position ASC").each do |status| %>
+  <option value="<%= status.id %>" class="<%= (status.is_closed? ?  l(:label_closed_issues) + ' ' : "") %>"><%= h status.name %></option>
+  <%- end %>
+</select>
+
+<select class="epic_tracker_id helper" id="epic_tracker_id_options">
+  <%- RbEpic.trackers(:project => @project, :type => :trackers).each do |tracker| %>
+	  <%- if (Backlogs.settings["default_epic_tracker"] && tracker.id.to_s==Backlogs.settings["default_epic_tracker"]) %>
+	  <option value="<%= tracker.id %>" selected="selected"><%= h tracker.name %></option>
+	  <%- else %>
+	  <option value="<%= tracker.id %>"><%= h tracker.name %></option>
+	  <%- end %>
+  <%- end %>
+</select>
+
+<%if User.current.backlogs_preference[:show_category] == '1' %>
+<select class="category_id helper" id="category_id_options">
+  <option value=""></option>
+	<% IssueCategory.where(project_id: @project.id).order("name ASC").each do |category| %>
+		<option value="<%= category.id%>"><%=h category.name %></option>
+	<%end%>
+</select>
+<%end%>
+
+<div id="epic_template">
+    <%= render :partial => 'rb_stories/story', :object => RbEpic.new %>
+</div>
+

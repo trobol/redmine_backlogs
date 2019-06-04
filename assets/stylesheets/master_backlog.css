@@ -334,15 +334,15 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   display:none;
 }
 
-#backlogs_container .stories{
+#backlogs_container .stories {
   list-style:none;
   margin:0;
   padding:0;
   position:relative;
 }
 
-
-#backlogs_container .stories .story{
+#backlogs_container .stories .story,
+#backlogs_container .stories .epic {
   background-color:#FFFFF6;
   cursor:move;
   font-size:11px;
@@ -350,31 +350,45 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   width:100%;
   border-bottom: #AAAAAA 1px solid;
 }
-#backlogs_container .closedbacklog .stories .story{
+
+#backlogs_container .closedbacklog .stories .story,
+#backlogs_container .closedbacklog .stories .epic {
   cursor:default;
 }
-#backlogs_container .stories .story.saving{
+
+#backlogs_container .stories .story.saving,
+#backlogs_container .stories .epic.saving {
   background-image:url('images/ajax.gif');
   background-repeat:no-repeat;
   background-position:center;
 }
-#backlogs_container .stories .story.error{
+
+#backlogs_container .stories .story.error,
+#backlogs_container .stories .epic.error {
   background-image:url('images/error.png');
   background-repeat:no-repeat;
   background-position:center;
 }
-#backlogs_container .stories .story:hover {
+
+#backlogs_container .stories .story:hover,
+#backlogs_container .stories .epic:hover {
   background-color:rgb(254,248,168);
 }
-#backlogs_container .stories .story .tracker_id{
+
+#backlogs_container .stories .story .tracker_id,
+#backlogs_container .stories .epic .tracker_id{
   display:none;
 }
-#backlogs_container .stories .story .id{
+
+#backlogs_container .stories .story .id,
+#backlogs_container .stories .epic .id{
   position:relative;
   width:49px;
   float: left;
 }
-#backlogs_container .stories .story .id .t * {
+
+#backlogs_container .stories .story .id .t *,
+#backlogs_container .stories .epic .id .t * {
   background-color:#CCC;
   background: -webkit-gradient(linear, left top, left bottom, from(#EEE), to(#CCC));
   background: -moz-linear-gradient(top, #EEE, #CCC);
@@ -397,17 +411,21 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   border: 1px solid #AAAAAA
 }
 
-#backlogs_container .stories .story .id .t a:hover {
+#backlogs_container .stories .story .id .t a:hover,
+#backlogs_container .stories .epic .id .t a:hover {
   background-color:#BBB;
   background: -webkit-gradient(linear, left top, left bottom, from(#DDD), to(#BBB));
   background: -moz-linear-gradient(top, #DDD, #BBB);
   filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,StartColorStr=#DDDDDD,EndColorStr=#BBBBBB);
 }
 
-#backlogs_container .stories .story .id .v {
+#backlogs_container .stories .story .id .v,
+#backlogs_container .stories .epic .id .v {
   display:none;
 }
-#backlogs_container .stories .story .project {
+
+#backlogs_container .stories .story .project,
+#backlogs_container .stories .epic .project {
   display:block;
   position:relative;
   float:left;
@@ -416,53 +434,76 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   white-space: nowrap;
   overflow: hidden;
 }
-#backlogs_container .stories .story .project .t {
+
+#backlogs_container .stories .story .project .t,
+#backlogs_container .stories .epic .project .t {
   overflow:hidden;
 }
-#backlogs_container .stories .story .project .v {
-  display:none;
-}
-#backlogs_container .stories .story.editing .project,
-#backlogs_container .stories .story.editing select.project_id.editor {
+
+#backlogs_container .stories .story .project .v,
+#backlogs_container .stories .epic .project .v {
   display:none;
 }
 
-#backlogs_container .stories .story .subject {
+#backlogs_container .stories .story.editing .project,
+#backlogs_container .stories .story.editing select.project_id.editor,
+#backlogs_container .stories .epic.editing .project,
+#backlogs_container .stories .epic.editing select.project_id.editor {
+  display:none;
+}
+
+#backlogs_container .stories .story .subject,
+#backlogs_container .stories .epic .subject {
   overflow:hidden;
   white-space:nowrap;
 }
-#backlogs_container .stories .story.closed .subject{
+
+#backlogs_container .stories .story.closed .subject,
+#backlogs_container .stories .epic.closed .subject{
   text-decoration:line-through;
 }
-#backlogs_container .stories .story .status_id {
+
+#backlogs_container .stories .story .status_id,
+#backlogs_container .stories .epic .status_id {
   width:68px;
   float: left;
   padding-left:8px;
   white-space: nowrap;
 }
 
-#backlogs_container .stories .story .story_points {
+#backlogs_container .stories .story .story_points,
+#backlogs_container .stories .epic .story_points {
   text-align:right;
   float: left;
   width:34px;
 }
 
-#backlogs_container .stories .story .priority_marker {
+#backlogs_container .stories .story .priority_marker,
+#backlogs_container .stories .epic .priority_marker {
   color: red;	
 }
+
 #backlogs_container .stories .story .release_marker,
-#backlogs_container .stories .story .support_marker {
+#backlogs_container .stories .story .support_marker,
+#backlogs_container .stories .epic .release_marker,
+#backlogs_container .stories .epic .support_marker {
   color: #777777
 }
 /*meta in story*/
+
 #backlogs_container .stories .story .fixed_version_id,
 #backlogs_container .stories .story .higher_item_id,
 #backlogs_container .stories .story .story_project,
-#backlogs_container .stories .story .user_status {
+#backlogs_container .stories .story .user_status,
+#backlogs_container .stories .epic .fixed_version_id,
+#backlogs_container .stories .epic .higher_item_id,
+#backlogs_container .stories .epic .story_project,
+#backlogs_container .stories .epic .user_status {
   display:none;
 }
 
-#backlogs_container .stories .story .clearfix {
+#backlogs_container .stories .story .clearfix,
+#backlogs_container .stories .epic .clearfix {
     zoom:1;
     clear:both;
     height: 0; /*IE7*/
@@ -550,38 +591,56 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 
 /* In-place Story Editor */
-#backlogs_container .stories .story.editing .editors{
+#backlogs_container .stories .story.editing .editors {
   display: inline-grid;
   grid-template-columns: auto;
   grid-template-rows: 33% 33% 34%;
   grid-template-areas: "lefttop middle righttop righttop" "leftbottom middle rightbottom1 rightbottom2" "footer footer footer footer";
 }
 
-#backlogs_container .stories .story.editing .editors label{
+#backlogs_container .stories .epic.editing .editors {
+  display: inline-grid;
+  grid-template-columns: auto;
+  grid-template-rows: 33% 33% 34%;
+  grid-template-areas: "lefttop middle righttop" "leftbottom middle rightbottom1" "footer footer footer";
+}
+
+#backlogs_container .stories .story.editing .editors label,
+#backlogs_container .stories .epic.editing .editors label {
   display:none;
 }
-#backlogs_container .stories .story.editing .editor{
+
+#backlogs_container .stories .story.editing .editor,
+#backlogs_container .stories .epic.editing .editor {
   display: block;
   font-family:Verdana, Arial, sans-serif;
   grid-area: righttop;
 }
-#backlogs_container .stories .story.editing .tracker_id.editor{
+
+#backlogs_container .stories .story.editing .tracker_id.editor,
+#backlogs_container .stories .epic.editing .tracker_id.editor {
   display:block;
   margin:0;
   width: 80px;
   grid-area: lefttop;
 }
-#backlogs_container .stories .story.editing .subject.editor{
+
+#backlogs_container .stories .story.editing .subject.editor,
+#backlogs_container .stories .epic.editing .subject.editor {
   font-size: 11px;
   margin:0;
   padding: 4px 4px 4px 4px;
 }
-#backlogs_container .stories .story.editing .status_id{
+
+#backlogs_container .stories .story.editing .status_id,
+#backlogs_container .stories .epic.editing .status_id {
   margin:0;
-  width: 70px;
+  width: 100%;
   grid-area: rightbottom1;
 }
-#backlogs_container .stories .story.editing select.story_points.editor {
+
+#backlogs_container .stories .story.editing select.story_points.editor,
+#backlogs_container .stories .epic.editing select.story_points.editor {
   margin:0;
   padding: 0px;
   height: inherit;
@@ -589,13 +648,17 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   overflow: visible;
   grid-area: rightbottom2;
 }
-#backlogs_container .stories .story.editing input.story_points.editor {
+
+#backlogs_container .stories .story.editing input.story_points.editor,
+#backlogs_container .stories .epic.editing input.story_points.editor {
   display:block;
   height:10px;
   margin:0;
   float: right;
 }
-#backlogs_container .stories .story.editing .subject.editor {
+
+#backlogs_container .stories .story.editing .subject.editor,
+#backlogs_container .stories .epic.editing .subject.editor {
   white-space: inherit;
   grid-area: middle;
 }
@@ -669,7 +732,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 #backlogs_container .stories .v {
   display:none;
 }
-#backlogs_container .stories .story.editing .category_id.editor{
+#backlogs_container .stories .story.editing .category_id.editor,
+#backlogs_container .stories .epic.editing .category_id.editor{
   display:block;
   margin:0;
   width: 80px;
@@ -778,12 +842,13 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
   padding-top: 4px;
   padding-bottom: 5px;
 }
-#backlogs_container .stories .story.editing .story_field {
+
+#backlogs_container .stories .story.editing .story_field,
+#backlogs_container .stories .epic.editing .story_field {
   display: none;
 }
 
 #backlogs_container .header .sprint,
-#backlogs_container .header .release,
 #backlogs_container .header .velocity {
 	line-height: 31px
 }
@@ -812,17 +877,22 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 }
 */
 #backlogs_container .story .assigned_to_full,
-#backlogs_container .story .assigned_to_short {
+#backlogs_container .story .assigned_to_short,
+#backlogs_container .epic .assigned_to_full,
+#backlogs_container .epic .assigned_to_short {
 	display: inline;
 }
 
-#backlogs_container .backlogs-panel-inner .model.story .assigned_to_color {
+#backlogs_container .backlogs-panel-inner .model.story .assigned_to_color,
+#backlogs_container .backlogs-panel-inner .model.epic .assigned_to_color {
     border: 2px solid;
     border-radius: 6px;
     margin-left: 2px;
     display: inline;
 }
-#backlogs_container .story .assigned_to_color.bar{
+
+#backlogs_container .story .assigned_to_color.bar,
+#backlogs_container .epic .assigned_to_color.bar {
     position: relative;
     top: 6px;
 }
@@ -835,7 +905,8 @@ ul li { vertical-align: bottom; } /* close IE7 gap between list items */
 .ui-datepicker {display:none;}
 
 /* override: display story subject in multiple lines */
-.rb-multilinesubject #backlogs_container .stories .story .subject {
+.rb-multilinesubject #backlogs_container .stories .story .subject,
+.rb-multilinesubject #backlogs_container .stories .epic .subject {
   white-space: normal;
   height: auto;
   overflow: show;

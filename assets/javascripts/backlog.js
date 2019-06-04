@@ -43,15 +43,16 @@ RB.Backlog = RB.Object.create({
     if(this.isSprintBacklog()){
       RB.Factory.initialize(RB.Sprint, this.getSprint());
     }
-    else if (this.isReleaseBacklog()) {
-      RB.Factory.initialize(RB.Release, this.getRelease());
-    }
 
     this.drawMenu();
 
     // Initialize each item in the backlog
     this.getStories().each(function(index){
       story = RB.Factory.initialize(RB.Story, this); // 'this' refers to an element with class="story"
+    });
+    
+    this.getEpics().each(function(index){
+      story = RB.Factory.initialize(RB.Epic, this); // 'this' refers to an element with class="epic"
     });
     
     this.recalcVelocity();
@@ -236,12 +237,12 @@ RB.Backlog = RB.Object.create({
     return RB.$(this.el).find(".model.sprint").first();
   },
     
-  getRelease: function(){
-    return RB.$(this.el).find(".model.release").first();
-  },
-    
   getStories: function(){
     return this.getList().children(".story");
+  },
+
+  getEpics: function(){
+    return this.getList().children(".epic");
   },
 
   getList: function(){

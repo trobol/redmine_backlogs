@@ -1,4 +1,4 @@
-<li class="model story fff-wrapper <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>" story ="story_<%=story.id%>">
+<li class="model <%= story.backlogs_issue_type %> fff-wrapper <%= mark_if_closed(story) %> tracker<%= story ? story.tracker_id : '' %>" id="<%= story_html_id_or_empty(story) %>" story ="story_<%=story.id%>">
   <%- story_color = nil %>
   <%- front_color = nil %>
   <%- if User.current.backlogs_preference[:show_backlog_story_color] == '1' && story.assigned_to.present? && story.assigned_to.is_a?(User) %>
@@ -55,7 +55,7 @@
   </div>
  </div>
  <div class="fff-left">
-    <% qtip_cls = "story_tooltip"
+    <%- qtip_cls = "story_tooltip"
        qtip_cls = "story_tooltip_ajax" unless defined?(render_tooltip)  %>
   <div class="id <%= qtip_cls %> story_field">
     <div class="tooltip_text"><%= render :partial => "rb_stories/tooltip", :object => story if defined?(render_tooltip) %></div>
@@ -73,7 +73,7 @@
     <div class="v"><%= story.project_id %></div>
   </div>
 
-  <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>">
+  <div class="tracker_id editable story_field" fieldtype="select" fieldname="tracker_id" fieldlabel="<%=l(:field_tracker_id)%>" fieldhelper="<%= "epic_tracker_id_options" if story.is_epic? %>" >
     <div class="t"><%= h tracker_name_or_empty(story) %></div>
     <div class="v"><%= tracker_id_or_empty(story) %></div>
   </div>
@@ -95,22 +95,24 @@
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
   </div>
-  <% if Backlogs.setting[:story_points].blank? %>
+  <%- if !story.is_epic? %>
+  <%- if Backlogs.setting[:story_points].blank? %>
   <div class="story_points editable story_points_text story_field" fieldname="story_points" fieldlabel="<%=l(:story_points)%>" fieldtype="input"><%= story_points_or_empty(story) %></div>
-  <% else %>
+  <%- else %>
   <div class="story_points editable story_points_select story_field" fieldtype="select" fieldname="story_points" fieldlabel="<%=l(:story_points)%>">
-    <% %w(t v).each do |c| %>
+    <%- %w(t v).each do |c| %>
       <div class="<%=h c %>"><%= story_points_or_empty(story) %></div>
-    <% end %>
+    <%- end %>
   </div>
-  <% end %>
+  <%- end %>
+  <%- end %>
   <div class="fixed_version_id meta"><%= story.fixed_version_id %></div>
   <div class="user_status meta"><%= story.author == User.current ? '+' : '-' %>c<%= story.assigned_to == User.current ? '+' : '-' %>a</div>
   <div class="story_project meta"><%= story.project_id %></div>
   <% render_higher_item_id = false unless defined?(render_higher_item_id) %>
-  <% if render_higher_item_id %>
+  <%- if render_higher_item_id %>
   <div class="higher_item_id meta"><%= story.higher_item.nil? ? '' : story.higher_item.id %></div>
-  <% end %>
+  <%- end %>
   <div class="meta">
     <%= render :partial => "backlogs/model_errors", :object => story.errors unless story.errors.empty? %>
   </div>

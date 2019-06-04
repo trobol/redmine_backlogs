@@ -3,7 +3,7 @@ class RbEpic < RbStory
 
   private
 
-  #where to load tracker list from
+  # where to load tracker list from
   def self.tracker_setting; :epic_trackers end
 
   alias :trackers :epic_trackers

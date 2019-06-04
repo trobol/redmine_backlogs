@@ -114,6 +114,7 @@ RB.constants.task_states = <%= workflow_transitions(RbTask).to_json.html_safe %>
   RB.constants.projects_in_product_backlog = <%= projects_in_product_backlog.to_json.html_safe %>;
   RB.constants.project_versions = <%= project_versions.to_json.html_safe %>;
   RB.constants.story_states = <%= workflow_transitions(RbStory).to_json.html_safe %>;
+  RB.constants.epic_states = <%= workflow_transitions(RbEpic).to_json.html_safe %>;
   RB.routes.backlog_menu = <%= url_for(:controller => 'rb_master_backlogs', :action => 'menu', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
   RB.routes.closed_sprints = <%= url_for(:controller => 'rb_master_backlogs', :action => 'closed_sprints', :project_id => @project.identifier, :only_path => true).to_json.html_safe %>;
 <% end %>
