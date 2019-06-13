@@ -40,11 +40,11 @@ module Backlogs
       end
 
       def is_epic?
-        return RbEpic.trackers.include?(tracker_id)
+        RbEpic.trackers.include?(tracker_id)
       end
 
       def is_feature?
-        return RbGeneric.feature_trackers.include?(tracker_id)
+        RbGeneric.feature_trackers.include?(tracker_id)
       end
 
       def is_story?
@@ -57,6 +57,16 @@ module Backlogs
 
       def is_task?
         RbTask.tracker?(tracker_id)
+      end
+
+      def is_parent_story?
+        return self.parent.is_story? unless self.parent.blank?
+        false
+      end
+
+      def is_parent_epic?
+        return self.parent.is_epic? unless self.parent.blank?
+        false
       end
 
       def backlogs_issue_type
@@ -158,7 +168,9 @@ module Backlogs
             self.fixed_version = self.story.fixed_version if self.story
             self.start_date = Date.today if self.start_date.blank? && self.status_id != self.tracker.default_status.id
 
-            self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+            if self.is_parent_story?
+              self.tracker = Tracker.find(RbTask.tracker) unless self.tracker_id == RbTask.tracker
+            end
           elsif self.is_story? && Backlogs.setting[:set_start_and_duedates_from_sprint]
             if self.fixed_version
               self.start_date ||= (self.fixed_version.sprint_start_date || Date.today)
