@@ -22,7 +22,7 @@ class RbEpic < RbStory
     return self.children
   end
 
-  #disable some story methods
+  # disable some story methods
   def tasks; nil end
   def story_follow_task_state; nil end
 

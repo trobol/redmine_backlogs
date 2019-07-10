@@ -127,7 +127,7 @@ class RbStory < RbGeneric
     params['prev'] = nil if (['next', 'prev'] - params.keys).size == 2
 
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    attribs = params.select{|k,_v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
 
     attribs[:status] = RbStory.class_default_status
     attribs = Hash[*attribs.flatten]
@@ -196,7 +196,7 @@ class RbStory < RbGeneric
         :project_id=>params[:project_id] # required to verify "safeness"
       ).safe_attribute_names
     end
-    attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && safe_attributes_names.include?(k) }
+    attribs = params.select{|k,_v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && safe_attributes_names.include?(k) }
     attribs = Hash[*attribs.flatten]
 
     return self.journalized_update_attributes attribs

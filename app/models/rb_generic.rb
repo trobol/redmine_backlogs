@@ -3,10 +3,9 @@ class RbGeneric < Issue
 
   private
 
-
   def self.__find_options_normalize_option(option)
     option = [option] if option && !option.is_a?(Array)
-    option = option.collect{|s| s.is_a?(Integer) ? s : s.id} if option
+    option = option.collect { |s| s.is_a?(Integer) ? s : s.id } if option
   end
 
   def self.__find_options_add_permissions(options)
@@ -39,7 +38,7 @@ class RbGeneric < Issue
 
   def self.__find_options_pbl_condition(project_id, tracker_ids)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map { |p| p.id }.join(',')})
       and tracker_id in (?)
       and fixed_version_id is NULL
       and is_closed = ?", tracker_ids, false]
@@ -47,7 +46,7 @@ class RbGeneric < Issue
 
   def self.__find_options_generic_condition(project_id, tracker_ids)
     ["
-      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
+      project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map { |p| p.id }.join(',')})
       and tracker_id in (?)", tracker_ids
     ]
   end
@@ -181,7 +180,7 @@ class RbGeneric < Issue
     params['prev'] = nil if (['next', 'prev'] - params.keys).size == 2
 
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    attribs = params.select{|k,_v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs[:status] = RbStory.class_default_status
     attribs = Hash[*attribs.flatten]
     s = self.new(attribs)
@@ -197,7 +196,7 @@ class RbGeneric < Issue
     self.position!(params)
 
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    attribs = params.select{|k,_v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs = Hash[*attribs.flatten]
 
     return self.journalized_update_attributes attribs
@@ -223,7 +222,7 @@ class RbGeneric < Issue
     self.fixed_version.becomes(RbSprint) if self.fixed_version
   end
 
-  def points_display(notsized='-')
+  def points_display(notsized = '-')
     format_story_points(story_points, notsized)
   end
 
