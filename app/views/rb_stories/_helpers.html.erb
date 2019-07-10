@@ -38,6 +38,6 @@
 <%end%>
 
 <div id="story_template">
-    <%= render :partial => 'rb_stories/story', :object => RbStory.new %>
+    <%= render :partial => 'rb_stories/story', :object => RbStory.new(:project => @project, :tracker_id => Backlogs.settings["default_story_tracker"].to_i) %>
 </div>
 

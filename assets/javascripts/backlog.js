@@ -123,6 +123,9 @@ RB.Backlog = RB.Object.create({
         if (RB.permissions.create_stories) {
           menu.find('.add_new_story').bind('mouseup', self.handleNewStoryClick);
         }
+        if (RB.permissions.create_epics) {
+          menu.find('.add_new_epic').bind('mouseup', self.handleNewEpicClick);
+        }
         if (RB.permissions.create_sprints) {
           menu.find('.add_new_sprint').bind('mouseup', self.handleNewSprintClick);
         }
@@ -262,6 +265,19 @@ RB.Backlog = RB.Object.create({
     RB.$(this).parents('.backlog').data('this').newStory(project_id);
   },
 
+  handleNewEpicClick: function(event){
+    if(event.button > 1) return;
+    event.preventDefault();
+
+    var project_id = null;
+    var project_id_class = RB.$(this).attr('class').match(/project_id_([0-9]+)/);
+    if(project_id_class && project_id_class.length == 2) {
+      project_id = project_id_class[1];
+    }
+
+    RB.$(this).parents('.backlog').data('this').newEpic(project_id);
+  },
+
   handleNewSprintClick: function(event){
     if(event.button > 1) return;
     event.preventDefault();
@@ -296,7 +312,27 @@ RB.Backlog = RB.Object.create({
         scrollTop: story.find('.editor').first().offset().top-100
         }, 200);
   },
-  
+
+  newEpic: function(project_id) {
+    var epic = RB.$('#epic_template').children().first().clone();
+    if(project_id) {
+      RB.$('#project_id_options').empty();
+      RB.$('#project_id_options').append('<option value="'+project_id+'">'+project_id+'</option>');
+    }
+    
+    if (RB.constants.new_story_position == 'bottom') {
+      this.getList().append(epic);
+    } else {
+      this.getList().prepend(epic);
+    }
+    o = RB.Factory.initialize(RB.Epic, epic[0]);
+    o.edit();
+    epic.find('.editor' ).first().focus();
+    RB.$('html,body').animate({
+        scrollTop: epic.find('.editor').first().offset().top-100
+        }, 200);
+  },
+
   newSprint: function(){
     var sprint_backlog = RB.$('#sprint_template').children().first().clone();
 

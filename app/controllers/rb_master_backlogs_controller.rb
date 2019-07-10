@@ -20,10 +20,9 @@ class RbMasterBacklogsController < RbApplicationController
     end
   end
 
-  def _menu_new
+  def _menu_new(label_new, add_class)
     links = []
-    label_new = :label_new_story
-    add_class = 'add_new_story'
+    #label_new = :label_new_story
 
     if @settings[:sharing_enabled]
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
@@ -55,7 +54,8 @@ class RbMasterBacklogsController < RbApplicationController
   def menu
     links = []
 
-    links += _menu_new if User.current.allowed_to?(:create_stories, @project)
+    links += _menu_new(:label_new_story, 'add_new_story') if User.current.allowed_to?(:create_stories, @project)
+    links += _menu_new(:label_new_epic, 'add_new_epic') if User.current.allowed_to?(:create_epics, @project)
 
     links << {:label => l(:label_new_sprint), :url => '#', :classname => 'add_new_sprint'
              } unless @sprint || !User.current.allowed_to?(:create_sprints, @project)

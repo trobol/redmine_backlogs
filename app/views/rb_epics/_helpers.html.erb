@@ -1,4 +1,4 @@
-<!-- story helper tags -->
+<!-- epic helper tags -->
 
 <select class="epic_status_id helper" id="status_id_options">
   <%- IssueStatus.all.order("position ASC").each do |status| %>
@@ -26,6 +26,6 @@
 <%end%>
 
 <div id="epic_template">
-    <%= render :partial => 'rb_stories/story', :object => RbEpic.new %>
+    <%= render :partial => 'rb_stories/story', :object => RbEpic.new(:project => @project, :tracker_id => Backlogs.settings["default_epic_tracker"].to_i) %>
 </div>
 
