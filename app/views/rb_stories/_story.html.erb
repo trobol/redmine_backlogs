@@ -95,7 +95,9 @@
     <div class="t"><%= status_label_or_default(story) %></div>
     <div class="v"><%= status_id_or_default(story) %></div>
   </div>
-  <%- if !story.is_epic? %>
+  <%- if story.is_epic? %>
+  <div class="story_points start_edit story_points_text story_field">-</div>
+  <%- else %>
   <%- if Backlogs.setting[:story_points].blank? %>
   <div class="story_points editable story_points_text story_field" fieldname="story_points" fieldlabel="<%=l(:story_points)%>" fieldtype="input"><%= story_points_or_empty(story) %></div>
   <%- else %>
