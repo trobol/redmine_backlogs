@@ -259,8 +259,7 @@ end
 # You should have received a copy of the GNU General Public License along with
 # redmine_release_notes. If not, see <http://www.gnu.org/licenses/>.
 
-
-ActionDispatch::Callbacks.to_prepare do
+ActiveSupport::Reloader.to_prepare do
   # Patches to the Redmine core.
   patched_classes = %w(issue issues_controller settings_controller version)
   patched_classes.each do |core_class|

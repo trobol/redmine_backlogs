@@ -191,7 +191,13 @@ module Backlogs
       end
 
       def rb_project_settings
-        RbProjectSettings.where(:project_id => self.id).first_or_create
+        #@project_settings ||= RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
+        @project_settings ||= RbProjectSettings.where("project_id = ?", self.id).first()
+        unless @project_settings
+          @project_settings = RbProjectSettings.new( :project_id => self.id)
+          @project_settings.save
+        end
+        @project_settings
       end
 
       def projects_in_shared_product_backlog
@@ -287,7 +293,7 @@ module Backlogs
       # by parent projects which are out of scope of the currently selected project as they will
       # disappear when dropped.
       def droppable_releases
-        self.class.connection.select_all(_sql_for_droppables(RbRelease.table_name,true))
+        self.class.connection.select_all(_sql_for_droppables(RbRelease.table_name, true))
       end
 
       # Return a list of sprints each project's stories can be dropped to on the master backlog.

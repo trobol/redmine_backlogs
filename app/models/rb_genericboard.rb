@@ -11,13 +11,8 @@ class RbTeam < Group
   end
 end
 
-
-
 class RbGenericboard < ActiveRecord::Base
   include Redmine::SafeAttributes
-  attr_accessible :col_type, :element_type, :name, :prefilter, :colfilter, :rowfilter, :row_type,
-    :include_none_in_rows, :include_none_in_cols, :include_closed_elements, :immutable_positions,
-    :hide_empty_rows
   serialize :prefilter, Array
   serialize :rowfilter, Array
   serialize :colfilter, Array
@@ -43,23 +38,22 @@ class RbGenericboard < ActiveRecord::Base
   private
 
   def open_shared_versions(project)
-    #similar to project.open_shared_sprints but we not become(RbSprint) and return scopable query
+    # similar to project.open_shared_sprints but we not become(RbSprint) and return scopable query
     if Backlogs.setting[:sharing_enabled]
       order = 'ASC'
       project.shared_versions.visible.where(:status => ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}")
-    else #no backlog sharing
+    else # no backlog sharing
       RbSprint.open_sprints(project)
     end
   end
 
   def open_releases_by_date(project)
-    #similar to project.open_releases_by_date but we want to order ascending
-    #order = 'ASC'
+    # similar to project.open_releases_by_date but we want to order ascending
+    # order = 'ASC'
     (Backlogs.setting[:sharing_enabled] ? project.shared_releases : project.releases).
       visible.open.
       reorder("#{RbRelease.table_name}.release_end_date ASC")
   end
-
 
   def __sprints_condition(project, filter, filteroptions={})
     options = {}
@@ -164,7 +158,6 @@ class RbGenericboard < ActiveRecord::Base
 
     options
   end
-
 
   def resolve_scope(object_type, project, filter, options={})
     case object_type
@@ -327,7 +320,7 @@ class RbGenericboard < ActiveRecord::Base
       Group
     when '__state'
       IssueStatus
-    else #assume an id of tracker, see our options in helper
+    else # assume an id of tracker, see our options in helper
       RbGeneric
     end
   end

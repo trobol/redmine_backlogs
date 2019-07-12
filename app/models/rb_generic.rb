@@ -117,7 +117,7 @@ class RbGeneric < Issue
   def epic_trackers(options = {})
     self.epic_trackers(options)
   end
-  
+
   def self.epic_trackers(options = {})
     self.get_trackers(:epic_trackers, options)
   end
@@ -125,11 +125,11 @@ class RbGeneric < Issue
   def feature_trackers(options = {})
     self.feature_trackers(options)
   end
-  
+
   def self.feature_trackers(options = {})
     self.get_trackers(:feature_trackers, options)
   end
-  
+
   def self.generic_trackers
     [].concat(feature_trackers).concat(epic_trackers).concat(story_trackers)
   end
@@ -182,7 +182,7 @@ class RbGeneric < Issue
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,_v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
     attribs[:status] = RbStory.class_default_status
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
     s = self.new(attribs)
     s.save!
     s.position!(params)
@@ -197,7 +197,7 @@ class RbGeneric < Issue
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,_v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
 
     return self.journalized_update_attributes attribs
   end

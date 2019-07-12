@@ -5,7 +5,6 @@ module RbCommonHelper
   unloadable
 
   include CustomFieldsHelper
-  include RbPartialsHelper
 
   PRIORITY_VALUES = {
      :Low => "",
@@ -143,22 +142,19 @@ color: #{front_color};"
     sprint.new_record? ? l("version_status_#{Version::VERSION_STATUSES.first}") : l("version_status_#{sprint.status}")
   end
 
+  def status_from_story(story)
+    story.default_status if story.new_record?
+    story.status
+  end
+
   def status_id_or_default(story)
-    #story.new_record? ? IssueStatus.default.id : story.status.id
-    if story.new_record?
-      story.default_status ? story.default_status.id : 0
-    else
-      story.status ? story.status.id : 0
-    end
+    story_status = status_from_story(story)
+    story_status ? story_status.id : 0
   end
 
   def status_label_or_default(story)
-    #story.new_record? ? IssueStatus.default.name : story.status.name
-    if story.new_record?
-      story.default_status ? story.default_status.name : ""
-    else
-      story.status ? story.status.name : ""
-    end
+    story_status = status_from_story(story)
+    story_status ? story_status.name : ""
   end
 
   def format_sprint_name(sprint, options = {})
@@ -314,11 +310,11 @@ color: #{front_color};"
   end
 
   def self.find_backlogs_enabled_active_projects
-    #projects =
-    EnabledModule.where(name: 'backlogs')
-                  .includes(:project)
-                  .joins(:project).where(projects: {status: Project::STATUS_ACTIVE})
-                  .collect { |mod| mod.project}
+    #projects = EnabledModule.find(:all,
+     #                        :conditions => ["enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE],
+    #                         :include => :project,
+    #                         :joins => :project).collect { |mod| mod.project}
+    projects = EnabledModule.includes(:project).where("enabled_modules.name = 'backlogs' and status = ?", Project::STATUS_ACTIVE).joins(:project).collect{ |mod| mod.project}.find_all()
   end
 
   # Returns a collection of users allowed to log time for the current project. (see app/views/rb_taskboards/show.html.erb for usage)
@@ -380,7 +376,7 @@ color: #{front_color};"
       grouped[release.project.name] << [release.name, release.id]
     end
     # Add in the selected
-    (selected.to_a - releases.to_a).each{|s| grouped[s.project.name] << [s.name, s.id] }
+    (selected - releases).each{|s| grouped[s.project.name] << [s.name, s.id] }
 
     if grouped.keys.size > 1
       grouped_options_for_select(grouped, selected.collect{|s| s.id})
@@ -392,7 +388,7 @@ color: #{front_color};"
   # Convert selected ids to integer and remove blank values.
   def selected_ids(options)
     return nil if options.nil?
-    options.collect{|o| o.to_i unless o.blank?}.compact!
+    options.collect{|o| o.to_i unless o.blank?}.compact! 
   end
 
   def format_release_sharing(v)
@@ -420,6 +416,19 @@ color: #{front_color};"
   def is_support_id_present?(story)
     support_id_field = story.custom_values.find_by(custom_field_id: Backlogs.setting[:show_backlog_story_marker_support_id].to_i)
     (support_id_field.present? and support_id_field.value.present?) ? true : false
+  end
+
+  # def_rb_partial_method 'render_rb_task(task)', 'rb_tasks/_task.html.erb'
+  def render_rb_task(task)
+    render :partial => 'rb_tasks/task', :locals => { :task => task }
+  end
+
+  def render_rb_task_collection(tasks)
+    capture do
+      tasks.each do |task|
+        concat render_rb_task(task).html_safe
+      end
+    end
   end
 
 end

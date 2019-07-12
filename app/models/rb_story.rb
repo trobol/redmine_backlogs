@@ -5,47 +5,6 @@ class RbStory < RbGeneric
 
   def self.tracker_setting; :story_trackers end
 
-  def self.__find_options_normalize_option(option)
-    option = [option] if option && !option.is_a?(Array)
-    option = option.collect{|s| s.is_a?(Integer) ? s : s.id} if option
-  end
-
-  def self.__find_options_add_permissions(options)
-    permission = options.delete(:permission)
-    permission = false if permission.nil?
-
-    options[:conditions] ||= []
-    if permission
-      if Issue.respond_to? :visible_condition
-        visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
-      else
-        visible = Project.allowed_to_condition(User.current, :view_issues)
-      end
-      Backlogs::ActiveRecord.add_condition(options, visible)
-    end
-  end
-
-  def self.__find_options_sprint_condition(project_id, sprint_ids)
-    if Backlogs.settings[:sharing_enabled]
-      ["
-        tracker_id in (?)
-        and fixed_version_id IN (?)", self.trackers, sprint_ids]
-    else
-      ["
-        issues.project_id = ?
-        and tracker_id in (?)
-        and fixed_version_id IN (?)", project_id, self.trackers, sprint_ids]
-    end
-  end
-
-  def self.__find_options_pbl_condition(project_id)
-    ["
-      issues.project_id in (#{Project.find(project_id).projects_in_shared_product_backlog.map{|p| p.id}.join(',')})
-      and tracker_id in (?)
-      and fixed_version_id is NULL
-      and is_closed = ?", self.trackers, false]
-  end
-
   public
 
   def self.class_default_status
@@ -74,7 +33,7 @@ class RbStory < RbGeneric
       :sprint => sprint_id,
     })
 
-    Rails.logger.info "The options: #{options}."
+    Rails.logger.info "The backlog options: #{options}."
     self.visible.
       order("#{self.table_name}.position").
       backlog_scope(options)
@@ -93,7 +52,7 @@ class RbStory < RbGeneric
       :project => release.project.id,
     })
 
-    Rails.logger.info "The options: #{options}."
+    Rails.logger.info "The release backlog options: #{options}."
     self.visible.
       joins("INNER JOIN rb_issue_releases ON rb_issue_releases.issue_id = issues.id AND rb_issue_releases.release_id = #{release.id}").
       order("#{self.table_name}.position").
@@ -110,7 +69,7 @@ class RbStory < RbGeneric
     end
   end
 
-  def self.backlogs_by_release(project, releases, options={})
+  def self.backlogs_by_release(_project, releases, options={})
     #make separate queries for each release to get higher/lower item right
     return [] unless releases
     releases.map do |r|
@@ -128,9 +87,8 @@ class RbStory < RbGeneric
 
     # lft and rgt fields are handled by acts_as_nested_set
     attribs = params.select{|k,_v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
-
     attribs[:status] = RbStory.class_default_status
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
     s = RbStory.new(attribs)
     s.save!
     s.update_and_position!(params)
@@ -145,7 +103,7 @@ class RbStory < RbGeneric
 
   def self.find_all_updated_since(since, project_id)
     #look in backlog and sprint. look in shared sprints
-    project = Project.select("id,lft,rgt,parent_id,name").find(project_id)
+    project = Project.select("id,lft,rgt,parent_id,name").find_by_id(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
     #following will execute 3 queries and join it as array
     self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
@@ -155,7 +113,7 @@ class RbStory < RbGeneric
   end
 
   alias :trackers :story_trackers
-  
+
   def self.trackers(options = {})
     self.story_trackers(options)
   end
@@ -197,7 +155,7 @@ class RbStory < RbGeneric
       ).safe_attribute_names
     end
     attribs = params.select{|k,_v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && safe_attributes_names.include?(k) }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
 
     return self.journalized_update_attributes attribs
   end

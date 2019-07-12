@@ -19,7 +19,7 @@ module ReleaseNotesHelper
     completion = version.release_notes_percent_completion
     progress_bar([completion, completion],
                  :width => '40em',
-                 :legend => '%0.0f%' % completion)
+                 :legend => '%0.0f%%' % completion)
   end
 
   def release_notes_opts(object)

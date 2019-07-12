@@ -89,10 +89,6 @@ RB.BoardUpdater = RB.Object.create({
     if(latest_update.length > 0) {
         RB.$('#last_updated').text(latest_update);
     }
-    sprintestimatedhours = RB.$(data).find('#sprintestimatedhours').text();
-    if(sprintestimatedhours.length > 0) {
-        RB.$('#sprintestimatedhours').text(sprintestimatedhours);
-    }
 
     self.processAllItems(data);
     self.adjustPollWait(RB.$(data).children(":not(.meta)").length);

@@ -2,7 +2,7 @@
 class RbApplicationController < ApplicationController
   unloadable
 
-  before_filter :load_project, :authorize, :check_if_plugin_is_configured, :load_genericboard
+  before_action :load_project, :authorize, :check_if_plugin_is_configured, :load_genericboard
 
   #provide list of javascript_include_tags which must be rendered before common.js
   def rb_jquery_plugins
@@ -46,8 +46,7 @@ class RbApplicationController < ApplicationController
     if s1["story_trackers"].blank? || s1["task_tracker"].blank? || (s1["scaled_agile_enabled"] && (s1["epic_trackers"].blank? || s1["feature_trackers"].blank?))
       puts("check_if_plugin_is_configured: no trackers for story or task, or if scaled agile is enabled for epic or feature, halting. --#{s1[:story_trackers]}--#{s1[:task_tracker]}-- #{s1}")
       respond_to do |format|
-        format.html { render :template => "backlogs/not_configured",  :handlers => [:erb], :formats => [:html] }
-        format.js { }
+        format.html { render :file => "backlogs/not_configured" }
       end
     end
   end

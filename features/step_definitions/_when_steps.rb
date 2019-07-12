@@ -3,51 +3,61 @@ require 'pp'
 When /^I (try to )?create the impediment( on project )?(.*)$/ do |attempt, on, project|
   params = @impediment_params.dup
   params['project_id'] = Project.find(project) if project != ''
-  path = url_for(:controller => :rb_impediments,
+  page.driver.post(
+                      url_for(:controller => :rb_impediments,
                               :action => :create,
-                              :only_path => true)
-  @sessiondriver.submit :post, path, @impediment_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @impediment_params
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the story$/ do |attempt|
-  path = url_for(:controller => :rb_stories,
+  page.driver.post(
+                      url_for(:controller => :rb_stories,
                               :action => :create,
-                              :only_path => true)
-  @sessiondriver.submit :post, path, @story_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @story_params
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the task$/ do |attempt|
   initial_estimate = @task_params.delete('initial_estimate')
-  path = url_for(:controller => :rb_tasks,
+  page.driver.post(
+                      url_for(:controller => :rb_tasks,
                               :action => :create,
-                              :only_path => true)
-  @sessiondriver.submit :post, path, @task_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @task_params
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?create the sprint$/ do |attempt|
-  path = url_for(:controller => :rb_sprints,
+  page.driver.post(
+                      url_for(:controller => :rb_sprints,
                               :action => :create,
-                              :only_path => true)
-  @sessiondriver.submit :post, path, @sprint_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @sprint_params
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the story named (.+) above (.+)$/ do |attempt, story_subject, next_subject|
-  story = RbStory.find_by_subject(story_subject)
-  nxt  = RbStory.find_by_subject(next_subject)
+  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  nxt  = RbStory.find(:first, :conditions => ["subject=?", next_subject])
   
   attributes = story.attributes
   attributes[:next]             = nxt.id
 
-  path = url_for(:controller => 'rb_stories',
-                                :action => "update",
-                                :id => story.id,
-                                :only_path => true)
-  @sessiondriver.submit :put, path, attributes
-  verify_request_status(200) unless attempt
+  page.driver.post(
+                      url_for(:controller => 'rb_stories',
+                              :action => "update",
+                              :id => story.id,
+                              :only_path => true),
+                      attributes.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the story named (.+) to the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |attempt, story_subject, position, sprint_name|
@@ -59,12 +69,14 @@ When /^I (try to )?move the story named (.+) to the (\d+)(?:st|nd|rd|th) positio
   attributes = story.attributes
   attributes[:next] = story_after(position, sprint.project, sprint).to_s
 
-  path = url_for(:controller => 'rb_stories',
+  page.driver.post(
+                      url_for(:controller => 'rb_stories',
                               :action => "update",
                               :id => story.id,
-                              :only_path => true)
-  @sessiondriver.submit :put, path, attributes
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      attributes.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd|rd|th)? position$/ do |attempt, old_pos, new_pos|
@@ -82,37 +94,43 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
       nxt = @story_ids[new_pos-1]
   end
 
-  path = url_for(:controller => :rb_stories,
+  page.driver.post( 
+                      url_for(:controller => :rb_stories,
                               :action => :update,
                               :id => story_id,
-                              :only_path => true)
-  @sessiondriver.submit :put, path, {:next => nxt, :project_id => @project.id}
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      {:next => nxt, :project_id => @project.id, "_method" => "put"}
+                  )
+  verify_request_status(200) if attempt == ''
 
   @story = RbStory.find(story_id.to_i)
 end
 
 When /^I (try to )?request the server_variables resource$/ do |attempt|
   visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true, :context => 'backlogs')
-  verify_request_status(200) unless attempt
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?update the impediment$/ do |attempt|
-  path = url_for(:controller => :rb_impediments,
+  page.driver.post( 
+                      url_for(:controller => :rb_impediments,
                               :action => :update,
                               :id => @impediment_params['id'],
-                              :only_path => true)
-  @sessiondriver.submit :post, path, @impediment_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @impediment_params
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 When /^I (try to )?update the sprint$/ do |attempt|
-  path = url_for(:controller => 'rb_sprints',
+  page.driver.post(
+                      url_for(:controller => 'rb_sprints',
                               :action => "update",
                               :sprint_id => @sprint_params['id'],
-                              :only_path => true)
-  @sessiondriver.submit :put, path, @sprint_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @sprint_params.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 # Bug #855 update sprint details must not change project of sprint. Use complete javascript stack, as it injects project_id into request
@@ -138,7 +156,7 @@ When /^I create the story with subject "([^"]*)"$/ do |subject|
 end
 
 When(/^I change the subject of story "([^"]*)" to "([^"]*)"$/) do |story, subject|
-  page.find(:xpath,"//span[contains(normalize-space(text()), '#{story}')]").click
+  page.find(:xpath,"//div[contains(normalize-space(text()), '#{story}')]").click
   within "#content" do
     fill_in('subject', :with => subject)
     click_link('Save')
@@ -156,22 +174,26 @@ When(/^I change the subject of task "([^"]*)" to "([^"]*)"$/) do |task, subject|
 end
 
 When /^I (try to )?update the story$/ do |attempt|
-  path = url_for(:controller => :rb_stories,
+  page.driver.post(
+                      url_for(:controller => :rb_stories,
                               :action => :update,
                               :id => @story_params[:id],
-                              :only_path => true)
-  @sessiondriver.submit :put, path, @story_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @story_params #.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200) if attempt == ''
   @story.reload
 end
 
 When /^I (try to )?update the task$/ do |attempt|
-  path = url_for(:controller => :rb_tasks,
+  page.driver.post(
+                      url_for(:controller => :rb_tasks,
                               :action => :update,
                               :id => @task_params[:id],
-                              :only_path => true)
-  @sessiondriver.submit :put, path, @task_params
-  verify_request_status(200) unless attempt
+                              :only_path => true),
+                      @task_params.merge({ "_method" => "put" })
+                  )
+  verify_request_status(200) if attempt == ''
 end
 
 Given /^I visit the scrum statistics page$/ do
@@ -183,7 +205,7 @@ When /^I try to download the calendar feed$/ do
 end
 
 When /^I try to download the XML sheet for (.+)$/ do |sprint_name|
-  sprint = RbSprint.find_by_name(sprint_name)
+  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for({:key => @api_key, :controller => :rb_sprints, :action => :download,
                  :sprint_id => sprint, :format => :xml, :only_path => true})
 end
@@ -194,7 +216,7 @@ When /^I view the master backlog$/ do
 end
 
 When /^I view the stories of (.+) in the issues tab/ do |sprint_name|
-  sprint = RbSprint.find_by_name(sprint_name)
+  sprint = RbSprint.find(:first, :conditions => ["name=?", sprint_name])
   visit url_for(:controller => :rb_queries, :action => :show, :project_id => sprint.project_id, :sprint_id => sprint.id, :only_path => true)
 end
 
@@ -268,11 +290,13 @@ When /^I update the status of task (.+?) to (.+?)$/ do |task, state|
   @task_params = HashWithIndifferentAccess.new(task.attributes)
   state = IssueStatus.find_by_name(state)
   @task_params[:status_id] = state.id
-  path = url_for(:controller => :rb_tasks,
+  page.driver.post(
+                      url_for(:controller => :rb_tasks,
                               :action => :update,
                               :id => @task_params[:id],
-                              :only_path => true)
-  @sessiondriver.submit :put, path, @task_params
+                              :only_path => true),
+                      @task_params.merge({ "_method" => "put" })
+                  )
   verify_request_status(200)
 end
 

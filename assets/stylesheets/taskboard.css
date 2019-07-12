@@ -242,7 +242,7 @@ See RB.Taskboard.initialize()
 }
 .story .priority_marker,
 .epic .priority_marker {
-  color: red;	
+  color: red;
 }
 .story .release_marker,
 .story .support_marker,
@@ -497,6 +497,10 @@ See RB.Taskboard.initialize()
 }
 #ui-datepicker-div{
   display: none;
+}
+
+.ui-widget-overlay {
+  position: fixed;
 }
 
 #project_quick_jump_box{

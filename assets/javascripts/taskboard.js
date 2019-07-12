@@ -3,14 +3,14 @@
 ***************************************/
 
 RB.Taskboard = RB.Object.create({
-    
+
   initialize: function(el){
     var j = RB.$(el);
     var self = this; // So we can bind the event handlers to this object
-    
+
     self.$ = j;
     self.el = el;
-    
+
     // Associate this object with the element for later retrieval
     j.data('this', self);
 
@@ -83,7 +83,7 @@ RB.Taskboard = RB.Object.create({
       j.find('#impediments .add_new').bind('click', self.handleAddNewImpedimentClick);
     }
   },
-  
+
   onMouseUp: function(e) {
       //re-enable all cells deferred
       setTimeout(function(){
@@ -139,32 +139,20 @@ RB.Taskboard = RB.Object.create({
     el = RB.$(e.target).parents('.list'); // .task or .impediment
     if (el && el.length) el.sortable('refresh');
   },
-  
+
   dragComplete: function(event, ui) {
     if (!ui.sender) { // Handler is triggered for source and target. Thus the need to check.
       ui.item.data('this').saveDragResult();
-    }    
+    }
   },
 
-  dragStart: function(event, ui){ 
-    if (RB.$.support.noCloneEvent){
-      ui.item.addClass("dragging");
-    } else {
-      // for IE
-      ui.item.addClass("dragging");      
-      ui.item.draggable('enabled');
-    }
+  dragStart: function(event, ui){
+    ui.item.addClass("dragging");
   },
-  
-  dragStop: function(event, ui){ 
+
+  dragStop: function(event, ui){
     this.onMouseUp(event);
-    if (RB.$.support.noCloneEvent){
-      ui.item.removeClass("dragging");
-    } else {
-      // for IE
-      ui.item.draggable('disable');
-      ui.item.removeClass("dragging");      
-    }
+    ui.item.removeClass("dragging");
   },
 
   handleAddNewImpedimentClick: function(event){
@@ -172,7 +160,7 @@ RB.Taskboard = RB.Object.create({
     var row = RB.$(this).parents("tr").first();
     RB.$('#taskboard').data('this').newImpediment(row);
   },
-  
+
   handleAddNewTaskClick: function(event){
     if (event.button > 1) return;
     var row = RB.$(this).parents("tr").first();
@@ -194,14 +182,14 @@ RB.Taskboard = RB.Object.create({
     var o = RB.Factory.initialize(RB.Impediment, impediment);
     o.edit();
   },
-        
+
   newTask: function(row){
     var task = RB.$('#task_template').children().first().clone();
     row.find(".list").first().prepend(task);
     var o = RB.Factory.initialize(RB.Task, task);
     o.edit();
   },
-  
+
   updateColWidths: function(){
     var w = parseInt(RB.$("#col_width input").val(), 10);
     if (!w || isNaN(w)) { // 0,null,undefined,NaN.

@@ -19,38 +19,6 @@ module RedmineReleaseNotes
     def self.perform
       SettingsController.class_eval do
         helper 'release_notes_settings'
-
-        # tells Rails to render the 'release notes settings' view instead of the
-        # standard plugin settings view if the plugin we're looking at is the
-        # release notes one
-        def plugin_with_release_notes_patch
-          if params[:id] == 'redmine_release_notes'
-            plugin_redmine_release_notes
-          else
-            plugin_without_release_notes_patch
-          end
-        end
-
-        def plugin_redmine_release_notes
-          if request.get?
-            @settings = Backlogs.setting
-            @formats = ReleaseNotesFormat.all
-            render 'plugin_release_notes'
-          elsif request.post?
-            # if params looks ok, update settings in the db
-            if (params[:settings] &&
-              params[:settings][:default_generation_format_id].to_i > 0)
-              plugin_without_release_notes_patch
-            else
-              # otherwise just GET the settings again
-              redirect_to plugin_settings_path(:id => 'redmine_release_notes')
-            end
-          else
-            render_404
-          end
-        end
-
-        alias_method_chain :plugin, :release_notes_patch
       end
     end
   end

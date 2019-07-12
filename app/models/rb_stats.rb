@@ -13,7 +13,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class RbStats < ActiveRecord::Base
-  attr_protected :created_at # hack, all attributes will be mass asigment
   REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
   JOURNALED_PROPERTIES = {
     'estimated_hours'   => :float,
@@ -55,10 +54,11 @@ class RbStats < ActiveRecord::Base
       rescue ActiveRecord::RecordNotFound
         status = nil
       end
-      changes = [ { :property => 'status_open',              :value => status && !status.is_closed },
-                  { :property => 'status_success',           :value => status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) } ]
+      changes = [ { property: journal_property_key(prop), value: journal_property_value(prop, j) }]
+      changes = [{ :property => 'status_open',              :value => status && !status.is_closed },
+                 { :property => 'status_success',           :value => status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) }]
     else
-      changes = [ { :property => journal_property_key(prop), :value => journal_property_value(prop, j) } ]
+      changes = [{ :property => journal_property_key(prop), :value => journal_property_value(prop, j) }]
     end
     changes.each{|change|
       RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :change => change).save

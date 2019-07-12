@@ -7,13 +7,12 @@ module Backlogs
       base.send(:include, InstanceMethods)
       base.class_eval do
         unloadable
-        alias_method_chain :format_object, :backlogs
       end
     end
 
     module InstanceMethods
 
-      def format_object_with_backlogs(object, html=true, &block)
+      def format_object(object, html=true, &block)
         if object.class.name == "CustomFieldValue" || object.class.name == "CustomValue"
           if object.custom_field
             if object.custom_field.id == Backlogs.setting[:show_backlog_story_marker_support_id].to_i && object.value.present?
@@ -33,7 +32,7 @@ module Backlogs
             if f.nil? || f.is_a?(String)
               return f
             else
-              return format_object(f, html, &block)
+              return super(f, html, &block)
             end
           else
             return object.value.to_s
@@ -42,12 +41,12 @@ module Backlogs
         elsif object.class.name == "User" && params[:controller] == "rb_refine_stories"
           link_to "#{object.to_s}", project_issues_path({"set_filter"=>"1", "sort"=>"id:desc", "f"=>["status_id", "assigned_to_id", ""], "op"=>{"status_id"=>"=", "assigned_to_id"=>"="}, "v"=>{"status_id"=>Backlogs.setting[:status_for_validating], "assigned_to_id"=>["#{object.id}"]}, "t"=>[""]})
         else
-          format_object_without_backlogs(object, html, &block)
+          super(object, html, &block)
         end 
       end
     end
 
   end
 end
-ApplicationHelper.send(:include, Backlogs::ApplicationHelperPatch)
+ApplicationHelper.send(:prepend, Backlogs::ApplicationHelperPatch)
 

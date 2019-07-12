@@ -15,6 +15,7 @@
 # redmine_release_notes. If not, see <http://www.gnu.org/licenses/>.
 
 require 'yaml'
+require 'rake/testtask'
 
 namespace :redmine do
   namespace :plugins do

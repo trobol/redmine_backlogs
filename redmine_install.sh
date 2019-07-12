@@ -49,7 +49,6 @@ case $REDMINE_VER in
           export MIGRATE_PLUGINS=db:migrate_plugins
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
           ;;
-  2.*|3.*)  export PATH_TO_PLUGINS=./plugins # for redmine 2.0/3.0
           export GENERATE_SECRET=generate_secret_token
           export MIGRATE_PLUGINS=redmine:plugins:migrate
           export REDMINE_TARBALL=https://github.com/edavis10/redmine/archive/$REDMINE_VER.tar.gz
@@ -106,7 +105,7 @@ run_tests()
     TRACE=--trace
   fi
   # patch fixtures
-  bundle exec rake redmine:backlogs:prepare_fixtures #$TRACE
+  bundle exec rake redmine:backlogs:prepare_fixtures $TRACE
 
   # run cucumber
   if [ ! -n "${CUCUMBER_TAGS}" ];
@@ -231,9 +230,9 @@ sed -i -e 's/fail "GONE"/#fail "GONE"/' `find . -type f -exec grep -l 'fail "GON
 
 if [ "$VERBOSE" = "yes" ]; then echo 'Gems installed'; fi
 
-#if [ "$VERBOSE" = "yes" ]; then
-#  export TRACE=--trace
-#fi
+if [ "$VERBOSE" = "yes" ]; then
+  export TRACE=--trace
+fi
 
 # run redmine database migrations
 if [ "$VERBOSE" = "yes" ]; then echo 'Migrations'; fi

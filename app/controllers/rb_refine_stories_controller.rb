@@ -5,7 +5,7 @@ class RbRefineStoriesController < ApplicationController
   include QueriesHelper
   helper :queries
   helper :issues
-  before_filter :load_project, :get_query
+  before_action :load_project, :get_query
 
   def index
     @query = get_query

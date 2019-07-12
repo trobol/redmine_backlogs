@@ -32,8 +32,6 @@ Then /^application should route me to:$/ do |controller|
   url = url_for(controller_with_params)
   if @method == 'put'
     put url, controller_with_params
-  elsif @method == 'get'
-    get url, controller_with_params
   else
     post url, controller_with_params
   end

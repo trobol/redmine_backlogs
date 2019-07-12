@@ -10,21 +10,32 @@ class RbSprint < Version
     errors.add(:base, l(:error_sprint_end_before_start) ) if self.effective_date && self.sprint_start_date && self.sprint_start_date >= self.effective_date
   end
 
-  scope :open_sprints, lambda { |project| open_or_locked.by_date.in_project(project) }
-  scope :closed_sprints, lambda { |project| closed.by_date.in_project(project) }
-
-  scope :closed, -> { where(:status => 'closed') }
-  scope :open_or_locked, -> { where(:status => ['open', 'locked']) }
-
-  def self.by_date_clause
-    dir = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-    "CASE #{table_name}.sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{dir},
-     #{table_name}.sprint_start_date #{dir},
-     CASE #{table_name}.effective_date WHEN NULL THEN 1 ELSE 0 END #{dir},
-     #{table_name}.effective_date #{dir}"
+  def self.rb_scope(symbol, func)
+    if Rails::VERSION::MAJOR < 3
+      named_scope symbol, func
+    else
+      scope symbol, func
+    end
   end
-  scope :by_date, -> { order(by_date_clause) }
-  scope :in_project, lambda {|project| where(:project_id => project) }
+
+  rb_scope :by_date, lambda {
+    sort_order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
+    order("CASE sprint_start_date WHEN NULL THEN 1 ELSE 0 END #{sort_order},
+      sprint_start_date #{sort_order},
+      CASE effective_date WHEN NULL THEN 1 ELSE 0 END #{sort_order},
+      effective_date #{sort_order}")
+  }
+
+  rb_scope :in_project, lambda {|project| where(:project_id => project) }
+
+  rb_scope :open_sprints, lambda { |project|
+    where("status = 'open'").in_project(project).by_date
+  }
+
+  # TIB ajout du scope :closed_sprints
+  rb_scope :closed_sprints, lambda { |project|
+    where("status = 'closed'").in_project(project).by_date
+  }
 
   safe_attributes 'sprint_start_date',
       'story_points',

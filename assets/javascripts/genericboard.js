@@ -190,24 +190,12 @@ RB.Genericboard = RB.Object.create({
   },
 
   dragStart: function(event, ui){
-    if (RB.$.support.noCloneEvent){
-      ui.item.addClass("dragging");
-    } else {
-      // for IE
-      ui.item.addClass("dragging");
-      ui.item.draggable('enabled');
-    }
+    ui.item.addClass("dragging");
   },
 
   dragStop: function(event, ui){
     this.onMouseUp(event);
-    if (RB.$.support.noCloneEvent){
-      ui.item.removeClass("dragging");
-    } else {
-      // for IE
-      ui.item.draggable('disable');
-      ui.item.removeClass("dragging");
-    }
+    ui.item.removeClass("dragging");
   },
 
   dragRowComplete: function(event, ui) {

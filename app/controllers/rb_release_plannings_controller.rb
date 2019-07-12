@@ -4,7 +4,7 @@ include ProjectsHelper
 
 class RbReleasePlanningsController < ApplicationController
 
-  before_filter :load_project
+  before_action :load_project
   
   def new
     if @project.release_planning.present?

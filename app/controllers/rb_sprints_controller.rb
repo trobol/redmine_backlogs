@@ -12,12 +12,12 @@ class RbSprintsController < RbApplicationController
 
   def create
     attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
     @sprint = RbSprint.new(attribs)
 
     #share the sprint according to the global setting
     default_sharing = Backlogs.setting[:sharing_new_sprint_sharingmode]
-    if default_sharing 
+    if default_sharing
       if @sprint.allowed_sharings.include? default_sharing
         @sprint.sharing = default_sharing
       end
@@ -43,7 +43,7 @@ class RbSprintsController < RbApplicationController
   def update
     except = ['id', 'project_id']
     attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
-    attribs = Hash[*attribs.flatten]
+    attribs = attribs.to_unsafe_h
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
@@ -93,7 +93,7 @@ class RbSprintsController < RbApplicationController
 
     ids = []
     status = IssueStatus.default.id
-    Issue.where(fixed_version_id: @sprint.id).find_each {|issue|
+    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
       ids << issue.id.to_s
       issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => status)
     }
@@ -118,7 +118,7 @@ class RbSprintsController < RbApplicationController
 
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
-  
+
   def close
     if @sprint.stories.open.any?
       flash[:error] = l(:error_cannot_close_sprint_with_open_stories)
@@ -127,5 +127,5 @@ class RbSprintsController < RbApplicationController
     end
     redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
   end
- 
+
 end

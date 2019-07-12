@@ -5,13 +5,9 @@ class RbSprintBurndown < ActiveRecord::Base
   self.table_name = 'rb_sprint_burndown'
   belongs_to :version
 
-  attr_accessible :directon, :version_id, :stories, :burndown
-
   serialize :stories, Array
   serialize :burndown, Hash
   after_initialize :init
-
-  attr_accessible :stories, :burndown, :direction, :version
 
   def direction
     @direction
@@ -45,14 +41,14 @@ class RbSprintBurndown < ActiveRecord::Base
     @series ||= {}
     key = "#{@direction}_#{remove_empty ? 'filled' : 'all'}"
     if @series[key].nil?
-      @series[key] = self.get_burndown[@direction].keys.collect{|k| k.to_s}.sort
+      @series[key] = self.burndown[@direction].keys.collect{|k| k.to_s}.sort
       if remove_empty
         # delete :points_committed if flatline
-        @series[key].delete('points_committed') if self.get_burndown[@direction][:points_committed].uniq.compact.size < 1
+        @series[key].delete('points_committed') if self.burndown[@direction][:points_committed].uniq.compact.size < 1
 
         # delete any series that is flat-line 0/nil
         @series[key].each {|k|
-          @series[key].delete(k) if k != 'points_committed' && self.get_burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
+          @series[key].delete(k) if k != 'points_committed' && self.burndown[@direction][k.intern].collect{|d| d.to_f }.uniq == [0.0]
         }
       end
     end
@@ -62,14 +58,14 @@ class RbSprintBurndown < ActiveRecord::Base
 
   #compatibility
   def days
-    return self.get_burndown[:days]
+    return self.burndown[:days]
   end
 
   def cached_data
     return self.cached_burndown[@direction]
   end
   def data
-    return self.get_burndown[@direction]
+    return self.burndown[@direction]
   end
 
   def init
@@ -80,10 +76,10 @@ class RbSprintBurndown < ActiveRecord::Base
   def cached_burndown
     cb = read_attribute(:burndown)
     return cb unless cb.nil? || cb.empty?
-    get_burndown
+    burndown
   end
 
-  def get_burndown
+  def burndown
     return @_burndown if defined?(@_burndown)
 
     @_burndown = read_attribute(:burndown)

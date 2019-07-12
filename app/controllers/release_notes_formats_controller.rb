@@ -16,8 +16,8 @@
 
 class ReleaseNotesFormatsController < ApplicationController
   layout 'admin'
-  before_filter :require_admin
-  before_filter :find_backlog_plugin, :only => [:create, :update, :destroy]
+  before_action :require_admin
+  before_action :find_backlog_plugin, :only => [:create, :update, :destroy]
 
   def new
     @format = ReleaseNotesFormat.new

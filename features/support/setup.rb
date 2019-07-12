@@ -4,30 +4,18 @@ require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 require 'cucumber/rails/world'
 Cucumber::Rails::World.use_transactional_fixtures = true
 
-require 'minitest/spec'
-
-require 'minitest/unit'
-require 'minitest/spec'
-
-
-require 'minitest'
-module MiniTestAssertions
-  def self.extended(base)
-    base.extend(MiniTest::Assertions)
-    base.assertions = 0
-  end
-
-  attr_accessor :assertions
+if Rails::VERSION::MAJOR >= 3
+  require 'rspec/rails/matchers'
+  World(RSpec::Rails::Matchers::RoutingMatchers)
 end
-World(MiniTestAssertions)
-
-require 'rspec/rails/matchers'
-World(RSpec::Rails::Matchers::RoutingMatchers)
-
 
 #Seed the DB
 def seed_the_database
-  fixtures = ActiveRecord::FixtureSet
+  if Rails::VERSION::MAJOR < 3
+    fixtures = Fixtures
+  else
+    fixtures = ActiveRecord::Fixtures
+  end
   seed_the_database_with(fixtures)
 end
 

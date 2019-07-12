@@ -3,14 +3,14 @@
 ***************************************/
 
 RB.Epicboard = RB.Object.create({
-    
+
   initialize: function(el){
     var j = RB.$(el);
     var self = this; // So we can bind the event handlers to this object
-    
+
     self.$ = j;
     self.el = el;
-    
+
     // Associate this object with the element for later retrieval
     j.data('this', self);
 
@@ -55,7 +55,7 @@ RB.Epicboard = RB.Object.create({
     j.find('#stories .add_new').bind('click', self.handleAddNewStoryClick);
 
   },
-  
+
   /*onMouseUp: function(e) {
       //re-enable all cells deferred
       setTimeout(function(){
@@ -71,27 +71,15 @@ RB.Epicboard = RB.Object.create({
 
     if(isDropTarget){
       ui.item.data('this').saveDragResult();
-    }    
-  },
-  
-  dragStart: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
-      ui.item.addClass("dragging");
-    } else {
-      // for IE
-      ui.item.addClass("dragging");      
-      ui.item.draggable('enabled');
     }
   },
-  
-  dragStop: function(event, ui){ 
-    if (jQuery.support.noCloneEvent){
-      ui.item.removeClass("dragging");
-    } else {
-      // for IE
-      ui.item.draggable('disable');
-      ui.item.removeClass("dragging");      
-    }
+
+  dragStart: function(event, ui){
+    ui.item.addClass("dragging");
+  },
+
+  dragStop: function(event, ui){
+    ui.item.removeClass("dragging");
   },
 
   handleAddNewStoryClick: function(event){

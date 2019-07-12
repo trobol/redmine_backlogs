@@ -43,11 +43,11 @@ module RedmineReleaseNotes
       else
         ""
       end
-    end 
+    end
 
     def view_layouts_base_html_head(context)
       stylesheet_link_tag('release_notes.css',
-                          :plugin => 'redmine_release_notes')
+                          plugin: 'redmine_backlogs')
     end
   end
 end
