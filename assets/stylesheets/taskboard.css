@@ -453,11 +453,13 @@ See RB.Taskboard.initialize()
   text-transform:capitalize;
   width:100%;
 }
+
 .rb_editor .editor{
   font-size:11px;
   margin-bottom:10px;
   width:100%;
 }
+
 .rb_editor .subject{
   height:65px;
   width:272px;
@@ -467,6 +469,7 @@ See RB.Taskboard.initialize()
   height:80px;
   width:272px;
 }
+
 .rb_editor .remaining_hours,
 .rb_editor .time_entry_hours,
 .rb_editor .time_entry_user_id,
@@ -474,6 +477,7 @@ See RB.Taskboard.initialize()
 .rb_editor .blocks{
   width:268px;
 }
+
 .rb_editor .time_entry_comments{
   height:30px;
   width:268px;
@@ -485,16 +489,20 @@ See RB.Taskboard.initialize()
 #story_template{
   display:none;
 }
+
 #preloader{
   left:-500px;
   position:absolute;
 }
+
 #spinner{
   background-image:url('images/indicator.gif');
 }
+
 #warning{
   background-image:url('images/warning.png');
 }
+
 #ui-datepicker-div{
   display: none;
 }
