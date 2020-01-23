@@ -1,10 +1,10 @@
 Given(/^scaled agile features are enabled and configured$/) do
   Backlogs.setting[:scaled_agile_enabled] = true
 
-  defaultstatus = IssueStatus.find_by(:name => 'New')
+  defaultstatus = IssueStatus.find_by(name: 'New')
   # Configure the epic and feature trackers
-  epic_trackers = [(Tracker.find_by_name('Epic') || Tracker.create!(:name => 'Epic', :default_status => defaultstatus))]
-  feature_trackers = [(Tracker.find_by_name('Feature') || Tracker.create!(:name => 'Feature', :default_status => defaultstatus))]
+  epic_trackers = [(Tracker.find_by_name('Epic') || Tracker.create!(name: 'Epic', default_status: defaultstatus))]
+  feature_trackers = [(Tracker.find_by_name('Feature') || Tracker.create!(name: 'Feature', default_status: defaultstatus))]
   # get the ids
   epic_trackers = epic_trackers.map { |t| t.id }
   feature_trackers = feature_trackers.map { |t| t.id }
@@ -110,10 +110,10 @@ end
 
 Given(/^I am viewing the boards page$/) do
   first_genericboard_id = RbGenericboard.order(:name).first.id
-  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
+  visit url_for(controller: :projects, action: :show, id: @project.identifier, only_path: true)
   verify_request_status(200)
   click_link("Boards")
-  page.current_path.should == url_for(:controller => :rb_genericboards, :action => :show, :genericboard_id => first_genericboard_id, :project_id => @project.identifier, :only_path=>true)
+  page.current_path.should == url_for(controller: :rb_genericboards, action: :show, genericboard_id: first_genericboard_id, project_id: @project.identifier, only_path: true)
   verify_request_status(200)
 end
 
@@ -183,7 +183,7 @@ Then(/^the boards should provide correct data for rows, columns and elements$/) 
   columns = b.columns(@project)
   puts "columns #{columns}"
   #columns.each {|c| puts("col #{c}") }
-  page.driver.render('/tmp/2.3.png', :full=>true)
+  page.driver.render('/tmp/2.3.png', full: true)
 
   columns.length.should == 3
   columns[0].is_a?(RbFakeGeneric).should be true

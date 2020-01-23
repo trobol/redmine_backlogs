@@ -8,12 +8,12 @@ class DropReleaseBurndownDays < ActiveRecord::Migration[5.2]
 
   def self.down
     create_table :release_burndown_days do |t|
-      t.column :release_id, :integer, :null => false
-      t.column :day, :date, :null => false
-      t.column :remaining_story_points, :integer, :null => false
+      t.column :release_id, :integer, null: false
+      t.column :day, :date, null: false
+      t.column :remaining_story_points, :integer, null: false
       t.timestamps
     end
-    add_column :releases, :initial_story_points, :integer, :null => true
+    add_column :releases, :initial_story_points, :integer, null: true
   end
 end
 

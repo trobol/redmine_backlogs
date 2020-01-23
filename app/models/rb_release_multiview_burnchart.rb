@@ -77,8 +77,8 @@ class RbReleaseMultiviewBurnchart
     releases_with_trends = []
     @releases.each{|r|
       trend_end_date = @stacked_graph.total_estimates[r][:end_date_estimate] unless @stacked_graph.total_estimates[r].nil?
-      releases_with_trends << { :release => r,
-        :trend_end_date => _estimate_text(r.has_open_stories?,trend_end_date)}
+      releases_with_trends << { release: r,
+        trend_end_date: _estimate_text(r.has_open_stories?,trend_end_date)}
     }
     releases_with_trends
   end

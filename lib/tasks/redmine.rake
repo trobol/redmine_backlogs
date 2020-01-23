@@ -21,7 +21,7 @@ namespace :redmine do
   namespace :plugins do
     namespace :release_notes do
       desc 'run all tests for release notes plugin'
-      task :test => 'redmine:plugins:release_notes:test:all'
+      task test: 'redmine:plugins:release_notes:test:all'
 
       namespace :test do
         def assumes_migrated_test_task(type)
@@ -57,7 +57,7 @@ namespace :redmine do
         assumes_migrated_test_task :all
       end
 
-      task :load_default_formats => :environment do
+      task load_default_formats: :environment do
         fail 'you already have some formats! run with FORCE to force' unless
           ReleaseNotesFormat.count == 0 || ENV['FORCE']
 

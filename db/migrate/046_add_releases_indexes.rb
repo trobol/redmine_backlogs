@@ -9,12 +9,12 @@ class AddReleasesIndexes < ActiveRecord::Migration[5.2]
   end
 
   def self.down
-    remove_index :issues, :column => :release_id
-    remove_index :issues, :column => :release_relationship
-    remove_index :releases, :column => :project_id
-    remove_index :releases, :column => :status
-    remove_index :releases, :column => :release_start_date
-    remove_index :releases, :column => :release_end_date
+    remove_index :issues, column: :release_id
+    remove_index :issues, column: :release_relationship
+    remove_index :releases, column: :project_id
+    remove_index :releases, column: :status
+    remove_index :releases, column: :release_start_date
+    remove_index :releases, column: :release_end_date
   end
 end
 

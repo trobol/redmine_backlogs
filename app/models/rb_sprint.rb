@@ -26,7 +26,7 @@ class RbSprint < Version
       effective_date #{sort_order}")
   }
 
-  rb_scope :in_project, lambda {|project| where(:project_id => project) }
+  rb_scope :in_project, lambda {|project| where(project_id: project) }
 
   rb_scope :open_sprints, lambda { |project|
     where("status = 'open'").in_project(project).by_date
@@ -113,7 +113,7 @@ class RbSprint < Version
     if !page
       template = find_wiki_template
       if template
-      page = WikiPage.new(:wiki => project.wiki, :title => self.wiki_page_title)
+      page = WikiPage.new(wiki: project.wiki, title: self.wiki_page_title)
       page.content = WikiContent.new
       page.content.text = "h1. #{self.name}\n\n#{template.text}"
       page.save!

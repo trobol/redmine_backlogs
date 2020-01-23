@@ -127,8 +127,8 @@ module BacklogsSpreadsheet
     end
 
     def default_style
-      return {:numberformat => {'ss:Format' => 'Short Date'}} if self.hour == 0 && self.min == 0 && self.sec == 0
-      return {:numberformat => {'ss:Format' => 'General Date'}}
+      return {numberformat: {'ss:Format' => 'Short Date'}} if self.hour == 0 && self.min == 0 && self.sec == 0
+      return {numberformat: {'ss:Format' => 'General Date'}}
     end
   end
 
@@ -307,7 +307,7 @@ module BacklogsSpreadsheet
             end
 
             c = cell.at('Comment//Data')
-            v = {:value => v, :comment => c.text} if c
+            v = {value: v, comment: c.text} if c
 
             _ws[rownum, colnum] = v
           }

@@ -17,7 +17,7 @@
 class ReleaseNotesFormatsController < ApplicationController
   layout 'admin'
   before_action :require_admin
-  before_action :find_backlog_plugin, :only => [:create, :update, :destroy]
+  before_action :find_backlog_plugin, only: [:create, :update, :destroy]
 
   def new
     @format = ReleaseNotesFormat.new
@@ -65,7 +65,7 @@ class ReleaseNotesFormatsController < ApplicationController
     format = ReleaseNotesFormat.new(params[:release_notes_format])
     version = ReleaseNotesGenerator::MockVersion.new
     @text = ReleaseNotesGenerator.new(version, format).generate
-    render :text => @text
+    render text: @text
   end
 
   def find_backlog_plugin

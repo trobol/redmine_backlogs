@@ -54,14 +54,13 @@ class RbStats < ActiveRecord::Base
       rescue ActiveRecord::RecordNotFound
         status = nil
       end
-      changes = [ { property: journal_property_key(prop), value: journal_property_value(prop, j) }]
-      changes = [{ :property => 'status_open',              :value => status && !status.is_closed },
-                 { :property => 'status_success',           :value => status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) }]
+      changes = [{ property: 'status_open',              value: status && !status.is_closed },
+                 { property: 'status_success',           value: status && !status.backlog_is?(:success, RbStory.trackers(:trackers)[0]) }]
     else
-      changes = [{ :property => journal_property_key(prop), :value => journal_property_value(prop, j) }]
+      changes = [{ property: journal_property_key(prop), value: journal_property_value(prop, j) }]
     end
     changes.each{|change|
-      RbJournal.new(:issue_id => issue_id, :timestamp => timestamp, :change => change).save
+      RbJournal.new(issue_id: issue_id, timestamp: timestamp, change: change).save
     }
   end
 
@@ -84,7 +83,7 @@ class RbStats < ActiveRecord::Base
   end
 
   def self.rebuild(issue)
-    RbJournal.delete_all(:issue_id => issue.id)
+    RbJournal.delete_all(issue_id: issue.id)
 
     changes = {}
     RbJournal::REDMINE_PROPERTIES.each{|prop| changes[prop] = [] }
@@ -96,7 +95,7 @@ class RbStats < ActiveRecord::Base
                                                 RbJournal::REDMINE_PROPERTIES, issue.id])
                 .order("journals.created_on asc")
                 .joins(:journal).find_each {|detail|
-          changes[detail.prop_key] << {:time => detail.journal.created_on, :old => detail.old_value, :new => detail.value}
+          changes[detail.prop_key] << {time: detail.journal.created_on, old: detail.old_value, new: detail.value}
         }
 
       when :chiliproject
@@ -114,16 +113,16 @@ class RbStats < ActiveRecord::Base
               next if changes[prop].size == 0 && !valid_statuses.include?(delta[0])
               next unless valid_statuses.include?(delta[1])
             end
-            changes[prop] << {:time => j.created_at, :old => delta[0], :new => delta[1]}
+            changes[prop] << {time: j.created_at, old: delta[0], new: delta[1]}
           }
         }
     end
 
     RbJournal::REDMINE_PROPERTIES.each{|prop|
       if changes[prop].size > 0
-        changes[prop].unshift({:time => issue.created_on, :new => changes[prop][0][:old]})
+        changes[prop].unshift({time: issue.created_on, new: changes[prop][0][:old]})
       else
-        changes[prop] = [{:time => issue.created_on, :new => issue.send(prop.intern)}]
+        changes[prop] = [{time: issue.created_on, new: issue.send(prop.intern)}]
       end
     }
 
@@ -139,14 +138,14 @@ class RbStats < ActiveRecord::Base
     ['status_open', 'status_success'].each{|p| changes[p] = [] }
     changes['status_id'].each{|change|
       status = issue_status[change[:new]]
-      changes['status_open'] << change.merge(:new => status && !status.is_closed?)
-      changes['status_success'] << change.merge(:new => status && status.backlog_is?(:success, RbStory.trackers(:trackers)[0]))
+      changes['status_open'] << change.merge(new: status && !status.is_closed?)
+      changes['status_success'] << change.merge(new: status && status.backlog_is?(:success, RbStory.trackers(:trackers)[0]))
     }
     changes.delete('status_id')
 
     changes.each_pair{|prop, updates|
       updates.each{|change|
-        RbJournal.new(:issue_id => issue.id, :timestamp => change[:time], :change => {:property => prop, :value => change[:new]}).save
+        RbJournal.new(issue_id: issue.id, timestamp: change[:time], change: {property: prop, value: change[:new]}).save
       }
     }
   end

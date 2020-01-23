@@ -15,7 +15,7 @@ class RbGeneric < Issue
     options[:conditions] ||= []
     if permission
       if Issue.respond_to? :visible_condition
-        visible = Issue.visible_condition(User.current, :project => project || Project.find(project_id))
+        visible = Issue.visible_condition(User.current, project: project || Project.find(project_id))
       else
         visible = Project.allowed_to_condition(User.current, :view_issues)
       end
@@ -96,8 +96,8 @@ class RbGeneric < Issue
 
   def list_with_gaps_options
     {
-      :project => self.project_id,
-      :sprint => self.fixed_version_id,
+      project: self.project_id,
+      sprint: self.fixed_version_id,
     }
   end
 
@@ -135,11 +135,11 @@ class RbGeneric < Issue
   end
 
   def self.all_trackers(tracker_id)
-    if self.epic_trackers(:type=>:array).include?(tracker_id)
+    if self.epic_trackers(type: :array).include?(tracker_id)
       return self.epic_trackers
-    elsif self.feature_trackers(:type=>:array).include?(tracker_id)
+    elsif self.feature_trackers(type: :array).include?(tracker_id)
       return self.feature_trackers
-    elsif self.story_trackers(:type=>:array).include?(tracker_id)
+    elsif self.story_trackers(type: :array).include?(tracker_id)
       return self.story_trackers
     elsif tracker_id == RbTask.tracker
       return [RbTask.tracker]
@@ -149,7 +149,7 @@ class RbGeneric < Issue
 
   def self.get_trackers(trackersettings, options = {})
     # legacy
-    options = {:type => options} if options.is_a?(Symbol)
+    options = {type: options} if options.is_a?(Symbol)
 
     # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
     trackers = []

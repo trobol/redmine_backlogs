@@ -92,7 +92,7 @@ private
 
   # Used when adding first stacked series
   def add_first(arrays,object, create_estimate)
-    @total_data << {:days => arrays[:days], :total_points => arrays[:total_points], :object => object}
+    @total_data << {days: arrays[:days], total_points: arrays[:total_points], object: object}
     # Need to duplicate array of days. Otherwise ruby references falsely.
     days_within_limit = arrays[:days].select{|day| day <= @closed_day_limit}
     return if days_within_limit.size() == 0
@@ -101,7 +101,7 @@ private
 
     if create_estimate
       est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
-      @total_estimates[object] = {:trendline => est_total}
+      @total_estimates[object] = {trendline: est_total}
     end
   end
 
@@ -134,11 +134,11 @@ private
       end
     }
     # Add the new stacked total series
-    @total_data << {:days => arrays[:days], :total_points => tmp_total, :object => object}
+    @total_data << {days: arrays[:days], total_points: tmp_total, object: object}
 
     if create_estimate
       est_total = _linear_regression(@total_data[-1][:days],@total_data[-1][:total_points],ESTIMATE_POINTS)
-      @total_estimates[object] = {:trendline => est_total }
+      @total_estimates[object] = {trendline: est_total }
     end
   end
 

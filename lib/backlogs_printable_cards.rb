@@ -249,7 +249,7 @@ module BacklogsPrintableCards
 
     def initialize(email, size)
       # see conversion chart pt -> px @ http://sureshjain.wordpress.com/2007/07/06/53/
-      @url = gravatar_url(email, :size => (size * 16) / 12)
+      @url = gravatar_url(email, size: (size * 16) / 12)
     end
 
     def image
@@ -278,7 +278,7 @@ module BacklogsPrintableCards
       label = Nokogiri::XML(Zlib::GzipReader.open(f))
 
       bounds = label.xpath('//ns:Template/ns:Label-rectangle', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
-      @template = { :x => bounds['width'].units_to_points, :y => bounds['height'].units_to_points}
+      @template = { x: bounds['width'].units_to_points, y: bounds['height'].units_to_points}
 
       @card = label.xpath('//ns:Objects', 'ns' => 'http://snaught.com/glabels/2.2/')[0]
       @width = width
@@ -287,10 +287,10 @@ module BacklogsPrintableCards
 
     def box(b, scaled=true)
       return {
-        :x => (b['x'].units_to_points / @template[:x]) * @width,
-        :y => (1 - (b['y'].units_to_points / @template[:y])) * @height,
-        :w => (b['w'].units_to_points / @template[:x]) * @width,
-        :h => (b['h'].units_to_points / @template[:y]) * @height
+        x: (b['x'].units_to_points / @template[:x]) * @width,
+        y: (1 - (b['y'].units_to_points / @template[:y])) * @height,
+        w: (b['w'].units_to_points / @template[:x]) * @width,
+        h: (b['h'].units_to_points / @template[:y]) * @height
       }
     end
 
@@ -299,8 +299,8 @@ module BacklogsPrintableCards
       style = [s['font_weight'] == "Bold" ? 'bold' : nil, s['font_italic'] == "True" ? 'italic' : nil].compact.join('_')
       style = 'normal' if style == ''
       return {
-        :size => Integer(s['font_size']),
-        :style => style.intern
+        size: Integer(s['font_size']),
+        style: style.intern
       }
     end
 
@@ -317,10 +317,10 @@ module BacklogsPrintableCards
 
     def line(l)
       return {
-        :x1 => (l['x'].units_to_points / @template[:x]) * @width,
-        :y1 => (1 - (l['y'].units_to_points / @template[:y])) * @height,
-        :x2 => ((l['x'].units_to_points + l['dx'].units_to_points) / @template[:x]) * @width,
-        :y2 => (1 - ((l['y'].units_to_points + l['dy'].units_to_points) / @template[:y])) * @height
+        x1: (l['x'].units_to_points / @template[:x]) * @width,
+        y1: (1 - (l['y'].units_to_points / @template[:y])) * @height,
+        x2: ((l['x'].units_to_points + l['dx'].units_to_points) / @template[:x]) * @width,
+        y2: (1 - ((l['y'].units_to_points + l['dy'].units_to_points) / @template[:y])) * @height
       }
     end
 
@@ -328,7 +328,7 @@ module BacklogsPrintableCards
       default_stroke_color = pdf.stroke_color
       default_fill_color = pdf.fill_color
 
-      pdf.bounding_box [x, y], :width => @width, :height => @height do
+      pdf.bounding_box [x, y], width: @width, height: @height do
         @card.children.each {|obj|
           next if obj.text?
 
@@ -379,7 +379,7 @@ module BacklogsPrintableCards
 
               s = style(obj)
               pdf.font_size(s[:size]) do
-                Prawn::Text::Box.new(content, {:overflow => :ellipses, :at => [dim[:x], dim[:y]], :document => pdf, :width => dim[:w], :height => dim[:h], :style => s[:style]}).render
+                Prawn::Text::Box.new(content, {overflow: :ellipses, at: [dim[:x], dim[:y]], document: pdf, width: dim[:w], height: dim[:h], style: s[:style]}).render
               end
 
             when 'Object-image'
@@ -388,7 +388,7 @@ module BacklogsPrintableCards
 
                 img = Gravatar.new(data['owner.email'], (dim[:h] < dim[:w]) ? dim[:h] : dim[:w]).image
                 if img
-                  pdf.image img, :at => [dim[:x], dim[:y]], :width => dim[:w]
+                  pdf.image img, at: [dim[:x], dim[:y]], width: dim[:w]
                 else
                   # if image loading fails once, stop loading images for this rendering
                   @gravatar_online = false
@@ -414,12 +414,12 @@ module BacklogsPrintableCards
 
       @label = CardPageLayout.selected
       @pdf = Prawn::Document.new(
-        :page_layout => :portrait,
-        :left_margin => 0,
-        :right_margin => 0,
-        :top_margin => 0,
-        :bottom_margin => 0,
-        :page_size => @label ? @label.paper_size : 'A4')
+        page_layout: :portrait,
+        left_margin: 0,
+        right_margin: 0,
+        top_margin: 0,
+        bottom_margin: 0,
+        page_size: @label ? @label.paper_size : 'A4')
 
       if !@label
         @pdf.text("No (valid) label layout was selected. Your rails log will probably have more details on the exact problem.")
@@ -430,10 +430,10 @@ module BacklogsPrintableCards
         fontdir = File.dirname(__FILE__) + '/ttf'
         @pdf.font_families.update(
           "DejaVuSans" => {
-            :bold         => "#{fontdir}/DejaVuSans-Bold.ttf",
-            :italic       => "#{fontdir}/DejaVuSans-Oblique.ttf",
-            :bold_italic  => "#{fontdir}/DejaVuSans-BoldOblique.ttf",
-            :normal       => "#{fontdir}/DejaVuSans.ttf"
+            bold: "#{fontdir}/DejaVuSans-Bold.ttf",
+            italic: "#{fontdir}/DejaVuSans-Oblique.ttf",
+            bold_italic: "#{fontdir}/DejaVuSans-BoldOblique.ttf",
+            normal: "#{fontdir}/DejaVuSans.ttf"
           }
         )
         @pdf.font "DejaVuSans"

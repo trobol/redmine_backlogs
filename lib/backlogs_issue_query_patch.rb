@@ -55,25 +55,25 @@ module Backlogs
         else
           backlogs_filters = {
             # mother of *&@&^*@^*#.... order "20" is a magical constant in RM2.2 which means "I'm a custom field". What. The. Fuck.
-            "backlogs_issue_type" => {  :type => :list,
-                                        :name => l(:field_backlogs_issue_type),
-                                        :values => [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
-                                        :order => 21 },
-            "story_points" => { :type => :float,
-                                :name => l(:field_story_points),
-                                :order => 22 }
+            "backlogs_issue_type" => {  type: :list,
+                                        name: l(:field_backlogs_issue_type),
+                                        values: [[l(:backlogs_story), "story"], [l(:backlogs_task), "task"], [l(:backlogs_impediment), "impediment"], [l(:backlogs_any), "any"]],
+                                        order: 21 },
+            "story_points" => { type: :float,
+                                name: l(:field_story_points),
+                                order: 22 }
             }
         end
 
-        backlogs_filters["releases"] = { :type => :list_optional,
-                          :name => l(:field_releases),
-                          :values => lambda { project.releases.collect{|s| [s.name, s.id.to_s] } },
-                          :order => 23
+        backlogs_filters["releases"] = { type: :list_optional,
+                          name: l(:field_releases),
+                          values: lambda { project.releases.collect{|s| [s.name, s.id.to_s] } },
+                          order: 23
                         }
 
         if check_redmine_version_ge(3, 4)
           backlogs_filters.each do |field, filter|
-            options = {:type => filter[:type], :name => filter[:name], :values => filter[:values]}
+            options = {type: filter[:type], name: filter[:name], values: filter[:values]}
             add_available_filter(field, options)
           end
         else
@@ -88,11 +88,11 @@ module Backlogs
 
         @backlog_columns_included = true
 
-        @available_columns << QueryColumn.new(:story_points, :sortable => "#{Issue.table_name}.story_points")
+        @available_columns << QueryColumn.new(:story_points, sortable: "#{Issue.table_name}.story_points")
         @available_columns << QueryColumn.new(:velocity_based_estimate)
-        @available_columns << QueryColumn.new(:position, :sortable => "#{Issue.table_name}.position")
-        @available_columns << QueryColumn.new(:remaining_hours, :sortable => "#{Issue.table_name}.remaining_hours")
-        @available_columns << QueryColumn.new(:releases, :sortable => "#{RbIssueRelease.table_name}.release_id")
+        @available_columns << QueryColumn.new(:position, sortable: "#{Issue.table_name}.position")
+        @available_columns << QueryColumn.new(:remaining_hours, sortable: "#{Issue.table_name}.remaining_hours")
+        @available_columns << QueryColumn.new(:releases, sortable: "#{RbIssueRelease.table_name}.release_id")
         @available_columns << QueryColumn.new(:backlogs_issue_type)
       end
 
@@ -108,7 +108,7 @@ module Backlogs
         selected_values = values_for(field)
         selected_values = ['story', 'task'] if selected_values.include?('any')
 
-        story_trackers = RbStory.trackers(:type=>:string)
+        story_trackers = RbStory.trackers(type: :string)
         all_trackers = (RbStory.trackers + [RbTask.tracker]).collect{|val| "#{val}"}.join(",")
 
         selected_values.each { |val|

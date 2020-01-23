@@ -9,7 +9,7 @@ class AddStoryPositions < ActiveRecord::Migration[5.2]
 
       execute "update issues
                set position = #{max} + id
-               where position is null and tracker_id in (#{RbStory.trackers(:type=>:string)})"
+               where position is null and tracker_id in (#{RbStory.trackers(type: :string)})"
     end
   end
 

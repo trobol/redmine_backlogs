@@ -41,7 +41,7 @@ class RbGenericboard < ActiveRecord::Base
     # similar to project.open_shared_sprints but we not become(RbSprint) and return scopable query
     if Backlogs.setting[:sharing_enabled]
       order = 'ASC'
-      project.shared_versions.visible.where(:status => ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}")
+      project.shared_versions.visible.where(status: ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}")
     else # no backlog sharing
       RbSprint.open_sprints(project)
     end
@@ -183,8 +183,8 @@ class RbGenericboard < ActiveRecord::Base
       return RbGeneric.visible.
         where(conditions[:conditions]).
         generic_backlog_scope({
-            :project => project,
-            :trackers => resolve_trackers(tracker_id)
+            project: project,
+            trackers: resolve_trackers(tracker_id)
         }).
         order("#{RbGeneric.table_name}.position")
     end
@@ -227,7 +227,7 @@ class RbGenericboard < ActiveRecord::Base
     when '__current_release', '__current_or_no_release'
       if filteroptions.include? '__release'
         if filteroptions['__release'].to_i > 0
-          RbRelease.where(:id => filteroptions['__release']).take || project.active_release || nil
+          RbRelease.where(id: filteroptions['__release']).take || project.active_release || nil
         else
           filteroptions['__release'].to_i
         end
@@ -238,7 +238,7 @@ class RbGenericboard < ActiveRecord::Base
     when '__current_sprint', '__current_or_no_sprint'
       if filteroptions.include? '__sprint'
         if filteroptions['__sprint'].to_i > 0
-          RbSprint.where(:id => filteroptions['__sprint']).take || project.active_sprint || nil
+          RbSprint.where(id: filteroptions['__sprint']).take || project.active_sprint || nil
         else
           filteroptions['__sprint'].to_i
         end
@@ -249,7 +249,7 @@ class RbGenericboard < ActiveRecord::Base
     when '__my_team'
       if filteroptions.include? '__team'
         if filteroptions['__team'].to_i > 0
-          Group.where(:id => filteroptions['__team']).take || User.current.groups.order(:lastname).first || nil
+          Group.where(id: filteroptions['__team']).take || User.current.groups.order(:lastname).first || nil
         else
           filteroptions['__team'].to_i
         end
@@ -260,12 +260,12 @@ class RbGenericboard < ActiveRecord::Base
     when '__parent'
       if filteroptions.include? '__parent'
         if filteroptions['__parent'].to_i > 0
-          RbGeneric.where(:id => filteroptions['__parent']).take || nil
+          RbGeneric.where(id: filteroptions['__parent']).take || nil
         else
           filteroptions['__parent'].to_i
         end
       else
-        RbGeneric.epics({:project=>project}).order(:subject).first || 0
+        RbGeneric.epics({project: project}).order(:subject).first || 0
       end
     else
       0
@@ -283,7 +283,7 @@ class RbGenericboard < ActiveRecord::Base
       #User.current.groups.order(:lastname).to_a
       Group.order(:lastname).to_a
     when '__parent'
-      RbGeneric.epics({:project => project}).order(:position).to_a
+      RbGeneric.epics({project: project}).order(:position).to_a
     else
       nil
     end
@@ -355,7 +355,7 @@ class RbGenericboard < ActiveRecord::Base
       "Epic"
     else #assume an id of tracker, see our options in helper
       tracker_id = object_type
-      tracker = Tracker.where(:id => tracker_id).take
+      tracker = Tracker.where(id: tracker_id).take
       if tracker
         tracker.name
       else
@@ -441,7 +441,7 @@ class RbGenericboard < ActiveRecord::Base
     filter = [filter] if filter && !filter.is_a?(Array)
     # assemble objects into __filter => list
     opts = Hash[filter.collect{|f|
-      [f, {:values=>find_filter_alternative_options(project, f)}] unless f.blank?
+      [f, {values: find_filter_alternative_options(project, f)}] unless f.blank?
     }.compact()]
     # convert onbjects in lists to [id, name] tuples
     opts.each {|key, optionlist|
@@ -498,7 +498,7 @@ class RbGenericboard < ActiveRecord::Base
       if include_none_in_rows?
         e = e.where(["(#{RbGeneric.table_name}.parent_id in (?) or #{RbGeneric.table_name}.parent_id is null)", row_ids])
       else
-        e = e.where(:parent_id => row_ids)
+        e = e.where(parent_id: row_ids)
       end
       #Rails.logger.info("xxxxxelements #{e.to_a.collect{|f| f.id}}")
     end

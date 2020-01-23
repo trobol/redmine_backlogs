@@ -4,7 +4,7 @@ module Backlogs
   class Statistics
     def initialize(project)
       @project = project
-      @statistics = {:succeeded => [], :failed => [], :values => {}}
+      @statistics = {succeeded: [], failed: [], values: {}}
 
       @active_sprint = @project.active_sprint
       @past_sprints = RbSprint.where("project_id = ? and not(effective_date is null or sprint_start_date is null) and effective_date < ?", @project.id, Date.today)
@@ -173,9 +173,9 @@ module Backlogs
 
       base.class_eval do
         unloadable
-        has_many :releases, -> { order "#{RbRelease.table_name}.name DESC" }, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy
-        has_many :releases_multiview, :class_name => 'RbReleaseMultiview', :dependent => :destroy
-        has_one :release_planning, :class_name => 'RbReleasePlanning'
+        has_many :releases, -> { order "#{RbRelease.table_name}.name DESC" }, class_name: 'RbRelease', inverse_of: :project, dependent: :destroy
+        has_many :releases_multiview, class_name: 'RbReleaseMultiview', dependent: :destroy
+        has_one :release_planning, class_name: 'RbReleasePlanning'
         include Backlogs::ActiveRecord::Attributes
       end
     end
@@ -194,7 +194,7 @@ module Backlogs
         #@project_settings ||= RbProjectSettings.first(:conditions => ["project_id = ?", self.id])
         @project_settings ||= RbProjectSettings.where("project_id = ?", self.id).first()
         unless @project_settings
-          @project_settings = RbProjectSettings.new( :project_id => self.id)
+          @project_settings = RbProjectSettings.new( project_id: self.id)
           @project_settings.save
         end
         @project_settings
@@ -220,7 +220,7 @@ module Backlogs
         if Backlogs.setting[:sharing_enabled]
           order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
           #beware - this returns an array, not an activerecord query
-          shared_versions.visible.where(:status => ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+          shared_versions.visible.where(status: ['open', 'locked']).order("sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.open_sprints(self)
         end
@@ -230,7 +230,7 @@ module Backlogs
       def closed_shared_sprints
         if Backlogs.setting[:sharing_enabled]
           order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
-          shared_versions.visible.where(:status => ['closed']).order("sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
+          shared_versions.visible.where(status: ['closed']).order("sprint_start_date #{order}, effective_date #{order}").collect{|v| v.becomes(RbSprint) }
         else #no backlog sharing
           RbSprint.closed_sprints(self)
         end
@@ -240,7 +240,7 @@ module Backlogs
         search_date = (Time.zone ? Time.zone : Time).now.strftime('%Y-%m-%d')
         if user.groups
           @active_sprint ||= RbSprint.where("project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? >= sprint_start_date and ? <= effective_date",
-                                            self.id, search_date, search_date).where(:rbteam_id => user.groups).take
+                                            self.id, search_date, search_date).where(rbteam_id: user.groups).take
         else
           @active_sprint ||= RbSprint.where("project_id = ? and status = 'open' and not (sprint_start_date is null or effective_date is null) and ? >= sprint_start_date and ? <= effective_date",
                                             self.id, search_date, search_date).take

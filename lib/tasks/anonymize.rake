@@ -14,7 +14,7 @@ end
 
 namespace :redmine do
   namespace :backlogs do
-    task :anonymize => :environment do
+    task anonymize: :environment do
       if ENV['ANONYMIZE'] != 'yes'
         puts "This will anonymize ALL YOUR DATA"
         puts "ARE YOU VERY, VERY SURE?"
@@ -94,13 +94,13 @@ namespace :redmine do
         end
       end
 
-      Issue.update_all({:due_date => nil}, ['not due_date is null and not start_date is null and due_date < start_date'])
-      Member.update_all(:mail_notification => false)
-      User.update_all(:auth_source_id => nil, :mail_notification => '',
-                      :hashed_password => '5f2570b6183a74c5709a751ad344a909436f16f5', :salt => 'e358ba6a9fd7e24796b149315e8554a4',
-                      :identity_url => nil)
+      Issue.update_all({due_date: nil}, ['not due_date is null and not start_date is null and due_date < start_date'])
+      Member.update_all(mail_notification: false)
+      User.update_all(auth_source_id: nil, mail_notification: '',
+                      hashed_password: '5f2570b6183a74c5709a751ad344a909436f16f5', salt: 'e358ba6a9fd7e24796b149315e8554a4',
+                      identity_url: nil)
 
-      puts "Your anonymized admins are #{User.find(:all, :conditions => ['admin = ?', true]).collect{|u| u.login}.inspect} with password 'insecure'"
+      puts "Your anonymized admins are #{User.find(:all, conditions: ['admin = ?', true]).collect{|u| u.login}.inspect} with password 'insecure'"
     end
   end
 end

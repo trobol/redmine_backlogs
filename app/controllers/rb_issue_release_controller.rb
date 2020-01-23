@@ -13,8 +13,8 @@ include RbCommonHelper
 # Responsible for exposing issue-release CRUD. It SHOULD NOT be used
 # for display
 class RbIssueReleaseController < RbApplicationController
-  before_action :find_issue, :authorize, :only => [:index, :create, :new]
-  before_action :find_issue_release, :only => [:show, :update, :destroy]
+  before_action :find_issue, :authorize, only: [:index, :create, :new]
+  before_action :find_issue_release, only: [:show, :update, :destroy]
 
   def index
     # should not be hit

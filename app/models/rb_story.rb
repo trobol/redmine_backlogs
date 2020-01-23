@@ -29,8 +29,8 @@ class RbStory < RbGeneric
 
   def self.backlog(project_id, sprint_id, options={})
     options = options.merge({
-      :project => project_id,
-      :sprint => sprint_id,
+      project: project_id,
+      sprint: sprint_id,
     })
 
     Rails.logger.info "The backlog options: #{options}."
@@ -40,7 +40,7 @@ class RbStory < RbGeneric
   end
 
   def self.product_backlog(project, limit=nil)
-    return RbStory.backlog(project.id, nil, {:limit => limit })
+    return RbStory.backlog(project.id, nil, {limit: limit })
   end
 
   def self.sprint_backlog(sprint, options={})
@@ -49,7 +49,7 @@ class RbStory < RbGeneric
 
   def self.release_backlog(release, options={})
     options = options.merge({
-      :project => release.project.id,
+      project: release.project.id,
     })
 
     Rails.logger.info "The release backlog options: #{options}."
@@ -63,8 +63,8 @@ class RbStory < RbGeneric
     #make separate queries for each sprint to get higher/lower item right
     return [] unless sprints
     sprints.map do |s|
-      { :sprint => s,
-        :stories => RbStory.backlog(project.id, s.id, options)
+      { sprint: s,
+        stories: RbStory.backlog(project.id, s.id, options)
       }
     end
   end
@@ -73,8 +73,8 @@ class RbStory < RbGeneric
     #make separate queries for each release to get higher/lower item right
     return [] unless releases
     releases.map do |r|
-      { :release => r,
-        :stories => RbStory.release_backlog(r, options)
+      { release: r,
+        stories: RbStory.release_backlog(r, options)
       }
     end
   end
@@ -106,9 +106,9 @@ class RbStory < RbGeneric
     project = Project.select("id,lft,rgt,parent_id,name").find_by_id(project_id)
     sprints = project.open_shared_sprints.map{|s|s.id}
     #following will execute 3 queries and join it as array
-    self.backlog_scope( {:project => project_id, :sprint => nil, :release => nil } ).
+    self.backlog_scope( {project: project_id, sprint: nil, release: nil } ).
           updated_since(since) |
-      self.backlog_scope( {:project => project_id, :sprint => sprints, :release => nil } ).
+      self.backlog_scope( {project: project_id, sprint: sprints, release: nil } ).
           updated_since(since)
   end
 
@@ -151,7 +151,7 @@ class RbStory < RbGeneric
       safe_attributes_names = RbStory::SAFE_ATTRIBUTES
     else
       safe_attributes_names = Issue.new(
-        :project_id=>params[:project_id] # required to verify "safeness"
+        project_id: params[:project_id] # required to verify "safeness"
       ).safe_attribute_names
     end
     attribs = params.select{|k,_v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && safe_attributes_names.include?(k) }
@@ -199,7 +199,7 @@ class RbStory < RbGeneric
     sprint ||= self.fixed_version.becomes(RbSprint) if self.fixed_version
     return nil if sprint.nil? || !sprint.has_burndown?
 
-    bd = {:points_committed => [], :points_accepted => [], :points_resolved => [], :hours_remaining => []}
+    bd = {points_committed: [], points_accepted: [], points_resolved: [], hours_remaining: []}
 
     self.history.filter(sprint, status).each{|d|
       if d.nil? || d[:sprint] != sprint.id || d[:tracker] != :story
@@ -232,7 +232,7 @@ class RbStory < RbGeneric
           break if status.default_done_ratio.to_f > avg_ratio
         }
         #set status and good.
-        self.journalized_update_attributes :status_id => new_st.id if new_st
+        self.journalized_update_attributes status_id: new_st.id if new_st
         set_closed_status_if_following_to_close
 
         #calculate done_ratio weighted from tasks
@@ -249,7 +249,7 @@ class RbStory < RbGeneric
           tasks.each{|task|
             return unless task.status.is_closed?
           }
-          self.journalized_update_attributes :status_id => status_id.to_i #update, but no need to position
+          self.journalized_update_attributes status_id: status_id.to_i #update, but no need to position
         end
   end
 

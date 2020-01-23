@@ -22,12 +22,12 @@ end
 
 Then /^(.+) should be in the (\d+)(?:st|nd|rd|th) position of the sprint named (.+)$/ do |story_subject, position, sprint_name|
   position = position.to_i
-  story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story = RbStory.find(:first, conditions: ["subject=? and name=?", story_subject, sprint_name], joins: :fixed_version)
   story.rank.should == position.to_i
 end
 
 Then /^I should see (\d+) sprint backlogs$/ do |count|
-  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint", :visible => true)
+  sprint_backlogs = page.all(:css, "#sprint_backlogs_container .sprint", visible: true)
   sprint_backlogs.length.should == count.to_i
 end
 
@@ -73,7 +73,7 @@ end
 
 Then /^show me the list of shared sprints$/ do
   header = [['id', 3], ['name', 18], ['project id', 5], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
+  sprints = @project.shared_versions.scoped(conditions: {status: ['open', 'locked']}, order: 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
   data = sprints.collect{|sprint| [sprint.id, sprint.name, sprint.project_id, sprint.start_date, sprint.effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
@@ -90,11 +90,11 @@ Then /^the sprint "([^"]*)" should be shared by (.+)$/ do |sprint, sharing|
 end
 
 Then /^show me the list of issues( on )?(all )?(project)?s?(.*)?$/ do |on, all, project, name|
-  options = {:order => "position ASC", :conditions => { :project_id => @project.id }}
+  options = {order: "position ASC", conditions: { project_id: @project.id }}
   if all.to_s.strip == 'all'
     options.delete(:conditions)
   elsif name.to_s != ''
-    options[:conditions]= { :project_id => Project.find_by_name(name).id }
+    options[:conditions]= { project_id: Project.find_by_name(name).id }
   end
 
   header = [['id', 5], ['tracker', 10], ['created', 20], ['position', 8], ['rank', 8], ['status', 12], ['subject', 30], ['sprint', 20], ['remaining', 10]]
@@ -144,7 +144,7 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should be (.+)$/ do |position, backlog, subject|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
-  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(project: @project, sprint: sprint))
 
   story.should_not be_nil
   story.subject.should == subject
@@ -152,7 +152,7 @@ end
 
 Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should have the tracker (.+)$/ do |position, backlog, tracker|
   sprint = (backlog == 'the product backlog' ? nil : Version.find_by_name(backlog))
-  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(:project => @project, :sprint => sprint))
+  story = RbStory.find_by_rank(position.to_i, RbStory.find_options(project: @project, sprint: sprint))
   
   t = get_tracker(tracker)
   
@@ -161,17 +161,17 @@ Then /^the (\d+)(?:st|nd|rd|th) story in (.+) should have the tracker (.+)$/ do 
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) should be (.+)$/ do |position, story_subject, task_subject|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find(:first, conditions: ["subject=?", story_subject])
   story.should_not be_nil
   story.children.length.should be >= position.to_i
   story.children[position.to_i - 1].subject.should == task_subject
 end
 
 Then /^the (\d+)(?:st|nd|rd|th) task for (.+) is assigned to (.+)$/ do |position, story_subject, task_assigned_to|
-  story = RbStory.find(:first, :conditions => ["subject=?", story_subject])
+  story = RbStory.find(:first, conditions: ["subject=?", story_subject])
   story.should_not be_nil
   story.children.length.should be >= position.to_i
-  story.children[position.to_i - 1].assigned_to.should == User.find(:first, :conditions => ["login=?", task_assigned_to])
+  story.children[position.to_i - 1].assigned_to.should == User.find(:first, conditions: ["login=?", task_assigned_to])
 end
 
 Then /^the server should return an update error$/ do
@@ -197,7 +197,7 @@ Then /^The last_update information should be near (.+)$/ do |t|
 end
 
 Then /^the sprint named (.+) should have (\d+) impediments? named (.+)$/ do |sprint_name, count, impediment_subject|
-  sprint = RbSprint.find(:all, :conditions => { :name => sprint_name })
+  sprint = RbSprint.find(:all, conditions: { name: sprint_name })
   sprint.length.should == 1
   sprint = sprint.first
 
@@ -246,7 +246,7 @@ Then /^the status of the story should be set as (.+)$/ do |status|
 end
 
 Then /^the story named (.+) should have (\d+) task named (.+)$/ do |story_subject, count, task_subject|
-  stories = RbStory.find(:all, :conditions => { :subject => story_subject })
+  stories = RbStory.find(:all, conditions: { subject: story_subject })
   stories.length.should == 1
 
   tasks = stories.first.descendants
@@ -271,7 +271,7 @@ Then /^the story should have a (.+) of (.+)$/ do |attribute, value|
   @story.reload
   if attribute=="tracker"
     attribute="tracker_id"
-    value = Tracker.find(:first, :conditions => ["name=?", value]).id
+    value = Tracker.find(:first, conditions: ["name=?", value]).id
   end
   @story[attribute].should == value
 end
@@ -292,7 +292,7 @@ end
 Then /^the sprint burn(down|up) should be:$/ do |direction, table|
   dayno = table.hashes[-1]['day']
   dayno = '0' if dayno == 'start'
-  set_now(dayno.to_i + 1, :sprint => @sprint)
+  set_now(dayno.to_i + 1, sprint: @sprint)
 
   bd = current_sprint(:keep).burndown
   bd.direction = direction
@@ -360,7 +360,7 @@ Then /^show me the journal for (.+)$/ do |subject|
     raise "No issue with subject '#{subject}'" unless issue
 
     columns = (columns + issue.history.history.collect{|d| d.keys}.flatten).uniq
-    data << issue.history.history.collect{|d| d.reject{|k, v| [:origin, :status_id].include?(k)}.merge(:issue => issue.subject)}
+    data << issue.history.history.collect{|d| d.reject{|k, v| [:origin, :status_id].include?(k)}.merge(issue: issue.subject)}
     #puts "\n#{issue.subject}:\n  #{issue.history.history.inspect}\n  #{issue.is_story? ? issue.burndown.inspect : ''}\n"
   }
   columns = [:issue, :date] + columns.reject{|c| [:issue, :date].include?(c)}.sort{|a, b| a.to_s <=> b.to_s}
@@ -377,7 +377,7 @@ Then /^show me the journal for (.+)$/ do |subject|
 end
 
 Then /^show me the story burndown for (.+)$/ do |story|
-  story = RbStory.find(:first, :conditions => ['subject = ?', story])
+  story = RbStory.find(:first, conditions: ['subject = ?', story])
   bd = story.burndown
   header = ['day'] + bd.keys.sort{|a, b| a.to_s <=> b.to_s}
   bd['day'] = current_sprint(:keep).days
@@ -391,15 +391,15 @@ Then /^task (.+) should have a total time spent of (\d+) hours$/ do |subject,val
 end
 
 Then /^sprint (.+) should contain (.+)$/ do |sprint_name, story_subject|
-  story = RbStory.find(:first, :conditions => ["subject=? and name=?", story_subject, sprint_name], :joins => :fixed_version)
+  story = RbStory.find(:first, conditions: ["subject=? and name=?", story_subject, sprint_name], joins: :fixed_version)
   story.should_not be_nil
 end
 
 Then /^the story named (.+) should have a task named (.+)$/ do |story_subject, task_subject|
-  stories = RbStory.find(:all, :conditions => { :subject => story_subject })
+  stories = RbStory.find(:all, conditions: { subject: story_subject })
   stories.length.should == 1
 
-  tasks = RbTask.find(:all, :conditions => { :subject => task_subject, :parent_id => stories.first.id })
+  tasks = RbTask.find(:all, conditions: { subject: task_subject, parent_id: stories.first.id })
   tasks.length.should == 1
 end
 
@@ -429,7 +429,7 @@ Then /^I should (.*)see the backlog of Sprint (.+)$/ do |neg, arg1|
 #  page.should_not have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg != ''
 #  page.should have_css(:css, "#sprint_#{sprint_id}", :visible => true) if neg == ''
   begin
-    page.find(:css, "#sprint_#{sprint_id}", :visible => true)
+    page.find(:css, "#sprint_#{sprint_id}", visible: true)
     found = true
   rescue
     found = false
@@ -514,7 +514,7 @@ end
 
 #only with phantomjs driver:
 Then /^show me a screenshot at (.+)$/ do |arg1|
-  page.driver.render(arg1, :full=>true)
+  page.driver.render(arg1, full: true)
 end
 
 Then /^dump the database to (.+)$/ do |arg1|
@@ -568,6 +568,6 @@ Then(/^release multiview "(.*?)" should contain "(.*?)"$/) do |release_multiview
   m.should_not be_nil
 
   release_names = releases.split(",")
-  expected_releases = RbRelease.find(:all,:conditions => {:name => release_names})
+  expected_releases = RbRelease.find(:all,conditions: {name: release_names})
   m.releases.should == expected_releases
 end

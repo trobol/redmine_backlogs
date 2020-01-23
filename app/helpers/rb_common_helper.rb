@@ -7,11 +7,11 @@ module RbCommonHelper
   include CustomFieldsHelper
 
   PRIORITY_VALUES = {
-     :Low => "",
-     :Normal => "",
-     :High => "fa-exclamation",
-     :Urgent => "fa-exclamation-circle",
-     :Immediate => "fa-exclamation-triangle"}
+     Low: "",
+     Normal: "",
+     High: "fa-exclamation",
+     Urgent: "fa-exclamation-circle",
+     Immediate: "fa-exclamation-triangle"}
 
   def assignee_id_or_empty(story)
     story.new_record? ? "" : story.assigned_to_id
@@ -66,13 +66,13 @@ color: #{front_color};"
   def issue_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => "issues", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, {controller: "issues", action: "show", id: item}, {target: "_blank", class: "prevent_edit"})
   end
 
   def sprint_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => 'rb_sprints_roadmap', :action => "show", :sprint_id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, {controller: 'rb_sprints_roadmap', action: "show", sprint_id: item}, {target: "_blank", class: "prevent_edit"})
   end
 
   def release_display_name(release)
@@ -80,11 +80,11 @@ color: #{front_color};"
   end
 
   def release_link_or_empty(release)
-    release.new_record? ? "" : link_to(release_display_name(release), {:controller => 'rb_releases', :action => "show", :release_id => release}, :class => release.css_classes)
+    release.new_record? ? "" : link_to(release_display_name(release), {controller: 'rb_releases', action: "show", release_id: release}, class: release.css_classes)
   end
 
   def release_multiview_link_or_empty(release)
-    release.new_record? ? "" : link_to(release_display_name(release), {:controller => "rb_releases_multiview", :action => "show", :release_multiview_id => release})
+    release.new_record? ? "" : link_to(release_display_name(release), {controller: "rb_releases_multiview", action: "show", release_multiview_id: release})
   end
 
   def mark_if_closed(story)
@@ -175,7 +175,7 @@ color: #{front_color};"
     return 'no sprint' unless sprint && sprint.is_a?(Version)
     nameoptions = {}
     nameoptions[:team] = options.delete(:team) if options.include?(:team)
-    options = {:title => format_date(sprint.effective_date)}.merge(options)
+    options = {title: format_date(sprint.effective_date)}.merge(options)
     link_to_if sprint.visible?, format_sprint_name(sprint, nameoptions), rb_sprint_path(sprint), options
   end
 
@@ -287,7 +287,7 @@ color: #{front_color};"
     # below to make (German) Excel happy
     #decimal_separator = l(:general_csv_decimal_separator)
 
-    export = FCSV.generate(:col_sep => ';') do |csv|
+    export = FCSV.generate(col_sep: ';') do |csv|
       # csv header fields
       headers = [ l(:label_points_backlog),
                   l(:label_points_added),
@@ -420,7 +420,7 @@ color: #{front_color};"
 
   # def_rb_partial_method 'render_rb_task(task)', 'rb_tasks/_task.html.erb'
   def render_rb_task(task)
-    render :partial => 'rb_tasks/task', :locals => { :task => task }
+    render partial: 'rb_tasks/task', locals: { task: task }
   end
 
   def render_rb_task_collection(tasks)

@@ -2,7 +2,7 @@ class RbIssueRelease < ActiveRecord::Base
   include Redmine::SafeAttributes
 
   belongs_to :issue
-  belongs_to :release, :class_name => 'RbRelease'
+  belongs_to :release, class_name: 'RbRelease'
   validates :issue, uniqueness: { scope: :release }
 
   safe_attributes 'issue_id',

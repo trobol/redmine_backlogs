@@ -9,10 +9,10 @@ class IssuePatchTest < ActiveSupport::TestCase
     # create a tracker which is enabled for release notes
     enabled_tracker = FactoryGirl.create(:tracker)
     Setting.stubs(:plugin_redmine_backlogs).
-      returns({:enabled_tracker_ids => [enabled_tracker.id]})
+      returns({enabled_tracker_ids: [enabled_tracker.id]})
     # create a project which is enabled for release notes
     enabled_project = FactoryGirl.create(:project_with_release_notes,
-                                 :trackers => [enabled_tracker])
+                                 trackers: [enabled_tracker])
 
     issue = FactoryGirl.build(:issue)
     issue.tracker = enabled_tracker

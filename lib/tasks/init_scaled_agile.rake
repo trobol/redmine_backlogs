@@ -1,7 +1,7 @@
 namespace :redmine do
   namespace :backlogs do
     desc "initialize scaled agile settings and trackers"
-    task :init_scaled_agile => :environment do
+    task init_scaled_agile: :environment do
       unless Backlogs.migrated?
         puts "Please run plugin migrations first"
       else
@@ -11,8 +11,8 @@ namespace :redmine do
 		
         # Configure the epic and feature trackers
         puts "Creating Epic and Feature trackers"
-        epic_trackers = [(Tracker.find_by_name('Epic') || Tracker.create!(:name => 'Epic'))]
-        feature_trackers = [(Tracker.find_by_name('Feature') || Tracker.create!(:name => 'Feature'))]
+        epic_trackers = [(Tracker.find_by_name('Epic') || Tracker.create!(name: 'Epic'))]
+        feature_trackers = [(Tracker.find_by_name('Feature') || Tracker.create!(name: 'Feature'))]
         # get the ids
         epic_trackers = epic_trackers.map { |t| t.id }
         feature_trackers = feature_trackers.map { |t| t.id }

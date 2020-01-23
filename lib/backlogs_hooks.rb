@@ -40,10 +40,10 @@ module BacklogsPlugin
           end
 
           url_options = {
-            :only_path  => true,
-            :controller => :rb_hooks_render,
-            :action     => :view_issues_sidebar,
-            :project_id => project.identifier
+            only_path: true,
+            controller: :rb_hooks_render,
+            action: :view_issues_sidebar,
+            project_id: project.identifier
           }
           url_options[:sprint_id] = sprint_id if sprint_id
           url = url_for_prefix_in_hooks
@@ -133,14 +133,14 @@ module BacklogsPlugin
             snippet += '<p>'
             #snippet += context[:form].label(:story_points)
             if Backlogs.setting[:story_points].blank?
-              snippet += context[:form].text_field(:story_points, :size => 3, :value => format_story_points(issue.story_points))
+              snippet += context[:form].text_field(:story_points, size: 3, value: format_story_points(issue.story_points))
             else
               snippet += context[:form].select(:story_points, options_for_select(get_story_points_map, format_story_points(issue.story_points)), include_blank: true)
             end
             snippet += '</p>'
 
             snippet += '<div class="splitcontentleft"><p>'
-            snippet += context[:form].select :rbteam_id, teams_assignable_options_for_select(Group.all, issue.rbteam), :include_blank => true
+            snippet += context[:form].select :rbteam_id, teams_assignable_options_for_select(Group.all, issue.rbteam), include_blank: true
             snippet += '</p></div>'
           end
 
@@ -174,7 +174,7 @@ module BacklogsPlugin
 
           if issue.is_task? && !issue.new_record? && Backlogs.setting[:use_remaining_hours]
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', issue.remaining_hours, :size => 3)
+            snippet += text_field_tag('remaining_hours', issue.remaining_hours, size: 3)
             snippet += '</p>'
           end
 
@@ -205,9 +205,8 @@ module BacklogsPlugin
         context[:issue_release] = RbIssueRelease.new
         controller.IssueReleases(issue.issue_releases)
         controller.render_to_string(
-          { :partial =>
-              'hooks/rb_view_issues_show_description_bottom',
-            :locals => context }
+          { partial:               'hooks/rb_view_issues_show_description_bottom',
+            locals: context }
         )
       end
 
@@ -223,8 +222,8 @@ module BacklogsPlugin
           if User.current.allowed_to?(:edit_wiki_pages, project) and context[:release].blank?
             snippet += '<span id="edit_wiki_page_action">'
             snippet += link_to l(:button_edit_wiki),
-                      url_for_prefix_in_hooks + url_for({:controller => 'rb_wikis', :action => 'edit', :sprint_id => version.id }),
-                      :class => 'icon icon-edit'
+                      url_for_prefix_in_hooks + url_for({controller: 'rb_wikis', action: 'edit', sprint_id: version.id }),
+                      class: 'icon icon-edit'
             snippet += '</span>'
 
             # this wouldn't be necesary if the schedules plugin
@@ -249,25 +248,25 @@ module BacklogsPlugin
 
       def view_my_account(context={ })
         color_hash = {
-            :value => '1'
+            value: '1'
         }
 
         color_hash[:checked] = "checked" if context[:user].backlogs_preference[:show_backlog_story_color] == '1'
 
         full_name_hash = {
-            :value => '1'
+            value: '1'
         }
 
         full_name_hash[:checked] = "checked" if context[:user].backlogs_preference[:show_assigned_to_full] == '1'
 
         short_name_hash = {
-            :value => '1'
+            value: '1'
         }
 
         short_name_hash[:checked] = "checked" if context[:user].backlogs_preference[:show_assigned_to_short] == '1'
 
         category_hash = {
-            :value => '1'
+            value: '1'
         }
 
         category_hash[:checked] = "checked" if context[:user].backlogs_preference[:show_category] == '1'
@@ -279,11 +278,11 @@ module BacklogsPlugin
             <h3>#{l(:label_backlogs)}</h3>
             <p>
               #{label :backlogs, l(:field_task_color)}
-              #{text_field :backlogs, :task_color, :value => context[:user].backlogs_preference[:task_color]}
+              #{text_field :backlogs, :task_color, value: context[:user].backlogs_preference[:task_color]}
             </p>
             <p>
               #{label :backlogs, l(:field_task_front_color)}
-              #{text_field :backlogs, :task_front_color, :value => context[:user].backlogs_preference[:task_front_color]}
+              #{text_field :backlogs, :task_front_color, value: context[:user].backlogs_preference[:task_front_color]}
             </p>
             <div class="example_color" style="#{build_user_style(context[:user])}">
               #{l(:field_task_example_color)}
@@ -376,13 +375,13 @@ module BacklogsPlugin
         if User.current.admin? && !context[:request].session[:backlogs_configured]
           context[:request].session[:backlogs] = Backlogs.configured?
           unless context[:request].session[:backlogs]
-            context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured, {:administration => l(:label_administration), :plugins => l(:label_plugins), :configure => l(:button_configure)})
+            context[:controller].send(:flash)[:error] = l(:label_backlogs_unconfigured, {administration: l(:label_administration), plugins: l(:label_plugins), configure: l(:button_configure)})
           end
         end
 
         return context[:controller].send(:render_to_string, {
-          :locals => context,
-          :partial=> 'hooks/rb_include_scripts'})
+          locals: context,
+          partial: 'hooks/rb_include_scripts'})
       end
 
       def view_timelog_edit_form_bottom(context={ })
@@ -398,7 +397,7 @@ module BacklogsPlugin
           if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, time_entry.project) != nil && Backlogs.setting[:use_remaining_hours]
             remaining_hours = issue.remaining_hours
             snippet += "<p><label for='remaining_hours'>#{l(:field_remaining_hours)}</label>"
-            snippet += text_field_tag('remaining_hours', remaining_hours, :size => 6)
+            snippet += text_field_tag('remaining_hours', remaining_hours, size: 6)
             snippet += '</p>'
           end
           return snippet

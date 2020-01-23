@@ -17,17 +17,17 @@ class RbReleasesController < RbApplicationController
 
     respond_to do |format|
       format.html { render }
-      format.csv  { send_data(release_burndown_to_csv(@release), :type => 'text/csv; header=present', :filename => 'export.csv') }
+      format.csv  { send_data(release_burndown_to_csv(@release), type: 'text/csv; header=present', filename: 'export.csv') }
     end
   end
 
   def new
-    @release = RbRelease.new(:project => @project)
+    @release = RbRelease.new(project: @project)
     if request.post?
       @release.attributes = params[:release]
       if @release.save
         flash[:notice] = l(:notice_successful_create)
-        redirect_to :action => 'index', :project_id => @project
+        redirect_to action: 'index', project_id: @project
       end
     end
   end
@@ -35,7 +35,7 @@ class RbReleasesController < RbApplicationController
   def edit
     if request.post? and @release.update_attributes(params[:release])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+      redirect_to controller: 'rb_releases', action: 'show', release_id: @release
     end
   end
 
@@ -49,7 +49,7 @@ class RbReleasesController < RbApplicationController
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render text: e.message.blank? ? e.to_s : e.message, status: 400
       return
     end
 
@@ -57,9 +57,9 @@ class RbReleasesController < RbApplicationController
       format.html {
         if params[:release]
           flash[:notice] = l(:notice_successful_update)
-          redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+          redirect_to controller: 'rb_releases', action: 'show', release_id: @release
         else
-          render :partial => "release_mbp", :status => (result ? 200 : 400), :locals => { :release => @release, :cls => 'model release' }
+          render partial: "release_mbp", status: (result ? 200 : 400), locals: { release: @release, cls: 'model release' }
         end
       }
     end
@@ -67,7 +67,7 @@ class RbReleasesController < RbApplicationController
 
   def destroy
     @release.destroy
-    redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+    redirect_to controller: 'rb_releases', action: 'index', project_id: @project
   end
 
   private

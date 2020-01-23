@@ -4,7 +4,7 @@ include RbGenericboardsHelper
 class RbGenericboardsAdminController < ApplicationController
   unloadable
 
-  before_action :find_rb_genericboard, :except => [:index, :new, :create]
+  before_action :find_rb_genericboard, except: [:index, :new, :create]
   before_action :authorize_global
 
   def index
@@ -25,7 +25,7 @@ class RbGenericboardsAdminController < ApplicationController
           redirect_to(params[:continue] ? new_rb_genericboard_path : rb_genericboards_path)
         }
       else
-        format.html { render :action => "new" }
+        format.html { render action: "new" }
       end
     end
 
@@ -42,7 +42,7 @@ class RbGenericboardsAdminController < ApplicationController
         flash[:notice] = l(:notice_successful_update)
         format.html { redirect_to(rb_genericboards_path) }
       else
-        format.html { render :action => "edit" }
+        format.html { render action: "edit" }
       end
     end
   end

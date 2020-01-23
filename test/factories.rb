@@ -8,15 +8,15 @@ FactoryGirl.define do
 
     after(:build) do |i|
       i.tracker ||= FactoryGirl.create(:tracker,
-                                       :projects => [i.project])
+                                       projects: [i.project])
     end
   end
 
-  factory :issue_priority, :aliases => [:priority] do
+  factory :issue_priority, aliases: [:priority] do
     sequence(:name) {|n| "priority-#{n}"}
   end
 
-  factory :issue_status, :aliases => [:status] do
+  factory :issue_status, aliases: [:status] do
     sequence(:name) {|n| "issue-status-#{n}"}
     is_closed false
   end
@@ -36,7 +36,7 @@ FactoryGirl.define do
     project
   end
 
-  factory :user, :aliases => [:author] do
+  factory :user, aliases: [:author] do
     firstname 'joe'
     lastname  'bloggs'
     sequence(:login) {|n| "#{firstname}.#{lastname}.#{n}".downcase.gsub(/[^0-9a-z]/, '') }
@@ -61,7 +61,7 @@ FactoryGirl.define do
     project
 
     factory :version_with_release_notes do
-      association :project, :factory => :project_with_release_notes
+      association :project, factory: :project_with_release_notes
     end
   end
 

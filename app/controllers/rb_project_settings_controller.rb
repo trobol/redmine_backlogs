@@ -19,8 +19,8 @@ class RbProjectSettingsController < RbApplicationController
     else
       flash[:error] = t(:rb_project_settings_update_error)
     end
-    redirect_to :controller => 'projects', :action => 'settings', :id => @project,
-                :tab => 'backlogs'
+    redirect_to controller: 'projects', action: 'settings', id: @project,
+                tab: 'backlogs'
   end
 
 end

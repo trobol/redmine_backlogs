@@ -8,7 +8,7 @@ class RbWikisController < RbApplicationController
   def show
     #FIXME not authorizing may be a bad idea. We are creating a public page here... ?
     #@sprint.rb_wiki_page does actually return rb_wiki_page_title. Redmine titleizes this, so do we, even if it is redundant.
-    redirect_to :controller => 'wiki', :action => 'show', :project_id => @sprint.project, :id => Wiki.titleize(@sprint.rb_wiki_page)
+    redirect_to controller: 'wiki', action: 'show', project_id: @sprint.project, id: Wiki.titleize(@sprint.rb_wiki_page)
   end
 
   # NOTE: This method is public (see init.rb). We will let Redmine core's
@@ -16,6 +16,6 @@ class RbWikisController < RbApplicationController
   # NOTE: this redirection causes a page to be created from a template
   # as a side-effect of calling @sprint.rb_wiki_page
   def edit
-    redirect_to :controller => 'wiki', :action => 'edit', :project_id => @sprint.project, :id => Wiki.titleize(@sprint.rb_wiki_page)
+    redirect_to controller: 'wiki', action: 'edit', project_id: @sprint.project, id: Wiki.titleize(@sprint.rb_wiki_page)
   end
 end

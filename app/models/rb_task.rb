@@ -27,7 +27,7 @@ class RbTask < Issue
   # unify api between story and task. FIXME: remove this when merging to tracker-free-tasks
   # required for RbServerVariablesHelper.workflow_transitions
   def self.trackers(options = {})
-    options = {:type => options} if options.is_a?(Symbol)
+    options = {type: options} if options.is_a?(Symbol)
 
     # somewhere early in the initialization process during first-time migration this gets called when the table doesn't yet exist
     trackers = [self.tracker]
@@ -53,7 +53,7 @@ class RbTask < Issue
       safe_attributes_names = RbTask::SAFE_ATTRIBUTES
     else
       safe_attributes_names = Issue.new(
-        :project_id=>params[:project_id] # required to verify "safeness"
+        project_id: params[:project_id] # required to verify "safeness"
       ).safe_attribute_names
     end
     attribs = params.select {|k,v| safe_attributes_names.include?(k) }
@@ -105,9 +105,9 @@ class RbTask < Issue
 
     if sprint_id.nil? #FIXME this branch makes no sense, we are on a taskboard which may be sharing across projects
       Rails.logger.warn("DEPRECATION WARNING: RbTask.find_all_updated_since used without sprint")
-      scope = where(:project_id => project_id)
+      scope = where(project_id: project_id)
     else #this should be the only branch here.
-      scope = where(:fixed_version_id => sprint_id)
+      scope = where(fixed_version_id: sprint_id)
     end
     scope.where(["updated_on > ?
                   AND tracker_id in (?)
@@ -166,7 +166,7 @@ class RbTask < Issue
 
     # Non-existing relationships that are in for_blocking should be added to the 'blocks' list
     for_blocking.select{ |id| !already_blocking.include?(id) }.each{ |id|
-      ir = relations_from.new(:relation_type=>'blocks')
+      ir = relations_from.new(relation_type: 'blocks')
       ir[:issue_to_id] = id
       ir.save!
     }
@@ -212,7 +212,7 @@ class RbTask < Issue
     # Will also save time entry if only comment is filled, hours will default to 0. We don't want the user
     # to loose a precious comment if hours is accidently left blank.
     if !params[:time_entry_hours].blank? || !params[:time_entry_comments].blank?
-      @time_entry = TimeEntry.new(:issue => self, :project => self.project)
+      @time_entry = TimeEntry.new(issue: self, project: self.project)
       # Make sure user has permission to edit time entries to allow
       # logging time for other users. Use current user in case none is selected
       if User.current.allowed_to?(:edit_time_entries, self.project) && params[:time_entry_user_id].to_i != 0

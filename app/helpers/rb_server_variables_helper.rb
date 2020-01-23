@@ -7,7 +7,7 @@ module RbServerVariablesHelper
   #   workflow_transitions(RbStory)
   def workflow_transitions(klass)
      roles = User.current.admin ? Role.all : User.current.roles_for_project(@project)
-     transitions = {:states => {}, :transitions => {} , :default => 1 }
+     transitions = {states: {}, transitions: {} , default: 1 }
 
      klass.trackers.each {|tracker_id|
       tracker = Tracker.find(tracker_id)
@@ -20,7 +20,7 @@ module RbServerVariablesHelper
       tracker.issue_statuses.each {|status|
         status_id = status.id.to_s
 
-        transitions[:states][status_id] = {:name => status.name, :closed => (status.is_closed? ? l(:label_closed_issues) + ' ' : '')}
+        transitions[:states][status_id] = {name: status.name, closed: (status.is_closed? ? l(:label_closed_issues) + ' ' : '')}
 
         [[false, false], [true, true], [false, true], [true, false]].each{|creator, assignee|
           key = "#{creator ? '+' : '-'}c#{assignee ? '+' : '-'}a"

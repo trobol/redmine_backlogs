@@ -18,35 +18,35 @@ module ReleaseNotesHelper
   def release_notes_progress_bar(version)
     completion = version.release_notes_percent_completion
     progress_bar([completion, completion],
-                 :width => '40em',
-                 :legend => '%0.0f%%' % completion)
+                 width: '40em',
+                 legend: '%0.0f%%' % completion)
   end
 
   def release_notes_opts(object)
     opts = nil
     if object.is_a?(RbRelease)
       opts = {
-        :f => [:releases, :status_id],
-        :op => {
-          :releases => '=',
-          :status_id => '*',
+        f: [:releases, :status_id],
+        op: {
+          releases: '=',
+          status_id: '*',
         },
-        :v => {
-          :releases => [object.id]
+        v: {
+          releases: [object.id]
         },
-        :set_filter => 1
+        set_filter: 1
       }
     else
       opts = {
-        :f => [:fixed_version_id, :status_id],
-        :op => {
-          :fixed_version_id => '=',
-          :status_id => '*',
+        f: [:fixed_version_id, :status_id],
+        op: {
+          fixed_version_id: '=',
+          status_id: '*',
         },
-        :v => {
-          :fixed_version_id => [object.id]
+        v: {
+          fixed_version_id: [object.id]
         },
-        :set_filter => 1
+        set_filter: 1
       }
     end
     opts
@@ -138,12 +138,12 @@ END
     if params[:action] == "generate_for_release"
       str << formats.map { |format|
         link_to(format.name, generate_release_notes_for_release_rb_path(
-          :release_notes_format => format.name))
+          release_notes_format: format.name))
       }.join(' | ')
     else
       str << formats.map { |format|
         link_to(format.name, generate_release_notes_rb_path(
-          :release_notes_format => format.name))
+          release_notes_format: format.name))
       }.join(' | ')
     end
     str << "</p>"

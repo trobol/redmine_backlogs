@@ -10,18 +10,18 @@ class RbRelease < ActiveRecord::Base
 
   unloadable
 
-  belongs_to :project, :inverse_of => :releases
+  belongs_to :project, inverse_of: :releases
 
-  has_many :rb_issue_release, :class_name => 'RbIssueRelease', :foreign_key => 'release_id', :dependent => :delete_all
-  has_many :issues_multiple, :class_name => 'RbStory', :through => :rb_issue_release, :source => :issue
+  has_many :rb_issue_release, class_name: 'RbIssueRelease', foreign_key: 'release_id', dependent: :delete_all
+  has_many :issues_multiple, class_name: 'RbStory', through: :rb_issue_release, source: :issue
 
   validates_presence_of :project_id, :name
-  validates_inclusion_of :status, :in => RELEASE_STATUSES
-  validates_inclusion_of :sharing, :in => RELEASE_SHARINGS
-  validates_length_of :name, :maximum => 64
+  validates_inclusion_of :status, in: RELEASE_STATUSES
+  validates_inclusion_of :sharing, in: RELEASE_SHARINGS
+  validates_length_of :name, maximum: 64
 
-  scope :open, -> { where( :status => 'open') }
-  scope :closed, -> { where(:status => 'closed') }
+  scope :open, -> { where( status: 'open') }
+  scope :closed, -> { where(status: 'closed') }
   scope :visible, lambda {|*args| joins(:project).includes(:project).
                                     where(Project.allowed_to_condition(args.first || User.current, :view_releases)) }
 
@@ -62,7 +62,7 @@ class RbRelease < ActiveRecord::Base
     order = Backlogs.setting[:sprint_sort_order] == 'desc' ? 'DESC' : 'ASC'
     # return issues sorted into sprints. Obviously does not return issues which are not in a sprint
     # unfortunately, group_by returns unsorted results.
-    issues.where(:tracker_id => RbStory.trackers).joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
+    issues.where(tracker_id: RbStory.trackers).joins(:fixed_version).includes(:fixed_version).order("versions.effective_date #{order}").group_by(&:fixed_version_id)
   end
 
   def has_open_stories?
@@ -114,8 +114,8 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.scoped(:include => :releases,
-          :conditions => ["#{RbRelease.table_name}.id = #{id}" +
+        Project.visible.scoped(include: :releases,
+          conditions: ["#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +

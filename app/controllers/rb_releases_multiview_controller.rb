@@ -15,7 +15,7 @@ class RbReleasesMultiviewController < RbApplicationController
   end
 
   def new
-    @release_multiview = RbReleaseMultiview.new(:project => @project)
+    @release_multiview = RbReleaseMultiview.new(project: @project)
     if request.post?
       # Convert id's into numbers and remove blank
       params[:release_multiview][:release_ids]=selected_ids(params[:release_multiview][:release_ids])
@@ -23,7 +23,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
       if @release_multiview.save
         flash[:notice] = l(:notice_successful_create)
-        redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+        redirect_to controller: 'rb_releases', action: 'index', project_id: @project
       end
     end
 
@@ -36,7 +36,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
       if @release_multiview.update_attributes(params[:release_multiview])
         flash[:notice] = l(:notice_successful_update)
-        redirect_to :controller => 'rb_releases_multiview', :action => 'show', :release_multiview_id => @release_multiview
+        redirect_to controller: 'rb_releases_multiview', action: 'show', release_multiview_id: @release_multiview
       end
     end
   end
@@ -46,7 +46,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
   def destroy
     @release_multiview.destroy
-    redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+    redirect_to controller: 'rb_releases', action: 'index', project_id: @project
   end
 
 end

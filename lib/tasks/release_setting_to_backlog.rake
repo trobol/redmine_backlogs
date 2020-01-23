@@ -1,6 +1,6 @@
 namespace :redmine do
   namespace :backlogs do
-    task :release_setting_to_backlog => :environment do
+    task release_setting_to_backlog: :environment do
       redmine_backlog = Setting.find_by_name("plugin_redmine_backlogs")
       if redmine_backlog.present?
         values = redmine_backlog.value

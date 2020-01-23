@@ -2,11 +2,11 @@ class SumRemainingHours < ActiveRecord::Migration[5.2]
   def self.up
     unless RbStory.trackers == []
       create_table :backlogs_tmp_story_remaining_hours do |t|
-        t.column :tmp_id, :integer, :null => false
-        t.column :tmp_root_id, :integer, :null => false
-        t.column :tmp_lft, :integer, :null => false
-        t.column :tmp_rgt, :integer, :null => false
-        t.column :tmp_remaining_hours, :float, :null => false
+        t.column :tmp_id, :integer, null: false
+        t.column :tmp_root_id, :integer, null: false
+        t.column :tmp_lft, :integer, null: false
+        t.column :tmp_rgt, :integer, null: false
+        t.column :tmp_remaining_hours, :float, null: false
       end
 
 
@@ -14,7 +14,7 @@ class SumRemainingHours < ActiveRecord::Migration[5.2]
       execute "insert into backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)
                select id, root_id, lft, rgt, 0
                from issues
-               where tracker_id in (#{RbStory.trackers(:type=>:string)}) and lft <> (rgt - 1)"
+               where tracker_id in (#{RbStory.trackers(type: :string)}) and lft <> (rgt - 1)"
 
       # tasks below these stories
       execute "insert into backlogs_tmp_story_remaining_hours (tmp_id, tmp_root_id, tmp_lft, tmp_rgt, tmp_remaining_hours)

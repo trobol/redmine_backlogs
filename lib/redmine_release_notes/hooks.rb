@@ -22,9 +22,8 @@ module RedmineReleaseNotes
         context[:release_note] = issue.release_note ||
           issue.build_release_note
         controller.render_to_string(
-          { :partial =>
-              'hooks/release_notes/view_issues_show_description_bottom',
-            :locals => context }
+          { partial:               'hooks/release_notes/view_issues_show_description_bottom',
+            locals: context }
         )
       else
         ""
@@ -36,9 +35,8 @@ module RedmineReleaseNotes
 
       if project.module_enabled? :release_notes
         controller.render_to_string(
-          { :partial =>
-            'hooks/release_notes/version_show_bottom',
-              :locals => context }
+          { partial:             'hooks/release_notes/version_show_bottom',
+              locals: context }
         )
       else
         ""

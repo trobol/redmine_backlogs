@@ -9,7 +9,7 @@ class RbTasksController < RbApplicationController
     begin
       @task  = RbTask.create_with_relationships(params, User.current.id, @project.id)
     rescue => e
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render text: e.message.blank? ? e.to_s : e.message, status: 400
       return
     end
 
@@ -18,7 +18,7 @@ class RbTasksController < RbApplicationController
     @include_meta = true
 
     respond_to do |format|
-      format.html { render :partial => "task", :object => @task, :status => status }
+      format.html { render partial: "task", object: @task, status: status }
     end
   end
 
@@ -32,7 +32,7 @@ class RbTasksController < RbApplicationController
     @task.story.story_follow_task_state if @task.story
 
     respond_to do |format|
-      format.html { render :partial => "task", :object => @task, :status => status }
+      format.html { render partial: "task", object: @task, status: status }
     end
   end
 

@@ -18,7 +18,7 @@ module RedmineReleaseNotes
   module IssuePatch
     def self.perform
       Issue.class_eval do
-        has_one :release_note, :dependent => :destroy
+        has_one :release_note, dependent: :destroy
 
         # NB: the release_notes_* scopes will not return issues which don't
         # have a value for the issue custom field.

@@ -8,7 +8,7 @@ class RbReleasePlanningsController < ApplicationController
   
   def new
     if @project.release_planning.present?
-      redirect_to edit_release_planing_rb_path(:id => @project.release_planning.id, :project_id => @project)
+      redirect_to edit_release_planing_rb_path(id: @project.release_planning.id, project_id: @project)
     else
       @release_planning = RbReleasePlanning.new
     end

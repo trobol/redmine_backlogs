@@ -8,12 +8,12 @@ ApplicationHelper.module_eval do
     return '' unless version && version.is_a?(Version)
 
     return link_to_version_without_backlogs(version, options) unless Backlogs.configured?
-    
-    link_to_sprint(version, options.merge({:team => true}))
+
+    link_to_sprint(version, options.merge({team: true}))
   end
 
   def format_object_custom_field(object, html=true, &block)
-    return object.value.to_s if !object.custom_field
+    return object.value.to_s unless object.custom_field
 
     if object.custom_field.id == Backlogs.setting[:show_backlog_story_marker_support_id].to_i && object.value.present?
       string = ""

@@ -17,8 +17,8 @@
 class ReleaseNotesController < ApplicationController
   unloadable
 
-  before_action :find_version, :only => [:generate]
-  before_action :find_project, :only => [:index]
+  before_action :find_version, only: [:generate]
+  before_action :find_project, only: [:index]
 
   helper :projects
 
@@ -88,10 +88,10 @@ class ReleaseNotesController < ApplicationController
     @content = ReleaseNotesGenerator.new(@version, @format).generate
 
     if params[:raw]
-      render :text => @content, :content_type => 'text/plain'
+      render text: @content, content_type: 'text/plain'
     elsif params[:download]
-      send_data @content, :content_type => 'text/plain',
-        :filename => "release-notes-#{@project.name}-version-#{@version.name}.txt"
+      send_data @content, content_type: 'text/plain',
+        filename: "release-notes-#{@project.name}-version-#{@version.name}.txt"
     end
   end
 
@@ -108,10 +108,10 @@ class ReleaseNotesController < ApplicationController
     @content = ReleaseNotesGenerator.new(@release, @format).generate_for_release
 
     if params[:raw]
-      render :text => @content, :content_type => 'text/plain'
+      render text: @content, content_type: 'text/plain'
     elsif params[:download]
-      send_data @content, :content_type => 'text/plain',
-        :filename => "release-notes-#{@project.name}-release-#{@release.name}.txt"
+      send_data @content, content_type: 'text/plain',
+        filename: "release-notes-#{@project.name}-release-#{@release.name}.txt"
     end
   end
 
@@ -148,10 +148,10 @@ class ReleaseNotesController < ApplicationController
          # record the change to the custom field
          journal = @issue.init_journal(User.current)
          journal.details << JournalDetail.new(
-           :property => 'cf',
-           :prop_key => custom_value.custom_field_id,
-           :old_value => old_value,
-           :value => new_value)
+           property: 'cf',
+           prop_key: custom_value.custom_field_id,
+           old_value: old_value,
+           value: new_value)
          if !journal.save
            @release_note.errors.add(:base,
              t('release_notes.errors.failed_save_journal_entry_html').html_safe)

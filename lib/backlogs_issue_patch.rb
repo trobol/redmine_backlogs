@@ -9,15 +9,15 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        belongs_to :rbteam, :class_name => 'User', :foreign_key => 'rbteam_id'
+        belongs_to :rbteam, class_name: 'User', foreign_key: 'rbteam_id'
 
-        acts_as_list_with_gaps :default => (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
+        acts_as_list_with_gaps default: (Backlogs.setting[:new_story_position] == 'bottom' ? 'bottom' : 'top')
 
-        has_one :backlogs_history, :class_name => 'RbIssueHistory', :dependent => :destroy
-        has_many :rb_release_burnchart_day_cache, :dependent => :delete_all
+        has_one :backlogs_history, class_name: 'RbIssueHistory', dependent: :destroy
+        has_many :rb_release_burnchart_day_cache, dependent: :delete_all
 
         belongs_to :rb_issue_release
-        has_many :releases, :class_name => 'RbRelease', :through => :rb_issue_release
+        has_many :releases, class_name: 'RbRelease', through: :rb_issue_release
 
         safe_attributes 'rbteam_id'
 
@@ -36,7 +36,7 @@ module Backlogs
 
     module InstanceMethods
       def history
-        @history ||= RbIssueHistory.where(:issue_id => self.id).first_or_initialize
+        @history ||= RbIssueHistory.where(issue_id: self.id).first_or_initialize
       end
 
       def is_epic?
@@ -217,7 +217,7 @@ module Backlogs
                                   rgt < #{self.class.connection.quote(self.rgt)} and
                                   (tracker_id in (#{self.class.connection.quote(RbTask.tracker)})
                                    or
-                                   tracker_id in (#{RbGeneric.story_trackers({:type=>:array}).join(',')})
+                                   tracker_id in (#{RbGeneric.story_trackers({type: :array}).join(',')})
                                   )
                                ")
 
@@ -279,7 +279,7 @@ module Backlogs
       end
 
       def issue_releases
-        @IssueReleases = RbIssueRelease.where(:issue_id => self.id).to_a
+        @IssueReleases = RbIssueRelease.where(issue_id: self.id).to_a
       end
 
       # Called after a release relation is added

@@ -5,7 +5,7 @@ class RbCalendarsController < RbApplicationController
 
   case Backlogs.platform
     when :redmine
-      before_action :require_admin_or_api_request, :only => :ical
+      before_action :require_admin_or_api_request, only: :ical
       accept_api_auth :ical
     when :chiliproject
       accept_key_auth :ical
@@ -13,7 +13,7 @@ class RbCalendarsController < RbApplicationController
 
   def ical
     respond_to do |format|
-      format.xml { send_data(generate_ical, :disposition => 'attachment') }
+      format.xml { send_data(generate_ical, disposition: 'attachment') }
     end
   end
 
@@ -23,9 +23,9 @@ class RbCalendarsController < RbApplicationController
     cal = Icalendar::Calendar.new
 
     # current + future sprints
-    RbSprint.find(:all, :conditions => ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
-      summary_text = l(:event_sprint_summary, { :project => @project.name, :summary => sprint.name } )
-      description_text = "#{sprint.name}: #{url_for(:controller => 'rb_queries', :only_path => false, :action => 'show', :project_id => @project.id, :sprint_id => sprint.id)}\n#{sprint.description}"
+    RbSprint.find(:all, conditions: ["not sprint_start_date is null and not effective_date is null and project_id = ? and effective_date >= ?", @project.id, Date.today]).each {|sprint|
+      summary_text = l(:event_sprint_summary, { project: @project.name, summary: sprint.name } )
+      description_text = "#{sprint.name}: #{url_for(controller: 'rb_queries', only_path: false, action: 'show', project_id: @project.id, sprint_id: sprint.id)}\n#{sprint.description}"
 
       cal.event do |e|
         e.dtstart     = sprint.sprint_start_date
@@ -84,9 +84,9 @@ class RbCalendarsController < RbApplicationController
     conditions << @project.id
     conditions << Date.today
 
-    issues = Issue.find(:all, :include => :status, :conditions => conditions).each {|issue|
-      summary_text = l(:todo_issue_summary, { :type => issue.tracker.name, :summary => issue.subject } )
-      description_text = "#{issue.subject}: #{url_for(:controller => 'issues', :only_path => false, :action => 'show', :id => issue.id)}\n#{issue.description}"
+    issues = Issue.find(:all, include: :status, conditions: conditions).each {|issue|
+      summary_text = l(:todo_issue_summary, { type: issue.tracker.name, summary: issue.subject } )
+      description_text = "#{issue.subject}: #{url_for(controller: 'issues', only_path: false, action: 'show', id: issue.id)}\n#{issue.description}"
       # I know this should be "cal.todo do", but outlook in it's
       # infinite stupidity doesn't support VTODO
       cal.event do |e|

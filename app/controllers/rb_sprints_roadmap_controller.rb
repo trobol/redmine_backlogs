@@ -29,7 +29,7 @@ class RbSprintsRoadmapController < RbApplicationController
   def index
     respond_to do |format|
       format.html {
-        @trackers = Tracker.where(:id => RbStory.trackers(:project => @project).map(&:to_i)).sorted.to_a
+        @trackers = Tracker.where(id: RbStory.trackers(project: @project).map(&:to_i)).sorted.to_a
         retrieve_selected_tracker_ids(@trackers, @trackers.select {|t| t.is_in_roadmap?})
         @with_subprojects = params[:with_subprojects].nil? ? Setting.display_subprojects_issues? : (params[:with_subprojects] == '1')
         project_ids = @with_subprojects ? @project.self_and_descendants.collect(&:id) : [@project.id]
@@ -82,17 +82,17 @@ class RbSprintsRoadmapController < RbApplicationController
         respond_to do |format|
           format.html do
             flash[:notice] = l(:notice_successful_create)
-            redirect_back_or_default settings_project_path(@project, :tab => 'versions')
+            redirect_back_or_default settings_project_path(@project, tab: 'versions')
           end
           format.js
           format.api do
-            render :action => 'show', :status => :created, :location => rb_sprint_path(@sprint)
+            render action: 'show', status: :created, location: rb_sprint_path(@sprint)
           end
         end
       else
         respond_to do |format|
-          format.html { render :action => 'new' }
-          format.js   { render :action => 'new' }
+          format.html { render action: 'new' }
+          format.js   { render action: 'new' }
         end
       end
     end
@@ -110,12 +110,12 @@ class RbSprintsRoadmapController < RbApplicationController
         respond_to do |format|
           format.html {
             flash[:notice] = l(:notice_successful_update)
-            redirect_back_or_default settings_project_path(@project, :tab => 'versions')
+            redirect_back_or_default settings_project_path(@project, tab: 'versions')
           }
         end
       else
         respond_to do |format|
-          format.html { render :action => 'edit' }
+          format.html { render action: 'edit' }
         end
       end
     end
@@ -125,20 +125,20 @@ class RbSprintsRoadmapController < RbApplicationController
     if request.put?
       @project.close_completed_versions
     end
-    redirect_to settings_project_path(@project, :tab => 'versions')
+    redirect_to settings_project_path(@project, tab: 'versions')
   end
 
   def destroy
     if @sprint.deletable?
       @sprint.destroy
       respond_to do |format|
-        format.html { redirect_back_or_default settings_project_path(@project, :tab => 'versions') }
+        format.html { redirect_back_or_default settings_project_path(@project, tab: 'versions') }
       end
     else
       respond_to do |format|
         format.html {
           flash[:error] = l(:notice_unable_delete_version)
-          redirect_to settings_project_path(@project, :tab => 'versions')
+          redirect_to settings_project_path(@project, tab: 'versions')
         }
      end
     end
@@ -146,7 +146,7 @@ class RbSprintsRoadmapController < RbApplicationController
 
   def status_by
     respond_to do |format|
-      format.html { render :action => 'show' }
+      format.html { render action: 'show' }
       format.js
     end
   end

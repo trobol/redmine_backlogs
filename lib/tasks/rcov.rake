@@ -9,7 +9,7 @@ begin
     namespace :backlogs do
 
       desc "Generate RCov report for Redmine Backlogs"
-      task :rcov => ["rcov:all"]
+      task rcov: ["rcov:all"]
 
       namespace :rcov do
         Cucumber::Rake::Task.new(:cucumber) do |t|

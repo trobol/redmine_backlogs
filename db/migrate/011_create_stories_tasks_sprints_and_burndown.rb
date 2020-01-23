@@ -4,15 +4,15 @@ class CreateStoriesTasksSprintsAndBurndown < ActiveRecord::Migration[5.2]
     add_column :issues, :story_points, :integer
     add_column :issues, :remaining_hours, :float
 
-    add_column :versions, :sprint_start_date, :date, :null => true
+    add_column :versions, :sprint_start_date, :date, null: true
 
     create_table :burndown_days do |t|
-      t.column :points_committed, :integer, :null => false, :default => 0
-      t.column :points_accepted, :integer, :null => false, :default => 0
-      t.column :points_resolved, :integer, :null => false, :default => 0
-      t.column :remaining_hours, :float, :null => false, :default => 0
+      t.column :points_committed, :integer, null: false, default: 0
+      t.column :points_accepted, :integer, null: false, default: 0
+      t.column :points_resolved, :integer, null: false, default: 0
+      t.column :remaining_hours, :float, null: false, default: 0
 
-      t.column :version_id, :integer, :null => false
+      t.column :version_id, :integer, null: false
       t.timestamps
     end
 

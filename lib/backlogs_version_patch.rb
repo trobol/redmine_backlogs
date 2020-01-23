@@ -9,8 +9,8 @@ module Backlogs
       base.class_eval do
         unloadable
 
-        has_one :sprint_burndown, :class_name => 'RbSprintBurndown', :dependent => :destroy
-        belongs_to :rbteam, :class_name => 'Group', :foreign_key => 'rbteam_id'
+        has_one :sprint_burndown, class_name: 'RbSprintBurndown', dependent: :destroy
+        belongs_to :rbteam, class_name: 'Group', foreign_key: 'rbteam_id'
 
         after_save :clear_burndown
 

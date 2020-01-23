@@ -27,7 +27,7 @@ class ReleaseNote < ActiveRecord::Base
 
   # the projects which can have release notes
   def self.enabled_project_ids
-    (EnabledModule.where(:name => 'release_notes').select('project_id') || []).
+    (EnabledModule.where(name: 'release_notes').select('project_id') || []).
       map(&:project_id).
       map(&:to_i)
   end

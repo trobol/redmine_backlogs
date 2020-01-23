@@ -89,14 +89,14 @@ class Repository
       @labels[label] = :delete
     }
 
-    @milestones = @client.milestones(@repo, :state => 'open')
+    @milestones = @client.milestones(@repo, state: 'open')
     @milestones.sort!{|a, b| a.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') <=> b.title.split('.').collect{|v| v.rjust(10, '0')}.join('.') }
     @next_milestone = @milestones.size == 0 ? nil : @milestones[0]
 
     begin
       page ||= 0
       page += 1
-      issues = @client.list_issues(@repo, :page => page, :state => 'open')
+      issues = @client.list_issues(@repo, page: page, state: 'open')
       issues.each{|i| Issue.new(self, i) }
     end while issues.size != 0
 

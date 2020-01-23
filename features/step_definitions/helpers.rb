@@ -139,7 +139,7 @@ def story_after(rank, project, sprint=nil)
 
   rank = rank.to_i if rank.is_a?(String) && rank =~ /^[0-9]+$/
 
-  nxt = RbStory.find_by_rank(rank, RbStory.find_options(:project => project, :sprint => sprint))
+  nxt = RbStory.find_by_rank(rank, RbStory.find_options(project: project, sprint: sprint))
   return nil if nxt.nil?
 
   return nxt.id
@@ -201,11 +201,11 @@ def initialize_sprint_params
 end
 
 def login_as(user, password)
-  visit url_for(:controller => 'account', :action=>'login', :only_path=>true)
-  fill_in 'username', :with => user
-  fill_in 'password', :with => password
+  visit url_for(controller: 'account', action: 'login', only_path: true)
+  fill_in 'username', with: user
+  fill_in 'password', with: password
   page.find(:xpath, '//input[@name="login"]').click
-  @user = User.find(:first, :conditions => "login='"+user+"'")
+  @user = User.find(:first, conditions: "login='"+user+"'")
 end
 
 def login_as_product_owner
@@ -228,7 +228,7 @@ def login_as_admin
 end
 
 def setup_permissions(typ)
-  role = Role.find(:first, :conditions => "name='Manager'")
+  role = Role.find(:first, conditions: "name='Manager'")
   if typ == 'scrum master'
     role.permissions << :view_master_backlog
     role.permissions << :view_releases
@@ -259,7 +259,7 @@ def setup_permissions(typ)
   role.save!
   
   @projects.each{|project|
-    m = Member.new(:user => @user, :roles => [role])
+    m = Member.new(user: @user, roles: [role])
     project.members << m
   }
 end
@@ -276,7 +276,7 @@ def story_position(story)
   p2 = story.rank
   p1.should == p2
 
-  s2 = RbStory.find_by_rank(p1, RbStory.find_options(:project => @project, :sprint => current_sprint))
+  s2 = RbStory.find_by_rank(p1, RbStory.find_options(project: @project, sprint: current_sprint))
   s2.should_not be_nil
   s2.id.should == story.id
 
@@ -284,7 +284,7 @@ def story_position(story)
 end
 
 def logout
-  visit url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  visit url_for(controller: 'account', action: 'logout', only_path: true)
   @user = nil
 end
 
@@ -327,11 +327,11 @@ When /^(?:|I )select multiple "([^"]*)" from "([^"]*)"(?: within "([^"]*)")?$/ d
   with_scope(selector) do
     # clear all options
     options.each{|v|
-      unselect(v, :from => field)
+      unselect(v, from: field)
     }
     # Select the requested options
     value.split(",").each{|v|
-      select(v, :from => field)
+      select(v, from: field)
     }
   end
 end

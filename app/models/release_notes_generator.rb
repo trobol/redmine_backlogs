@@ -50,21 +50,21 @@ class ReleaseNotesGenerator
       # yields all the MockIssues to the passed block
       def find_each(&blk)
         [
-          MockIssue.new(:subject => 'Crashes on startup',
-            :tracker => 'Bug',
-            :release_note => 'Startup crashes no longer occur.',
-            :project => 'Recipes app',
-            :id => 37),
-          MockIssue.new(:subject => 'Star recipes',
-            :tracker => 'Feature',
-            :release_note => 'Favourite recipes can now be starred.',
-            :project => 'Recipes app',
-            :id => 23),
-          MockIssue.new(:subject => 'Better performance when saving recipes',
-            :tracker => 'Feature',
-            :release_note => 'Performance improved when saving recipes.',
-            :project => 'Recipes app',
-            :id => 15)
+          MockIssue.new(subject: 'Crashes on startup',
+            tracker: 'Bug',
+            release_note: 'Startup crashes no longer occur.',
+            project: 'Recipes app',
+            id: 37),
+          MockIssue.new(subject: 'Star recipes',
+            tracker: 'Feature',
+            release_note: 'Favourite recipes can now be starred.',
+            project: 'Recipes app',
+            id: 23),
+          MockIssue.new(subject: 'Better performance when saving recipes',
+            tracker: 'Feature',
+            release_note: 'Performance improved when saving recipes.',
+            project: 'Recipes app',
+            id: 15)
         ].each(&blk)
       end
     end

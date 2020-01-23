@@ -5,7 +5,7 @@ class ReleaseNotesControllerTest < ActionController::TestCase
     @controller = ReleaseNotesController.new
 
     # run as an admin
-    @user = FactoryGirl.create(:user, :admin => true)
+    @user = FactoryGirl.create(:user, admin: true)
     @request.session[:user_id] = @user.id
 
     # create a format
@@ -17,15 +17,15 @@ class ReleaseNotesControllerTest < ActionController::TestCase
   def make_a_version_with_some_issues_and_release_notes
     tracker = FactoryGirl.create(:tracker)
     project = FactoryGirl.create(:project_with_release_notes,
-                                 :trackers => [tracker])
+                                 trackers: [tracker])
     ReleaseNote.stubs(:enabled_tracker_ids).returns([tracker.id])
-    version = FactoryGirl.create(:version, :project => project)
+    version = FactoryGirl.create(:version, project: project)
     [[3, 'todo'], [4, 'done'], [5, 'not_required']].each do |n, status|
       n.times do
         issue = FactoryGirl.create(:issue,
-                                   :project => project,
-                                   :fixed_version => version,
-                                   :tracker => tracker)
+                                   project: project,
+                                   fixed_version: version,
+                                   tracker: tracker)
         issue.build_release_note
         issue.release_note.status = status
         issue.release_note.text = 'LULZ' # so that it's valid
@@ -42,7 +42,7 @@ class ReleaseNotesControllerTest < ActionController::TestCase
 
     version = FactoryGirl.create(:version_with_release_notes)
 
-    get :generate, :id => version.id
+    get :generate, id: version.id
     assert_template 'no_formats'
   end
 
@@ -51,9 +51,9 @@ class ReleaseNotesControllerTest < ActionController::TestCase
     format = FactoryGirl.create(:release_notes_format)
 
     Setting.stubs(:plugin_redmine_backlogs).
-      returns(:default_generation_format_id => format.id)
+      returns(default_generation_format_id: format.id)
 
-    get :generate, :id => version.id
+    get :generate, id: version.id
     assert_template 'generate'
     assert_equal assigns(:format), format
   end
@@ -63,9 +63,9 @@ class ReleaseNotesControllerTest < ActionController::TestCase
     format = FactoryGirl.create(:release_notes_format)
 
     Setting.stubs(:plugin_redmine_backlogs).
-      returns(:default_generation_format_id => format.id)
+      returns(default_generation_format_id: format.id)
 
-    get :generate, :id => version.id, :release_notes_format => 'garbage'
+    get :generate, id: version.id, release_notes_format: 'garbage'
     assert_template 'generate'
     assert_equal assigns(:format), format
   end
@@ -76,20 +76,20 @@ class ReleaseNotesControllerTest < ActionController::TestCase
 
     # ensure the format is not retrieved from settings
     Setting.stubs(:plugin_redmine_backlogs).
-      returns(:default_generation_format_id => 0)
+      returns(default_generation_format_id: 0)
 
-    get :generate, :id => version.id, :release_notes_format => format.name
+    get :generate, id: version.id, release_notes_format: format.name
     assert_template 'generate'
     assert_equal assigns(:format), format
   end
 
   test 'should warn if some issues still need release notes' do
     version = make_a_version_with_some_issues_and_release_notes
-    get :generate, :id => version.id
+    get :generate, id: version.id
 
     # there should be 3 issues needing release notes
     assert_response :success
     assert_select 'div.flash.warning',
-      :text => /3/
+      text: /3/
   end
 end

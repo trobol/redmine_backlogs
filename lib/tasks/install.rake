@@ -7,7 +7,7 @@ def init_tracker_workflow(tracker)
     puts "Set very permissive default workflow for " + role.name + " on " + tracker.name
     IssueStatus.all.each { |os|
       IssueStatus.all.each { |ns|
-        WorkflowTransition.create!(:tracker_id => tracker.id, :role_id => role.id, :old_status_id => os.id, :new_status_id => ns.id) unless os == ns
+        WorkflowTransition.create!(tracker_id: tracker.id, role_id: role.id, old_status_id: os.id, new_status_id: ns.id) unless os == ns
       }
     }
   }
@@ -17,7 +17,7 @@ namespace :redmine do
   namespace :backlogs do
 
     desc "Install and configure Redmine Backlogs"
-    task :install => :environment do |t|
+    task install: :environment do |t|
       raise "You must specify the RAILS_ENV ('rake redmine:backlogs:install RAILS_ENV=production' or 'rake redmine:backlogs:install RAILS_ENV=development')" unless ENV["RAILS_ENV"]
 
       raise "You must set the default issue priority in redmine prior to installing backlogs" unless IssuePriority.default
@@ -65,8 +65,8 @@ namespace :redmine do
         trackers.each{|name|
           if ! Tracker.find_by_name(name)
             puts "Creating epic tracker '#{name}'"
-            default_status = IssueStatus.find_by(:name => 'New')
-            tracker = Tracker.new(:name => name, :default_status => default_status)
+            default_status = IssueStatus.find_by(name: 'New')
+            tracker = Tracker.new(name: name, default_status: default_status)
             tracker.save!
             init_tracker_workflow(tracker)
             puts "Current default projects tracker ids #{Setting.default_projects_tracker_ids} "
@@ -116,9 +116,9 @@ namespace :redmine do
       if ENV['story_trackers'] && ENV['story_trackers'] != ''
         trackers =  ENV['story_trackers'].split(',')
         trackers.each{|name|
-          if ! Tracker.find(:first, :conditions => ["name=?", name])
+          if ! Tracker.find(:first, conditions: ["name=?", name])
             puts "Creating story tracker '#{name}'"
-            tracker = Tracker.new(:name => name)
+            tracker = Tracker.new(name: name)
             tracker.save!
             init_tracker_workflow(tracker)
             Setting.default_projects_tracker_ids = Setting.default_projects_tracker_ids + [tracker.id.to_s]
@@ -165,9 +165,9 @@ namespace :redmine do
       end
 
       if ENV['task_tracker'] && ENV['task_tracker'] != ''
-        if ! Tracker.find(:first, :conditions => ["name=?", ENV['task_tracker']])
+        if ! Tracker.find(:first, conditions: ["name=?", ENV['task_tracker']])
           puts "Creating task tracker '#{ENV['task_tracker']}'"
-          tracker = Tracker.new(:name => ENV['task_tracker'])
+          tracker = Tracker.new(name: ENV['task_tracker'])
           tracker.save!
           init_tracker_workflow(tracker)
           Setting.default_projects_tracker_ids = Setting.default_projects_tracker_ids + [tracker.id.to_s]
@@ -249,7 +249,7 @@ namespace :redmine do
         print "Please type the tracker's name: "
         STDOUT.flush
         name = STDIN.gets.chomp!
-        if Tracker.find(:first, :conditions => "name='#{name}'")
+        if Tracker.find(:first, conditions: "name='#{name}'")
           puts "Ooops! That name is already taken."
           next
         end
@@ -257,7 +257,7 @@ namespace :redmine do
         STDOUT.flush
 
         if (STDIN.gets.chomp!).match("y")
-          tracker = Tracker.new(:name => name)
+          tracker = Tracker.new(name: name)
           tracker.save!
           init_tracker_workflow(tracker)
           Setting.default_projects_tracker_ids = Setting.default_projects_tracker_ids + [tracker.id.to_s]

@@ -16,7 +16,7 @@ tags.each {|version|
   raise "Unexpected version #{version.inspect}" unless m
   parts = 1.upto(3).collect{|i| Integer(m[i])}
   key = parts.collect{|p| p.to_s.rjust(5, '0')}.join('.')
-  versions[key] = {:string => version, :parts => parts}
+  versions[key] = {string: version, parts: parts}
 
   `git tag -d #{version}`
   #`git push origin :refs/tags/#{version}`

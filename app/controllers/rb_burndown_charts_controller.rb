@@ -11,7 +11,7 @@ class RbBurndownChartsController < RbApplicationController
 
   def embedded
     respond_to do |format|
-      format.html { render :template => 'rb_burndown_charts/show.html.erb', :layout => false }
+      format.html { render template: 'rb_burndown_charts/show.html.erb', layout: false }
     end
   end
 
@@ -23,7 +23,7 @@ class RbBurndownChartsController < RbApplicationController
       @height = '600'
     end
     respond_to do |format|
-      format.html { render :layout => false }
+      format.html { render layout: false }
     end
   end
 

@@ -124,9 +124,9 @@ class RbSprintBurndown < ActiveRecord::Base
         }
       }
 
-      @_burndown = { :up   => @_burndown.reject{|k, v| [:points_to_resolve, :points_to_accept].include?(k) },
-                     :down => @_burndown.reject{|k, v| [:points_resolved, :points_accepted].include?(k) },
-                     :days => days
+      @_burndown = { up: @_burndown.reject{|k, v| [:points_to_resolve, :points_to_accept].include?(k) },
+                     down: @_burndown.reject{|k, v| [:points_resolved, :points_accepted].include?(k) },
+                     days: days
                    }
     end
 

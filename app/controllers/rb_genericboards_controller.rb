@@ -4,7 +4,7 @@ include RbGenericboardsHelper
 class RbGenericboardsController < RbApplicationController
   unloadable
 
-  before_action :find_rb_genericboard, :except => [ :index ]
+  before_action :find_rb_genericboard, except: [ :index ]
 
   private
 
@@ -184,7 +184,7 @@ class RbGenericboardsController < RbApplicationController
   def index
     board = RbGenericboard.order(:name).first
     if board
-      redirect_to :controller => 'rb_genericboards', :action => 'show', :genericboard_id => board, :project_id => @project
+      redirect_to controller: 'rb_genericboards', action: 'show', genericboard_id: board, project_id: @project
       return
     end
     respond_to do |format|
@@ -200,7 +200,7 @@ class RbGenericboardsController < RbApplicationController
     @all_boards = RbGenericboard.all
 
     respond_to do |format|
-      format.html { render :layout => "rb" }
+      format.html { render layout: "rb" }
     end
   end
 
@@ -214,7 +214,7 @@ class RbGenericboardsController < RbApplicationController
     rescue => e
       Rails.logger.error "Error in genericboards create: #{e}"
       e.backtrace.each {|l| Rails.logger.error l}
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render text: e.message.blank? ? e.to_s : e.message, status: 400
       return
     end
 
@@ -226,7 +226,7 @@ class RbGenericboardsController < RbApplicationController
 
     status = (story.id ? 200 : 400)
     respond_to do |format|
-      format.html { render :partial => "generic", :object => story, :status => status, :locals => {:cls => cls_hint} }
+      format.html { render partial: "generic", object: story, status: status, locals: {cls: cls_hint} }
     end
   end
 
@@ -239,7 +239,7 @@ class RbGenericboardsController < RbApplicationController
     rescue => e
       Rails.logger.error "Error in genericboards update: #{e}"
       e.backtrace.each {|l| Rails.logger.error l}
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render text: e.message.blank? ? e.to_s : e.message, status: 400
       return
     end
     if attrs.include? :parent_issue_id
@@ -249,7 +249,7 @@ class RbGenericboardsController < RbApplicationController
 
     status = (result ? 200 : 400)
     respond_to do |format|
-      format.html { render :partial => "generic", :object => story, :status => status, :locals => {:cls => cls_hint} }
+      format.html { render partial: "generic", object: story, status: status, locals: {cls: cls_hint} }
     end
   end
 

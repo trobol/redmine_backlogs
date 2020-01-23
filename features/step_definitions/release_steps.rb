@@ -45,14 +45,14 @@ end
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
   story = RbStory.find_by_subject(story_name)
   @story_params = {
-    :id => story.id,
-    :release_id => RbRelease.find_by_name(release_name).id
+    id: story.id,
+    release_id: RbRelease.find_by_name(release_name).id
   }
   page.driver.post(
-                      url_for(:controller => :rb_stories,
-                              :action => :update,
-                              :id => @story_params[:id],
-                              :only_path => true),
+                      url_for(controller: :rb_stories,
+                              action: :update,
+                              id: @story_params[:id],
+                              only_path: true),
                       @story_params
                   )
   verify_request_status(200)
@@ -104,7 +104,7 @@ Given /^I have made the following story mutations:$/ do |table|
     story = RbStory.find_by_subject(mutation.delete('story'))
     story.should_not be_nil
     current_sprint(story.fixed_version.name)
-    set_now(mutation.delete('day'), :msg => story.subject, :sprint => current_sprint)
+    set_now(mutation.delete('day'), msg: story.subject, sprint: current_sprint)
     Time.zone.now.should be >= story.created_on
 
     story.init_journal(User.current)
@@ -113,7 +113,7 @@ Given /^I have made the following story mutations:$/ do |table|
     if status_name.blank?
       status = nil
     else
-      status = IssueStatus.find(:first, :conditions => ['name = ?', status_name])
+      status = IssueStatus.find(:first, conditions: ['name = ?', status_name])
       raise "No such status '#{status_name}'" unless status
       status = status.id
     end
@@ -128,7 +128,7 @@ end
 Given /^I accept story ([^"]*)$/ do |story_name|
   story = RbStory.find_by_subject(story_name)
   story.should_not be_nil
-  status = IssueStatus.find(:first, :conditions => ['name = ?', "Accepted"])
+  status = IssueStatus.find(:first, conditions: ['name = ?', "Accepted"])
   story.status_id = status.id
   story.save!.should be_true
 end
@@ -139,9 +139,9 @@ Given /^I duplicate ([^"]*) to release ([^"]*) as ([^"]*)$/ do |story_old, relea
   release = RbRelease.find_by_name(release_name)
   issue.should_not be_nil
   release.should_not be_nil
-  issue_copy = issue.copy({:release_id => release.id,
-                           :fixed_version_id => nil,
-                           :subject => story_new})
+  issue_copy = issue.copy({release_id: release.id,
+                           fixed_version_id: nil,
+                           subject: story_new})
   issue_copy.save
 end
 
@@ -251,7 +251,7 @@ Then /^journal for "([^"]*)" should show change to release "([^"]*)"$/ do |story
 end
 
 Given /^I view issues tab grouped by releases/ do
-  visit url_for(:controller => :issues, :action => :index, :project_id=> @project.id, :group_by => 'release', :only_path => false)
+  visit url_for(controller: :issues, action: :index, project_id: @project.id, group_by: 'release', only_path: false)
 end
 
 Then(/^I should see "(.*?)" group in the issues list$/) do |release_name|
@@ -261,21 +261,21 @@ end
 
 Given(/^I want to bulk edit "(.*?)" and "(.*?)"$/) do |arg1, arg2|
   @bulk_issues = []
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg1])
-  @bulk_issues << RbStory.find(:first, :conditions => ["subject=?", arg2])
-  visit url_for(:controller => :issues,
-                :action => :bulk_edit,
-                :ids => @bulk_issues.map(&:id)
+  @bulk_issues << RbStory.find(:first, conditions: ["subject=?", arg1])
+  @bulk_issues << RbStory.find(:first, conditions: ["subject=?", arg2])
+  visit url_for(controller: :issues,
+                action: :bulk_edit,
+                ids: @bulk_issues.map(&:id)
                 )
   verify_request_status(200)
 end
 
 Given(/^I want to set the release to "(.*?)"$/) do |release_name|
-  page.select(release_name, :from => 'issue_release_id')
+  page.select(release_name, from: 'issue_release_id')
 end
 
 Given(/^I want to set the release relationship to (Auto|Initial|Continued|Added)$/) do |relationship|
-  page.select(relationship, :from => 'issue_release_relationship')
+  page.select(relationship, from: 'issue_release_relationship')
 end
 
 When(/^I update the stories$/) do

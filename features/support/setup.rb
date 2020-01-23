@@ -43,7 +43,7 @@ end
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, :inspector => true)
+  Capybara::Poltergeist::Driver.new(app, inspector: true)
 end
 #give travis some time for ajax requests to complete
 Capybara.default_wait_time = 15
