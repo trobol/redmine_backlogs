@@ -15,6 +15,7 @@ gem 'chronic'
 
 group :development do
   gem "inifile"
+  gem 'meta_request'
 end
 
 group :test do
