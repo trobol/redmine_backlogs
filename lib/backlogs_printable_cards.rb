@@ -233,7 +233,7 @@ module BacklogsPrintableCards
       }
     rescue => e
       Rails.logger.error("Backlogs printable cards: problem loading labels: #{e}")
-      Rails.logger.error(e.backtrace.join("\n"))
+      Rails.logger.error(e.backtrace.join("\n")) if Rails.env.development?
     end
   end
 
