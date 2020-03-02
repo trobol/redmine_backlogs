@@ -58,7 +58,7 @@ namespace :redmine do
         Backlogs.setting[:card_spec] = BacklogsPrintableCards::CardPageLayout.available[0]
       end
 
-      trackers = Tracker.find(:all)
+      trackers = Tracker.all
 
       if ENV['epic_trackers'] && ENV['epic_trackers'] != ''
         trackers =  ENV['epic_trackers'].split(',')
